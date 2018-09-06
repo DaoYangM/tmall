@@ -3,6 +3,8 @@
     <head></head>
     <index-swiper></index-swiper>
     <index-icons></index-icons>
+    <index-like></index-like>
+    <commodity></commodity>
   </view>
 </template>
 
@@ -12,16 +14,22 @@ import wepy from 'wepy';
 import Head from '../components/index/head'
 import IndexSwiper from '../components/index/index-swiper'
 import IndexIcons from '../components/index/index-icons'
+import IndexLike from '../components/index/index-like'
+import Commodity from '../components/commodity'
+
 
 export default class Index extends wepy.page {
   components = {
-    head: Head,
-    "index-swiper": IndexSwiper,
-    "index-icons": IndexIcons,
+    'head': Head,
+    'index-swiper': IndexSwiper,
+    'index-icons': IndexIcons,
+    'index-like': IndexLike,
+    'commodity': Commodity,
   }
 }
 </script>
 
-<style lang="stylus" scoped>
-
+<style lang="stylus">
+  page
+    height 100%
 </style>

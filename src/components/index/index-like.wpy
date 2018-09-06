@@ -1,0 +1,69 @@
+<template>
+  <view class="like-container">
+    <view class="like-title">
+      <text class="like-title-line"></text>
+      <view class="like-title-text">
+        <i class="iconfont icon-search" style="display:inline-block; padding-right: 10rpx; font-size: 30rpx; height: 44rpx"></i>
+        <text>猜你喜欢</text>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class IndexLike extends wepy.component {
+  
+}
+</script>
+
+<style lang="stylus" scoped>
+  .like-container
+    width 100%
+
+    .like-title
+      width 100%
+      height 70rpx
+      line-height 70rpx
+      font-size 34rpx
+      background-color #ffffff
+      color #ff5555
+      text-align center
+      position relative
+
+      .like-title-line
+        display inline-block
+        height 2rpx
+        width 280rpx
+        position absolute
+        top 0
+        left 0
+        right 0
+        bottom 0
+        margin auto
+        background-color #ff5555
+        z-index 1
+
+      .like-title-text
+        z-index 2
+        background-color #ffffff
+        position relative
+        display: inline-block
+        padding 0 16rpx
+
+      .like-title-text:before  
+        left -6rpx
+      .like-title-text:after  
+        right -6rpx
+      .like-title-text:before, .like-title-text:after
+          content: ''
+          position: absolute
+          background: #ff5000
+          width 6rpx
+          height 6rpx
+          border-radius 100%
+          top 49%
+          -webkit-transform translate(0,-50%);
+          -ms-transform translate(0,-50%);
+          transform translate(0,-50%);
+</style>
