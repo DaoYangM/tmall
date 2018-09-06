@@ -1,0 +1,46 @@
+<template>
+  <view class="swiper-img-container">
+    <swiper indicator-dots="{{indicatorDots}}" indicator-color="{{indicatorColor}}" indicator-active-color="{{indicatorActiveColor}}"
+      autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+      <block wx:for="{{imgUrls}}" wx:key="{{index}}">
+        <swiper-item>
+          <image class="swiper-img" src="{{item}}"/>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class IndexSwiper extends wepy.component {
+  data = {
+    imgUrls: [
+      'https://img.alicdn.com/imgextra/i4/173/TB2r4RXvCcqBKNjSZFgXXX_kXXa_!!173-0-luban.jpg',
+      'https://aecpm.alicdn.com/simba/img/TB1CWf9KpXXXXbuXpXXSutbFXXX.jpg_q50.jpg',
+      'https://aecpm.alicdn.com/simba/img/TB14ab1KpXXXXclXFXXSutbFXXX.jpg_q50.jpg',
+      'https://gw.alicdn.com/imgextra/i3/165/TB2w37XvA7mBKNjSZFyXXbydFXa_!!165-0-lubanu.jpg',
+      'https://gw.alicdn.com/imgextra/TB2hktzuBjTBKNjSZFDXXbVgVXa_!!51-0-lubanu.jpg',
+    ],
+    indicatorDots: true,
+    autoplay: true,
+    interval: 5000,
+    duration: 1000,
+    indicatorColor: "rgb(255, 255, 255)",
+    indicatorActiveColor: "rgb(255, 80, 0)"
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+  swiper
+    height 240rpx
+
+  .swiper-img-container
+    height 240rpx
+    width 100%
+
+    .swiper-img
+      width 100%
+      height 240rpx
+</style>

@@ -1,0 +1,27 @@
+<template>
+  <view class="container">
+    <head></head>
+    <index-swiper></index-swiper>
+    <index-icons></index-icons>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+
+import Head from '../components/index/head'
+import IndexSwiper from '../components/index/index-swiper'
+import IndexIcons from '../components/index/index-icons'
+
+export default class Index extends wepy.page {
+  components = {
+    head: Head,
+    "index-swiper": IndexSwiper,
+    "index-icons": IndexIcons,
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+
+</style>
