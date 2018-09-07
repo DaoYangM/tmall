@@ -1,0 +1,52 @@
+<template>
+  <view class="tail-bar-container">
+    <view @tap="clickIndex" class="tail-bar-item"><i class="iconfont icon-home"></i><text class="tail-bar-text">首页</text></view>
+    <view class="tail-bar-item"><i class="iconfont icon-search"></i><text class="tail-bar-text">搜索</text></view>
+    <view class="tail-bar-item"><i class="iconfont icon-cart"></i><text class="tail-bar-text">购物车</text></view>
+    <view @tap="clickMe" class="tail-bar-item"><i class="iconfont icon-people"></i><text class="tail-bar-text">我的</text></view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class IndexTailBar extends wepy.component{
+  methods = {
+    clickMe () {
+      console.log('click me')
+      this.$emit('indexChangeMe', "me");
+    },
+    clickIndex () {
+      console.log('click index')
+      this.$emit('indexChange', "index");
+    },
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+  .tail-bar-container
+    position fixed
+    bottom 0
+    width 100%
+    height 8%
+    z-index 99
+    display flex
+    flex-wrap nowrap
+
+    .tail-bar-item
+      flex 1
+      display flex
+      flex-direction column
+      justify-content center
+      align-items center
+      background #ffffff
+
+      .iconfont
+        display inline-block
+        font-size: 40rpx
+        color black
+        color #FF852A
+      .tail-bar-text
+        font-size 24rpx  
+</style>

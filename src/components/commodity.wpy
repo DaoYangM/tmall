@@ -1,6 +1,6 @@
 <template>
   <view class="commodity-container">
-    <view class="commodity-item">
+    <view class="commodity-item" @tap="detail({{1}})">
       <view class="item-image-wrap">
         <image class="item-image" src="https://img.alicdn.com/bao/uploaded/i3/399230749/TB2FYZVl_nI8KJjSszbXXb4KFXa_!!399230749.jpg_300x300q85s150.jpg" />
       </view>
@@ -55,7 +55,14 @@
 import wepy from 'wepy'
 
 export default class Commodity extends wepy.component {
-  
+  methods = {
+    detail (id) {
+      console.log(id)
+      wx.navigateTo({
+        url: 'detail?id=' + id
+      })
+    }
+  }
 }
 </script>
 
@@ -69,7 +76,7 @@ export default class Commodity extends wepy.component {
     justify-content space-between
 
     .commodity-item
-      height 75%
+      height 88%
       width 49%
       overflow hidden
       display flex
@@ -99,14 +106,14 @@ export default class Commodity extends wepy.component {
           line-height 32rpx
           color rgb(51, 51, 51)
           max-height: 64rpx;
-          // text-overflow: ellipsis
+          text-overflow: ellipsis
           overflow hidden
 
       .commodity-price-wrap
         display flex
         justify-content space-between
         margin-left 20rpx
-        margin-top 13rpx
+        // margin-top 10rpx
 
         .commodity-price
           display inline-block

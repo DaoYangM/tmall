@@ -1,0 +1,28 @@
+<template>
+  <detail-swiper></detail-swiper>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+import DetailSwiper from '../components/detail/detail-swiper'
+export default class Detail extends wepy.page {
+  config = {
+    navigationBarTitleText: "商品详情"
+  }
+
+  components = {
+    'detail-swiper': DetailSwiper
+  }
+
+  onLoad (option){
+      console.log(option.id)
+  }
+
+}
+</script>
+
+<style lang="stylus">
+  page
+    height 100%
+</style>

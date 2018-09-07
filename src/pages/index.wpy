@@ -1,10 +1,10 @@
 <template>
   <view class="container">
-    <head></head>
-    <index-swiper></index-swiper>
-    <index-icons></index-icons>
-    <index-like></index-like>
-    <commodity></commodity>
+      <head></head>
+      <index-swiper></index-swiper>
+      <index-icons></index-icons>
+      <index-like></index-like>
+      <commodity></commodity>          
   </view>
 </template>
 
@@ -16,15 +16,31 @@ import IndexSwiper from '../components/index/index-swiper'
 import IndexIcons from '../components/index/index-icons'
 import IndexLike from '../components/index/index-like'
 import Commodity from '../components/commodity'
-
+import IndexTailBar from '../components/index/index-tail-bar'
 
 export default class Index extends wepy.page {
+  data = {
+    index: 'me'
+  }
+
+  config = {
+    navigationBarTitleText: "Tmall"
+  }
+
   components = {
     'head': Head,
     'index-swiper': IndexSwiper,
     'index-icons': IndexIcons,
     'index-like': IndexLike,
     'commodity': Commodity,
+    'index-tail-bar': IndexTailBar,
+  }
+
+  methods = {
+    changeIndex(str, evt) {
+      console.log("fa " + str)
+      this.index = str
+    }
   }
 }
 </script>
