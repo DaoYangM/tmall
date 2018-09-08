@@ -1,0 +1,55 @@
+<template>
+  <view class="detail-service-container">
+    <view class="detail-service s-b">
+      <text class="service-title">服务</text>
+      <text class="service">7天无理由 · 运费险 · 72小时内发货</text>
+      <view><i class="iconfont icon-right" style="height: 20rpx width: 20rpx;"></i></view>
+    </view>
+    <view class="detail-service">
+      <text class="service-title">规格</text>
+      <text class="service">请选择 颜色分类 </text>
+      <view><i class="iconfont icon-right" style="height: 20rpx width: 20rpx;"></i></view>
+    </view>
+    <view class="detail-service">
+      <text class="service-title">参数</text>
+      <text class="service">品牌 型号...</text>
+      <view><i class="iconfont icon-right" style="height: 20rpx width: 20rpx;"></i></view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class DetailService extends wepy.component {
+  
+}
+</script>
+
+<style lang="stylus" scoped>
+  .detail-service-container
+    height 20%
+    margin 0 24rpx
+    font-size 26rpx
+
+    .detail-service
+      height 30%
+      display flex
+      align-items center
+      color rgb(153, 153, 153)
+      position relative
+
+      .service-title
+        display inline-block
+        margin-right 32rpx
+      .service
+        color rgb(51, 51, 51)
+
+      .icon-right
+        position absolute
+        right: 0
+        top: 50%;
+        transform: translate(-50%, -50%); 
+    .s-b
+      border-bottom 20rpx solid rgb(248, 248, 248)
+
+</style>

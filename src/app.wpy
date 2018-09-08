@@ -1,6 +1,6 @@
 <style lang="less">
+@import (less) "./iconfont.css";
 .container {
-  @import (less) "./iconfont.css";
   height: 100%;
   display: flex;
   flex-direction: column;

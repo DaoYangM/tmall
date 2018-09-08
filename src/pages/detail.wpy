@@ -1,28 +1,39 @@
 <template>
-  <detail-swiper></detail-swiper>
+  <view class="detail-container">
+    <detail-swiper></detail-swiper>
+    <detail-info></detail-info>
+    <detail-service></detail-service>
+  </view>
 </template>
 
 <script>
 import wepy from 'wepy'
 
 import DetailSwiper from '../components/detail/detail-swiper'
+import DetailInfo from '../components/detail/detail-info'
+import DetailService from '../components/detail/detail-service'
+
 export default class Detail extends wepy.page {
   config = {
     navigationBarTitleText: "商品详情"
   }
 
   components = {
-    'detail-swiper': DetailSwiper
+    'detail-swiper': DetailSwiper,
+    'detail-info': DetailInfo,
+    'detail-service': DetailService,
   }
 
   onLoad (option){
       console.log(option.id)
   }
-
 }
 </script>
 
 <style lang="stylus">
   page
     height 100%
+
+    .detail-container
+      height 100%
 </style>

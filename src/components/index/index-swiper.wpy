@@ -36,7 +36,7 @@ export default class IndexSwiper extends wepy.component {
   .swiper-img-container
     height 17%
     width 100%
-    margin-top 88rpx
+    margin-top 78rpx
     
     swiper
       height 100%
