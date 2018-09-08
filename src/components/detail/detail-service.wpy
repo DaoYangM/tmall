@@ -1,11 +1,11 @@
 <template>
   <view class="detail-service-container">
-    <view class="detail-service s-b">
+    <view class="detail-service s-b" @tap="showModal(1)">
       <text class="service-title">服务</text>
       <text class="service">7天无理由 · 运费险 · 72小时内发货</text>
       <view><i class="iconfont icon-right" style="height: 20rpx width: 20rpx;"></i></view>
     </view>
-    <view class="detail-service">
+    <view class="detail-service" @tap="showModal(2)">
       <text class="service-title">规格</text>
       <text class="service">请选择 颜色分类 </text>
       <view><i class="iconfont icon-right" style="height: 20rpx width: 20rpx;"></i></view>
@@ -15,13 +15,152 @@
       <text class="service">品牌 型号...</text>
       <view><i class="iconfont icon-right" style="height: 20rpx width: 20rpx;"></i></view>
     </view>
+
+    <view class="mask-screen" wx:if="{{maskScreen}}" @tap="hideModal('{{show}}')"></view>
+    <view animation="{{animationDataService}}" class="mask-menu">
+      <view class="dialog-title">
+        <text>基础服务</text>
+      </view>
+      <view class="base-info-list">
+        <view class="base-info-item">
+          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
+          <text class="info-title">7天无理由</text>
+          <view text class="info-desc"><text>满足7天无理由退换货申请的前提下，包邮商品需要买家承担退货邮费，非包邮商品需要买家承担发货和退货邮费。</text></view>
+        </view>
+        <view class="base-info-item">
+          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
+          <text class="info-title">运费险</text>
+        </view>
+        <view class="base-info-item">
+          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
+          <text class="info-title">72小时内发货</text>
+        </view>
+      </view>
+      <view class="dialog-title" style="border-radius: 0">
+        <text>其他</text>
+      </view>
+      <view class="base-info-list">
+        <view class="base-info-item">
+          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
+          <text class="info-title">蚂蚁花呗</text>
+        </view>
+        <view class="base-info-item">
+          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
+          <text class="info-title">信用卡支付</text>
+        </view>
+        <view class="base-info-item">
+          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
+          <text class="info-title">集分宝</text>
+        </view>
+      </view>
+      <view class="dialog-button-group">
+        <button class="btn-close" @tap="hideModal('{{show}}')">完成</button>
+      </view>
+    </view>
+    <view animation="{{animationDataSpecification}}" class="mask-menu">
+      <view class="dialog-title">
+        <text>服务</text>
+      </view>
+      <view class="base-info-list">
+        <view class="base-info-item">
+          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
+          <text class="info-title">7天无理由</text>
+          <view text class="info-desc"><text>满足7天无理由退换货申请的前提下，包邮商品需要买家承担退货邮费，非包邮商品需要买家承担发货和退货邮费。</text></view>
+        </view>
+        <view class="base-info-item">
+          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
+          <text class="info-title">运费险</text>
+        </view>
+        <view class="base-info-item">
+          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
+          <text class="info-title">72小时内发货</text>
+        </view>
+      </view>
+      <view class="dialog-title" style="border-radius: 0">
+        <text>其他</text>
+      </view>
+      <view class="base-info-list">
+        <view class="base-info-item">
+          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
+          <text class="info-title">蚂蚁花呗</text>
+        </view>
+        <view class="base-info-item">
+          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
+          <text class="info-title">信用卡支付</text>
+        </view>
+        <view class="base-info-item">
+          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
+          <text class="info-title">集分宝</text>
+        </view>
+      </view>
+      <view class="dialog-button-group">
+        <button class="btn-close" @tap="hideModal">完成</button>
+      </view>
+    </view>  
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
 export default class DetailService extends wepy.component {
-  
+  data = {
+    show: 0,
+    maskScreen: false,
+    animationDataService: {},
+    animationDataSpecification: {}
+  }
+  methods = {
+    showService () {
+      this.maskScreen = true
+    },
+    toggleMask () {
+      this.maskScreen = false
+    },
+
+    showModal (index) {
+        // 显示遮罩层
+      this.show = index
+      console.log("show1 " + this.show)
+      this.animation.height('83%').step()
+      switch (index) {
+        case '1':
+          this.animationDataService = this.animation.export()
+          break;
+        case '2':
+          this.animationDataSpecification = this.animation.export()
+          break
+        default:
+          break;
+      }
+      
+      this.maskScreen = true
+    },
+    hideModal (index) {
+      console.log(index)
+      this.animation.height('0').step()
+      switch (index) {
+        case '1':
+          this.animationDataService = this.animation.export()
+          break;
+        case '2':
+          this.animationDataSpecification = this.animation.export()
+          break
+        default:
+          break;
+      }
+      this.maskScreen = false
+    }
+  }
+
+  onLoad () {
+    let animation = wx.createAnimation({
+      duration: 250,
+      timingFunction: "ease",
+      delay: 0
+    })
+
+    this.animation = animation
+  }
 }
 </script>
 
@@ -51,5 +190,76 @@ export default class DetailService extends wepy.component {
         transform: translate(-50%, -50%); 
     .s-b
       border-bottom 20rpx solid rgb(248, 248, 248)
+    
+    .mask-screen
+      height 100%
+      width 100%
+      position fixed
+      top 0
+      bottom 0
+      left 0
+      right 0
+      background #000000
+      opacity 0.5
+      z-index 1000
+      
+    .mask-menu
+      height 0
+      width 100%
+      position fixed 
+      bottom 0
+      left 0
+      right 0
+      opacity 1
+      z-index 2000
+      display flex
+      flex-direction column
 
+      .dialog-title
+        height 15%
+        background red
+        display flex
+        justify-content center
+        align-items center
+        border-radius 20rpx 20rpx 0 0
+        font-size 30rpx
+        color #333
+        background #ffffff
+        overflow hidden
+        
+      .base-info-list
+        padding 0 20rpx
+        background #ffffff
+        color rgb(153, 153, 153)
+        font-size 28rpx
+
+        .base-info-item
+          padding 20rpx
+          
+          .info-img
+            width 30rpx
+            height 30rpx
+
+          .info-title
+            margin-left 30rpx
+
+          .info-desc
+            padding-left 50rpx
+            margin-top 10rpx
+            font-size 24rpx
+
+      .dialog-button-group
+        flex 1
+        background green
+        display flex
+        align-items flex-end
+        padding 20rpx
+        background #ffffff
+
+        .btn-close
+          width 100%
+          color #ffffff
+          font-size 30rpx
+          border-radius 60rpx
+          background-image linear-gradient(to right, #FF9000 0%, #FF5000 100%)
 </style>
