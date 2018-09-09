@@ -1,0 +1,77 @@
+<template>
+  <view class="item-container">
+    <view class="provide-container">
+      <image class="provide-avatar" src="https://img.alicdn.com/tps/i2/TB1wopUHVXXXXXyXpXXAAT2HVXX-63-63.png"/>
+      <text class="provide-name">xxxxx店</text>
+    </view>
+    <view class="item-info">
+      <view class="info-img-container">
+        <image class="provide-avatar" src="https://gw.alicdn.com/bao/uploaded/i3/399230749/TB2oU7KqFXXXXXvXFXXXXXXXXXX_!!399230749.jpg_270x270q90.jpg"/>
+      </view>
+      <view class="info-info">
+        <view class="info-title" style="margin-bottom: 10rpx">
+          出口单不粘迷你奶锅汤锅泡面锅米糊锅巧克力马卡龙棒棒糖熬糖糖水
+        </view>
+        <view class="info-price" style="color: #f50">
+          <text>￥</text><text>30.80</text>/ 件
+        </view>
+      </view>
+    </view>
+    <view class="btn-group">
+      
+    </view>
+  </view>
+
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class OrderItem extends wepy.component{
+
+}
+</script>
+
+<style lang="stylus" scoped>
+  .item-container
+    border-top 10rpx solid #f6f6f6
+
+    .provide-container
+      display flex
+      align-items center
+      height 100rpx
+      background #ffffff
+      color #666
+
+      .provide-avatar
+        height 50rpx 
+        width 50rpx
+        margin-right 30rpx
+        margin-left 20rpx
+
+      .provide-name  
+        font-size 30rpx
+
+  
+    .item-info
+      display flex
+      align-items center
+      background #f6f6f6
+      height 250rpx
+      
+      .info-img-container
+        width 184rpx
+        height 184rpx
+        margin-left 20rpx
+        overflow hidden
+
+        .provide-avatar
+          width 100%
+          height 100%
+
+      .info-info
+        flex 1
+        font-size 30rpx
+        height 184rpx
+        margin-left 20rpx
+</style>

@@ -1,0 +1,29 @@
+<template>
+  <view>
+    <wxaddress></wxaddress>
+    <order-item></order-item>
+  </view>
+
+</template>
+
+<script>
+import wepy from 'wepy'
+import WxAddress from '../components/createOrder/wxAddress'
+import OrderItem from '../components/createOrder/order-item'
+
+export default class CreateOrder extends wepy.page{
+  config = {
+    navigationBarTitleText: "确认订单"
+  }
+
+  components = {
+    'wxaddress': WxAddress,
+    'order-item': OrderItem
+  }
+}
+</script>
+
+<style lang="stylus">
+  page 
+    height 100%
+</style>

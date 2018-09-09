@@ -1,0 +1,120 @@
+<template>
+  <view class="wx-address-container">
+    <view wx:if="{{showGetAddress}}" class="get-wx-address" @tap="getAddress">
+      <view>
+        <image class="wx-icon" src="https://image.anruan.com/imglist/20170407/2017040754430995250.png" />
+        <text class="wx-text">一件获取微信地址</text>        
+      </view>
+      <view>
+        <i class="iconfont icon-right"></i>
+      </view>  
+    </view>
+    <view wx:else class="get-wx-address wx-address">
+      <view style="margin: 0 40rpx">
+        <i class="iconfont icon-location"></i>
+      </view>
+      <view class="address-container">
+        <view class="name-phone">
+          <text class="name">叶德杨</text>
+          <text class="phone">18359056538</text>
+        </view>
+        <view class="detail">
+          <text class="info">福建省</text>
+          <text class="info">三明市</text>
+          <text class="info">永安市</text>
+          <text class="info">益溪村 121</text>
+        </view>
+      </view>    
+    </view>  
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class WxAddress extends wepy.component{
+
+  data = {
+    showGetAddress: true
+  }
+
+  methods = {
+    getAddress () {
+     
+      wx.chooseAddress({
+        success: function (res) {
+          let userAddress = {
+            username: res.userName,
+            telNumber: res.telNumber,
+            provinceName: res.provinceName,
+            cityName: res.cityName,
+            countyName: res.countyName,
+            detailInfo: res.detailInfo
+          }
+          wx.setStorageSync('userAddress', userAddress)
+
+          console.log(wx.getStorageSync('userAddress'))
+        }
+      })      
+    }
+
+  }
+
+  onLoad () {
+    let userAddress = wx.getStorageSync('userAddress')
+    if (userAddress) {
+      this.showGetAddress = false
+    }
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+  .wx-address-container
+    margin 0 20rpx
+
+    .get-wx-address
+      display flex
+      align-items center
+      justify-content space-between
+      border-top 2rpx solid #eee
+      border-bottom 2rpx solid #000
+      height 80rpx
+      
+      .wx-icon
+        height 40rpx
+        width 40rpx
+
+      .wx-text  
+        display inline-block
+        padding-left 20rpx
+        font-size 30rpx
+      
+      .icon-location
+        display inline-block
+        width 50rpx
+        height 50rpx
+
+      .address-container
+        display flex
+        flex-direction column
+        justify-content center
+        font-size 26rpx
+        color #999
+
+        .name-phone
+          margin-bottom 10rpx
+          
+          .name
+            font-size 32rpx
+            color #000
+            margin-right 20rpx
+
+
+        .info
+          margin-right 10rpx 
+
+    .wx-address
+      height 150rpx
+      justify-content flex-start
+
+</style>

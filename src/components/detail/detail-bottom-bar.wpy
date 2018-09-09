@@ -1,0 +1,78 @@
+<template>
+  <view class="bottom-bar">
+    <view class="bottom shop">
+      <i class="iconfont icon-shop"></i>
+      <text>店铺</text>
+    </view>
+    <view class="bottom fav">
+      <i class="iconfont icon-favor"></i>
+      <text>收藏</text>
+    </view>
+    <view class="btn-group">
+      <bottom size="" class="btn-cart">加入购物车</bottom>
+      <bottom class="btn-buy">立即购买</bottom>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class DetailBottomBar extends wepy.component{
+  
+}
+</script>
+
+<style lang="stylus" scoped>
+  .bottom-bar
+    position fixed
+    bottom 0
+    left 0
+    width 100%
+    z-index 110
+    display flex
+    background #ffffff
+
+    .bottom
+      display flex
+      flex-direction column
+      justify-content center
+      align-items center
+      width 100rpx
+      height 100rpx
+
+      .iconfont
+        display inline-block
+        height 38rpx
+        width 36rpx
+      .icon-shop
+        color #ff5000
+
+      text
+        font-size 20rpx
+        line-height 40rpx
+        color #999
+
+    .btn-group
+      flex 1
+      display flex
+      justify-content center
+      align-items center
+      font-size 28rpx
+      cursor pointer
+      text-align center
+      color #ffffff
+      
+      .btn-cart
+        flex 1 0
+        border-radius 40rpx 0 0 40rpx
+        background-image linear-gradient(to right, #FFC500, #FF9402)
+        height 80rpx
+        line-height 80rpx
+      
+      .btn-buy
+        flex 1 0
+        border-radius 0 40rpx 40rpx 0
+        background-image linear-gradient(to right, #FF7A00, #FE560A)
+        height 80rpx
+        line-height 80rpx
+</style>
