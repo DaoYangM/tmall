@@ -1,0 +1,39 @@
+<template>
+  <view class="detail-desc">
+    <view class="divide-bar">
+      <text class="divide-line"></text>
+      <view style="margin: 0 16rpx">
+        <i class="iconfont icon-pic"></i>
+        <text style="font-size: 24rpx">详情</text>
+      </view>   
+      <text class="divide-line"></text>
+    </view>
+  </view>  
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class DetailDesc extends wepy.component{
+
+}
+</script>
+
+<style lang="stylus" scoped>
+  .detail-desc
+    margin 24rpx
+    background #f8f8f8;
+
+    .divide-bar
+      background #f8f8f8
+      padding 16rpx
+      color #999
+      display flex
+      justify-content center
+      align-items center
+
+      .divide-line
+        display inline-block
+        width 80rpx
+        border-top 2rpx solid #999
+</style>

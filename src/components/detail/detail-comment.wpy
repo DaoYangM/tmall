@@ -1,6 +1,21 @@
 <template>
-  <view>
-    123
+  <view class="comment-container">
+    <view class="comment-head">
+      <text class="commnet-count">宝贝评价(296)</text>
+      <view class="comment-all">
+        <text>查看全部</text>
+        <i class="iconfont icon-right" style="height: 20rpx width: 20rpx;"></i>
+      </view>
+    </view>
+    <view class="comment-hot-container">
+      <view style="display:flex; align-items:center">
+        <image class="comment-avatar" src="https://gtms03.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_80x80.jpg"/>
+        <text class="comment-anonymous">v**8</text>
+      </view>
+      <view class="comment">
+          家里正好有个小盖子，12cm的，盖上正好，这锅不要错，煮500ml的豆浆，看着不会溢出，深锅就是好
+      </view>
+    </view>
   </view>
 </template>
 
@@ -12,4 +27,59 @@ export default class DetailComment extends wepy.component{
 </script>
 
 <style lang="stylus" scoped>
+  .comment-container
+    margin-top 20rpx
+    background #ffffff
+    margin 24rpx
+
+    .comment-head
+      display flex
+      justify-content space-between
+      align-items center
+      font-size 28rpx
+      text-overflow ellipsis
+      overflow hidden
+
+      .commnet-count
+        display inline-block
+        line-height 33.6rpx
+        color rgb(51, 51, 51)
+
+      .comment-all
+        color rgb(255, 80, 0)
+        font-size 26rpx
+        line-height 31.2rpx
+        position relative
+
+        text
+          display inline-block
+          margin-right 56rpx
+        
+        .icon-right
+          position absolute
+          right: 0
+          top: 50%;
+          transform: translate(-50%, -50%); 
+    
+    .comment-hot-container
+      margin-top 40rpx
+
+      .comment-avatar
+        height 40rpx
+        width 40rpx
+        margin-right 20rpx
+
+      .comment-anonymous
+        display inline-block
+        font-size 26rpx
+        color rgb(153, 153, 153)
+
+      .comment
+        margin-top 20rpx
+        font-size 26rpx
+        color rgb(51, 51, 51)
+        max-height 72rpx
+        text-overflow ellipsis
+        overflow hidden
+        line-height 36rpx
 </style>
