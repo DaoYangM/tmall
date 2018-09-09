@@ -3,6 +3,7 @@
     <detail-swiper></detail-swiper>
     <detail-info></detail-info>
     <detail-service></detail-service>
+    <detail-comment></detail-comment>
   </view>
 </template>
 
@@ -12,6 +13,7 @@ import wepy from 'wepy'
 import DetailSwiper from '../components/detail/detail-swiper'
 import DetailInfo from '../components/detail/detail-info'
 import DetailService from '../components/detail/detail-service'
+import DetailComment from '../components/detail/detail-comment'
 
 export default class Detail extends wepy.page {
   config = {
@@ -22,6 +24,7 @@ export default class Detail extends wepy.page {
     'detail-swiper': DetailSwiper,
     'detail-info': DetailInfo,
     'detail-service': DetailService,
+    'detail-comment': DetailComment,
   }
 
   onLoad (option){

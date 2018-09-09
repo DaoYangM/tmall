@@ -55,7 +55,7 @@ export default class DetailSwiper extends wepy.component{
       width 80rpx
       height 40rpx
       background-color rgba(0, 0, 0, 0.4)
-      border-radius 20%
+      border-radius 40rpx
       line-height 40rpx
       color #ffffff
       text-align center

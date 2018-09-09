@@ -10,7 +10,7 @@
       <text class="service">请选择 颜色分类 </text>
       <view><i class="iconfont icon-right" style="height: 20rpx width: 20rpx;"></i></view>
     </view>
-    <view class="detail-service">
+    <view class="detail-service" @tap="showModal(3)">
       <text class="service-title">参数</text>
       <text class="service">品牌 型号...</text>
       <view><i class="iconfont icon-right" style="height: 20rpx width: 20rpx;"></i></view>
@@ -58,45 +58,74 @@
       </view>
     </view>
     <view animation="{{animationDataSpecification}}" class="mask-menu">
+      <view class="sku-pro">
+        <view class="sku-img-container">
+          <image class="sku-img" src="https://img.alicdn.com/imgextra/i3/399230749/TB2FYZVl_nI8KJjSszbXXb4KFXa_!!399230749.jpg_120x120q50s150.jpg"/>
+        </view>
+        <view class="sku-pro-info">
+          <text class="sku-price">￥27.8-35.8</text>
+          <text class="sku-stock">库存259</text>
+          <text class="sku-text">请选择: 颜色分类</text>
+        </view>
+      </view>
+      <view class="sku-info">
+        <text class="sku-title">颜色分类</text>
+        <view class="sku-select-group">
+          <text class="normal">中号橙色</text>
+          <text class="normal">中号紫色</text>
+          <text class="normal">加小号蒂芙尼兰</text>
+          <text class="normal">加小号玫紫色</text>
+          <text class="normal">大号玫红</text>
+          <text class="normal">小号橙色</text>
+        </view>
+        <view class="sku-quantity">
+          <text class="sku-quantity-title">购买数量</text>
+          <view class="sku-input-grounp">
+            <button class="sku-input-minus" size="mini">-</button>
+            <input value="1"/>
+            <button class="sku-input-plus" size="mini">+</button>
+          </view>
+        </view>
+      </view>
+      <view class="sku-button-group">
+        <button class="addcart" @tap="hideModal('{{show}}')">加入购物车</button>
+        <button class="gobuy" @tap="hideModal('{{show}}')">立即购买</button>
+      </view>
+    </view>
+    <view animation="{{animationDataParameter}}" class="mask-menu">
       <view class="dialog-title">
-        <text>服务</text>
+        <text>产品参数</text>
       </view>
       <view class="base-info-list">
-        <view class="base-info-item">
-          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
-          <text class="info-title">7天无理由</text>
-          <view text class="info-desc"><text>满足7天无理由退换货申请的前提下，包邮商品需要买家承担退货邮费，非包邮商品需要买家承担发货和退货邮费。</text></view>
+        <view class="base-info-item param-item">
+          <text class="param-name">品牌</text>
+          <view text class="param-value"><text>尾单</text></view>
         </view>
-        <view class="base-info-item">
-          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
-          <text class="info-title">运费险</text>
+        <view class="base-info-item param-item">
+          <text class="param-name">型号</text>
+          <view text class="param-value"><text>8</text></view>
         </view>
-        <view class="base-info-item">
-          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
-          <text class="info-title">72小时内发货</text>
+        <view class="base-info-item param-item">
+          <text class="param-name">颜色分类</text>
+          <view class="param-value">中号橙色,中号紫色,加小号蒂芙尼兰,加小号玫紫色,大号玫红,小号橙色,提示：不含盖子与锅架！,小号紫色,大号红色,中号玫红色,中号嫩绿色,加小号玫红,中号玫紫色,中号黑色,加小号红色,加小号橙色,中号西瓜红,大号黑色,加小号黑色,小号红色,大号玫紫色,中号红色,加小号磨砂蓝,中号绿色</view>
         </view>
-      </view>
-      <view class="dialog-title" style="border-radius: 0">
-        <text>其他</text>
-      </view>
-      <view class="base-info-list">
-        <view class="base-info-item">
-          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
-          <text class="info-title">蚂蚁花呗</text>
+        <view class="base-info-item param-item">
+          <text class="param-name">材质</text>
+          <view text class="param-value"><text>铝合金</text></view>
         </view>
-        <view class="base-info-item">
-          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
-          <text class="info-title">信用卡支付</text>
+        <view class="base-info-item param-item">
+          <text class="param-name">锅底类型</text>
+          <view text class="param-value"><text>单底</text></view>
         </view>
-        <view class="base-info-item">
-          <image class="info-img" src="https://gw.alicdn.com/tfs/TB1O4sFQpXXXXb3apXXXXXXXXXX-200-200.png" />
-          <text class="info-title">集分宝</text>
+        <view class="base-info-item param-item">
+          <text class="param-name">产地</text>
+          <view text class="param-value"><text>中国大陆</text></view>
         </view>
       </view>
       <view class="dialog-button-group">
-        <button class="btn-close" @tap="hideModal">完成</button>
+        <button class="btn-close" @tap="hideModal('{{show}}')">完成</button>
       </view>
-    </view>  
+    </view>
   </view>
 </template>
 
@@ -107,7 +136,8 @@ export default class DetailService extends wepy.component {
     show: 0,
     maskScreen: false,
     animationDataService: {},
-    animationDataSpecification: {}
+    animationDataSpecification: {},
+    animationDataParameter: {},
   }
   methods = {
     showService () {
@@ -129,6 +159,9 @@ export default class DetailService extends wepy.component {
         case '2':
           this.animationDataSpecification = this.animation.export()
           break
+        case '3':
+          this.animationDataParameter = this.animation.export()
+          break
         default:
           break;
       }
@@ -144,6 +177,9 @@ export default class DetailService extends wepy.component {
           break;
         case '2':
           this.animationDataSpecification = this.animation.export()
+          break
+        case '3':
+          this.animationDataParameter = this.animation.export()
           break
         default:
           break;
@@ -165,10 +201,14 @@ export default class DetailService extends wepy.component {
 </script>
 
 <style lang="stylus" scoped>
+
+  .param-item
+    display flex
   .detail-service-container
     height 20%
     margin 0 24rpx
     font-size 26rpx
+    border-bottom 15rpx solid rgb(248, 248, 248)
 
     .detail-service
       height 30%
@@ -214,6 +254,7 @@ export default class DetailService extends wepy.component {
       z-index 2000
       display flex
       flex-direction column
+      overflow hidden
 
       .dialog-title
         height 15%
@@ -232,10 +273,27 @@ export default class DetailService extends wepy.component {
         background #ffffff
         color rgb(153, 153, 153)
         font-size 28rpx
+        // overflow auto
 
         .base-info-item
           padding 20rpx
-          
+
+          .param-name
+            display inline-block
+            flex 2
+            color #999
+            font-size 30rpx
+            align-self flex-start
+            // word-break break-word
+
+          .param-value
+            display inline-block
+            flex 8
+            color #333
+            font-size 30rpx
+            padding-left 30rpx
+            text-overflow hidden
+
           .info-img
             width 30rpx
             height 30rpx
@@ -262,4 +320,108 @@ export default class DetailService extends wepy.component {
           font-size 30rpx
           border-radius 60rpx
           background-image linear-gradient(to right, #FF9000 0%, #FF5000 100%)
+
+      .sku-pro
+        display flex
+        align-items: flex-end
+        background #ffffff
+        border-radius 20rpx 20rpx 0 0
+        padding 20rpx 20rpx
+        padding-bottom 32rpx
+
+        .sku-img-container
+          width 220rpx
+          height 220rpx      
+          
+          .sku-img
+            width 100%
+            height 100%
+
+        .sku-pro-info
+          display flex
+          flex-direction column
+          margin-left 20rpx
+
+          .sku-price
+            color #ff5000
+            font-size 36rpx
+            font-weight bold
+
+          .sku-stock
+            font-size 24rpx
+
+          .sku-text
+            font-size 24rpx    
+
+      .sku-info
+        overflow auto
+        background #ffffff
+        padding 0 20rpx
+
+        .sku-title
+          display inline-block
+          font-size 30rpx
+          padding 25rpx 0
+
+        .sku-select-group
+          display flex
+          flex-wrap wrap 
+
+          .normal
+            display inline-block
+            background #F8F8F8
+            border-radius 40rpx
+            padding 16rpx 29rpx
+            font-size 24rpx
+            margin-right 28rpx
+            margin-bottom 20rpx
+
+        .sku-quantity
+          display flex
+          align-items center
+
+          .sku-quantity-title
+            display inline-block
+            font-size 30rpx
+            padding 25rpx 0
+            flex 2
+
+          .sku-input-grounp
+            flex 1
+            color #333
+            display flex
+            align-items center
+
+            button
+              background #fbfbfb
+            
+            input
+              width 80rpx
+              height 65rpx
+              text-align center
+              background #f6f6f6
+              font-size 28rpx
+
+      .sku-button-group
+        flex 1
+        display flex
+        padding-top 20rpx
+        align-items flex-end
+        background #ffffff
+
+        button
+          flex 1
+          height 80rpx
+          color #ffffff
+          font-size 30rpx
+          cursor pointer
+          line-height 80rpx
+
+        .addcart
+          background-image linear-gradient(to right, #FFC500, #FF9402)
+          border-radius 40rpx 0 0 40rpx
+        
+        .gobuy
+          border-radius 0 40rpx 40rpx 0
+          background-image linear-gradient(to right, #FF7A00, #FE560A)
 </style>
