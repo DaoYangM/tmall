@@ -20,9 +20,9 @@
     <view class="btn-group-container">
       <view class="btn-desc">购买数量</view>
       <view class="btn-gorup">
-        <button size="mini">-</button>
+        <button size="mini" plain="true">-</button>
         <input value="1" />
-        <button size="mini">+</button>
+        <button size="mini" plain="true">+</button>
       </view>
     </view>
     <view class="btn-group-container">
@@ -114,10 +114,18 @@ export default class OrderItem extends wepy.component{
         font-size 26rpx
         color #666
 
+        button 
+          background #f5f5f5
+          font-size 30rpx
+          border-radius 0
+          text-align center
+          border 0
+
         input 
-          width 60rpx
+          width 70rpx
           height 64rpx
           text-align center
+          line-height 64rpx
 
         .icon-right
           margin-left 30rpx  
