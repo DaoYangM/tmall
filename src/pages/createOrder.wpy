@@ -2,6 +2,7 @@
   <view>
     <wxaddress></wxaddress>
     <order-item></order-item>
+    <order-bottom></order-bottom>
   </view>
 
 </template>
@@ -10,6 +11,7 @@
 import wepy from 'wepy'
 import WxAddress from '../components/createOrder/wxAddress'
 import OrderItem from '../components/createOrder/order-item'
+import OrderBottom from '../components/createOrder/order-bottom'
 
 export default class CreateOrder extends wepy.page{
   config = {
@@ -18,7 +20,8 @@ export default class CreateOrder extends wepy.page{
 
   components = {
     'wxaddress': WxAddress,
-    'order-item': OrderItem
+    'order-item': OrderItem,
+    'order-bottom': OrderBottom,
   }
 }
 </script>
@@ -26,4 +29,5 @@ export default class CreateOrder extends wepy.page{
 <style lang="stylus">
   page 
     height 100%
+    background #eee
 </style>

@@ -70,19 +70,21 @@ export default class WxAddress extends wepy.component{
 
 <style lang="stylus" scoped>
   .wx-address-container
-    margin 0 20rpx
+    width 100%
 
     .get-wx-address
       display flex
       align-items center
       justify-content space-between
       border-top 2rpx solid #eee
-      border-bottom 2rpx solid #000
+      border-bottom 2rpx solid #eee
       height 80rpx
+      background #ffffff
       
       .wx-icon
         height 40rpx
         width 40rpx
+        margin-left 20rpx
 
       .wx-text  
         display inline-block

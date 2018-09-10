@@ -1,0 +1,42 @@
+<template>
+  <view class="order-bottom-container">
+    <view>
+      共<text style="color:#ff5000">1</text>件, 总金额
+      <view style="display: inline-block; color:#ff5000; font-size: 32rpx" >￥<text>30.90</text></view>
+    </view>
+    <button class="btn-submit">提交订单</button>  
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class OrderBottom extends wepy.component{
+  
+}
+</script>
+
+<style lang="stylus" scoped>
+  .order-bottom-container
+    display flex
+    justify-content flex-end
+    align-items center
+    position fixed
+    bottom 0 
+    right 0
+    font-size 28rpx
+    color #666
+    box-shadow: 0 -2rpx 0 0 rgba(0,0,0,.1), 0 -1rpx 1rpx 0 rgba(0,0,0,.2)
+    width 100%
+    overflow hidden
+    background #ffffff
+
+    .btn-submit
+      margin 0
+      background-color #f50
+      color #ffffff
+      margin-left 18rpx
+      height 110rpx
+      border-radius 0
+      line-height 110rpx
+      
+</style>

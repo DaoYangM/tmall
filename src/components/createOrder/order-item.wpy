@@ -9,7 +9,7 @@
         <image class="provide-avatar" src="https://gw.alicdn.com/bao/uploaded/i3/399230749/TB2oU7KqFXXXXXvXFXXXXXXXXXX_!!399230749.jpg_270x270q90.jpg"/>
       </view>
       <view class="info-info">
-        <view class="info-title" style="margin-bottom: 10rpx">
+        <view class="info-title" style="margin: 18rpx">
           出口单不粘迷你奶锅汤锅泡面锅米糊锅巧克力马卡龙棒棒糖熬糖糖水
         </view>
         <view class="info-price" style="color: #f50">
@@ -17,8 +17,27 @@
         </view>
       </view>
     </view>
-    <view class="btn-group">
-      
+    <view class="btn-group-container">
+      <view class="btn-desc">购买数量</view>
+      <view class="btn-gorup">
+        <button size="mini">-</button>
+        <input value="1" />
+        <button size="mini">+</button>
+      </view>
+    </view>
+    <view class="btn-group-container">
+      <view class="btn-desc">快递方式</view>
+      <view class="btn-gorup">
+        <text>快递 ￥0.0</text>
+        <i class="iconfont icon-right"></i>
+      </view>
+    </view>
+    <view class="btn-group-container">
+      <view class="btn-desc">运费险</view>
+      <view class="btn-gorup">
+        <text>卖家送,确认收货前退货可赔</text>
+        <i class="iconfont icon-right"></i>
+      </view>
     </view>
   </view>
 
@@ -74,4 +93,32 @@ export default class OrderItem extends wepy.component{
         font-size 30rpx
         height 184rpx
         margin-left 20rpx
+
+    .btn-group-container
+      display flex
+      justify-content space-between
+      align-items center
+      padding 20rpx 18rpx
+      border-bottom 2rpx solid #eee
+      box-sizing border-box
+      background #ffffff
+
+      .btn-desc
+        font-size 28rpx
+        color #666
+        line-height 56rpx
+        font-size 26rpx
+
+      .btn-gorup
+        display flex
+        font-size 26rpx
+        color #666
+
+        input 
+          width 60rpx
+          height 64rpx
+          text-align center
+
+        .icon-right
+          margin-left 30rpx  
 </style>
