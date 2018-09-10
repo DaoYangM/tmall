@@ -1,0 +1,26 @@
+<template>
+  <cart-item></cart-item>
+  <car-bottom-bar></car-bottom-bar>
+</template>
+
+<script>
+import wepy from 'wepy'
+import CartItem from '../components/cart/cart-item'
+import CartBottomBar from '../components/cart/cart-bottom-bar'
+
+export default class Cart extends wepy.page {
+  config = {
+    navigationBarTitleText: "购物车"
+  }
+
+  components = {
+    'cart-item': CartItem,
+    'car-bottom-bar': CartBottomBar,
+  }
+}
+</script>
+
+<style lang="stylus">
+  page
+    background rgb(238, 238, 238)
+</style>

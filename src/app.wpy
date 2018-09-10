@@ -19,6 +19,7 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/cart',
       'pages/me',
       'pages/createOrder',
       'pages/detail',
@@ -50,7 +51,7 @@ export default class extends wepy.app {
         },
         {
           text: "购物车",
-          pagePath: "pages/index",
+          pagePath: "pages/cart",
           iconPath: "images/icons/cart.png",
           selectedIconPath: "images/icons/cart-actived.png"
         },

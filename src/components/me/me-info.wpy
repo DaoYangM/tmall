@@ -10,7 +10,7 @@
         </text>        
       </block>
       <block wx:else>
-          <button wx:if="{{!userInfo}}" open-type="getUserInfo" bindgetuserinfo="bindgetUserInfo"> 获取头像昵称 </button>
+          <button style="background: #f50; color: #fff" wx:if="{{!userInfo}}" open-type="getUserInfo" bindgetuserinfo="bindgetUserInfo"> 获取头像昵称 </button>
       </block>  
     </view>  
     <view class="user-behavior">
