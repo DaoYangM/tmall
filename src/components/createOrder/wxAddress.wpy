@@ -6,7 +6,7 @@
         <text class="wx-text">一件获取微信地址</text>        
       </view>
       <view>
-        <i class="iconfont icon-right"></i>
+        <i class="iconfont icon-right" style="margin-right: 18rpx"></i>
       </view>  
     </view>
     <view wx:else class="get-wx-address wx-address">
@@ -71,6 +71,7 @@ export default class WxAddress extends wepy.component{
 <style lang="stylus" scoped>
   .wx-address-container
     width 100%
+    box-shadow 0 2rpx 0 0 rgba(0,0,0,.1), 0 1rpx 1rpx 0 rgba(0,0,0,.2)
 
     .get-wx-address
       display flex

@@ -54,6 +54,7 @@ export default class OrderItem extends wepy.component{
 <style lang="stylus" scoped>
   .item-container
     border-top 10rpx solid #f6f6f6
+    box-shadow 0 2rpx 0 0 rgba(0,0,0,.1), 0 1rpx 1rpx 0 rgba(0,0,0,.2)
 
     .provide-container
       display flex
