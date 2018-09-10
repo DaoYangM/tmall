@@ -1,0 +1,150 @@
+<template>
+  <view>
+    <view class="user">
+      <block wx:if="{{userInfo}}">
+        <view class="user-avatar">
+          <image src="{{userInfo.userInfo.avatarUrl}}" mode="cover"/>
+        </view>
+        <text class="user-name">
+          {{userInfo.userInfo.nickName}}
+        </text>        
+      </block>
+      <block wx:else>
+          <button wx:if="{{!userInfo}}" open-type="getUserInfo" bindgetuserinfo="bindgetUserInfo"> 获取头像昵称 </button>
+      </block>  
+    </view>  
+    <view class="user-behavior">
+      <view class="behavior-head">
+        <text class="behavior-title">我的订单</text>
+        <view>
+          <text class="behavior-all">查看全部</text>
+          <i class="iconfont icon-right"></i>
+        </view>
+      </view>
+      <view class="behavior-container">
+        <view class="behavior">
+          <i class="iconfont icon-pay"></i>
+          <text class="behavior-text">待付款</text>
+        </view>
+        <view class="behavior">
+          <i class="iconfont icon-time"></i>
+          <text class="behavior-text">代发货</text>
+        </view>
+        <view class="behavior">
+          <i class="iconfont icon-deliver"></i>
+          <text class="behavior-text">待收货</text>
+        </view>
+        <view class="behavior">
+          <i class="iconfont icon-evaluate"></i>
+          <text class="behavior-text">待评价</text>
+        </view>
+      </view>
+    </view>    
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class MeInfo extends wepy.component {
+  
+  data = {
+    userInfo: null
+  }
+
+  methods = {
+    bindgetUserInfo: function(e) {
+      console.log("bindgetUserInfo")
+      console.log(e)
+      this.$root.$parent.globalData.userInfo = e.detail.userInfo
+      this.setData({
+        userInfo: e.detail.userInfo,
+      })
+      console.log("this", this.userInfo)
+    }
+  }
+
+  onLoad () {
+    
+    this.userInfo = this.$root.$parent.globalData
+    
+    wx.getSetting({
+      success: function(res){
+        if (res.authSetting['scope.userInfo']) {
+          // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+          wx.getUserInfo({
+            success: function(res) {
+              console.log("getSetting")
+              console.log(res.userInfo)
+            }
+          })
+        }
+      },
+      fail: function(res) {
+        console.log(res)
+      }
+    })
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+  .user
+    height 240rpx
+    width 100%
+    background-color #ffffff
+    display flex
+    align-items center
+    border-bottom 2rpx solid #eee
+
+    .user-avatar
+      margin 0 40rpx
+
+      image 
+        height 150rpx
+        width 150rpx
+        border-radius 100%
+
+    .user-name
+      font-size 36rpx
+      color #666
+      margin-top 40rpx
+      align-self flex-start
+
+  .user-behavior
+    margin-top 10rpx
+    
+    .behavior-head
+      display flex
+      height 100rpx
+      justify-content space-between
+      align-items center
+      font-size 32rpx
+      color #000
+      margin 0 20rpx
+    
+    .behavior-all
+      font-size 26rpx
+      color #666
+    
+    .icon-right
+      color #666
+      margin-left 10rpx
+
+  .behavior-container
+    display flex
+    align-items center
+    padding-bottom 30rpx
+    border-bottom 16rpx solid #eee
+
+    .behavior
+      display flex
+      flex-direction column
+      justify-content space-between
+      align-items center
+      flex 1
+
+      .behavior-text
+        font-size 28rpx
+        color #666
+        margin-top 8rpx
+</style>

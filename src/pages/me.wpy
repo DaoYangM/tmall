@@ -1,0 +1,29 @@
+<template>
+  <me-info></me-info>
+  <index-like></index-like>
+  <commodity></commodity>
+</template>
+
+<script>
+import wepy from 'wepy'
+import MeInfo from '../components/me/me-info'
+import Commodity from '../components/commodity'
+import IndexLike from '../components/index/index-like'
+
+export default class Me extends wepy.page {
+  config = {
+    navigationBarTitleText: "个人中心"
+  }
+
+  components = {
+    'me-info': MeInfo,
+    'commodity': Commodity,
+    'index-like': IndexLike,
+  }
+}
+</script>
+
+<style lang="stylus">
+  page
+    height 100%
+</style>

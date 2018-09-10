@@ -10,7 +10,7 @@
     </view>
     <view class="btn-group">
       <bottom size="" class="btn-cart">加入购物车</bottom>
-      <bottom class="btn-buy">立即购买</bottom>
+      <bottom @tap="goBuy" class="btn-buy">立即购买</bottom>
     </view>
   </view>
 </template>
@@ -18,7 +18,13 @@
 <script>
 import wepy from 'wepy'
 export default class DetailBottomBar extends wepy.component{
-  
+  methods = {
+    goBuy () {
+      wx.navigateTo({
+        url: 'createOrder?id=1'
+      })
+    }
+  }
 }
 </script>
 
