@@ -16,7 +16,7 @@
     <view class="user-behavior">
       <view class="behavior-head">
         <text class="behavior-title">我的订单</text>
-        <view>
+        <view @tap="allOrder">
           <text class="behavior-all">查看全部</text>
           <i class="iconfont icon-right"></i>
         </view>
@@ -60,6 +60,12 @@ export default class MeInfo extends wepy.component {
         userInfo: e.detail.userInfo,
       })
       console.log("this", this.userInfo)
+    },
+
+    allOrder () {
+      wx.navigateTo({
+        url: 'order'
+      })
     }
   }
 
