@@ -1,0 +1,64 @@
+<template>
+  <view class="order-head-container">
+    <view wx:for="{{activeColor}}" wx:key="{{index}}" class="head-item {{item.activated}}" @tap="clickTop('{{index}}')">{{item.title}}</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class OrderHead extends wepy.component {
+  data = {
+    activeColor: [
+      {title: '全部', activated: 'activated'},
+      {title: '待付款', activated: ''},
+      {title: '待发货', activated: ''},
+      {title: '待收货', activated: ''},
+      {title: '待评价', activated: ''},
+    ]
+  }
+  methods = {
+    clickTop (index) {
+      for (let i = 0; i < this.activeColor.length; i++) {
+        if (i === index) {
+          this.activeColor[i].activated = 'activated'
+          
+          this.$emit('fChangeTop', index);
+
+        } else {
+          this.activeColor[i].activated = ''
+        }
+      }
+    }
+  }
+  onLoad () {
+    
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+  .activated
+    border-bottom: 4rpx solid #f50
+    color #ff5500
+
+  .order-head-container
+    display flex
+    width 100%
+    justify-content space-around
+    align-items center
+    position fixed
+    top 0
+    left 0
+    right 0
+    overflow auto
+    z-index 10000
+    background #ffffff
+
+    .head-item
+      height 80rpx
+      line-height 80rpx
+      font-size 28rpx
+      flex 1
+      text-align center
+</style>

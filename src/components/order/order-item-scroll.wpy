@@ -1,0 +1,115 @@
+<template>
+  <view class="order-container">
+
+    <scroll-view class="{{show == '0'? '': 'hiden'}}" scroll-y style="height:99vh;" lower-threshold="100" bindscrolltolower="lower" >
+      <block wx:if="{{ allList === null }}">
+        <empty></empty>
+      </block>
+      <block wx:else>
+        <repeat for="{{allList}}">
+          <order-item :dataSet.sync="item"></order-item>
+        </repeat>        
+      </block> 
+    </scroll-view>
+
+    <scroll-view class="{{show == '1'? '': 'hiden'}}" scroll-y style="height:99vh;" lower-threshold="100" bindscrolltolower="lower" >
+      <block wx:if="{{waitPayList.length == 0}}">
+        <empty></empty>
+      </block>
+      <block wx:else>
+        <repeat for="{{waitPayList}}">
+          <order-item :dataSet.sync="item"></order-item>
+        </repeat>        
+      </block> 
+    </scroll-view>
+
+    <scroll-view class="{{show == '2'? '': 'hiden'}}" scroll-y style="height:100vh;" lower-threshold="100" bindscrolltolower="lower">
+      <view id="green" wx:for="{{30}}" style="background: blue;height:200rpx;border: 2rpx solid #ffffff">{{index}}</view>
+    </scroll-view>
+
+    <scroll-view class="{{show == '3'? '': 'hiden'}}" scroll-y style="height:99vh;" lower-threshold="100" bindscrolltolower="lower" >
+      <block wx:if="{{waitRecepit.length == 0}}">
+        <empty></empty>
+      </block>
+      <block wx:else>
+        <repeat for="{{waitRecepit}}">
+          <order-item :dataSet.sync="item"></order-item>
+        </repeat>        
+      </block> 
+
+    </scroll-view>
+
+    <scroll-view class="{{show == '4'? '': 'hiden'}}" scroll-y style="height:99vh;" lower-threshold="100" bindscrolltolower="lower" >
+      <block wx:if="{{waitComment.length == 0}}">
+        <empty></empty>
+      </block>
+      <block wx:else>
+        <repeat for="{{waitComment}}">
+          <order-item :dataSet.sync="item"></order-item>
+        </repeat>        
+      </block> 
+
+    </scroll-view>
+
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import OrderItem from './order-item'
+import Empty from '../empty'
+
+export default class orderItemScroll extends wepy.component {
+  props = {
+    type: String
+  }
+
+  data = {
+    show: '0',
+    allList: [
+      {id: '0001', provideName: '充值中心', avatarUrl: 'https://gw.alicdn.com/bao/uploaded/i3/399230749/TB2oU7KqFXXXXXvXFXXXXXXXXXX_!!399230749.jpg_270x270q90.jpg', desc:"出口单不粘迷你奶锅汤锅泡面锅米糊锅巧克力马卡龙棒棒糖熬糖糖水", price: '30.08'}
+    ],
+    waitPayList: [],
+    waitRecepit: [],
+    waitComment: [],
+  }
+
+  onLoad () {
+    console.log(this.type); // mytitle
+  }
+
+  methods = {
+    lower () {
+      console.log("lower")
+      this.list = this.list.concat([11, 12, 13])
+    }
+  }
+
+  watch = {
+    type (newValue, oldValue) {
+      this.show = newValue
+      this.$apply()
+    }
+  }
+  
+  components = {
+    'order-item': OrderItem,
+    'empty': Empty
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+
+  .order-container
+    margin-top 80rpx
+    overflow hidden
+
+    .scroll-view-item
+      height 200rpx
+      background green
+      border 2rpx solid white
+
+  .hiden
+    display none  
+</style>

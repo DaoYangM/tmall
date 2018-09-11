@@ -1,0 +1,39 @@
+<template>
+  <view>
+    <order-head></order-head>
+    <order-item-scroll :type.sync="fType"></order-item-scroll>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import OrderHead from '../components/order/order-head'
+import orderItemScroll from '../components/order/order-item-scroll'
+
+export default class Order extends wepy.page {
+  data = {
+    fType: '0'
+  }
+
+  config = {
+    navigationBarTitleText: "订单管理"
+  }
+
+  components = {
+    'order-head': OrderHead,
+    'order-item-scroll': orderItemScroll,
+  }
+
+  events = {
+    fChangeTop (index) {
+      console.log("fa", index)
+      this.fType = index
+    }
+  }
+}
+</script>
+
+<style lang="stylus">
+  page
+    background #f5f5f5
+</style>
