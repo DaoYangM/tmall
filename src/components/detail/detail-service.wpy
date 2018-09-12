@@ -140,7 +140,8 @@ export default class DetailService extends wepy.component {
     animationDataSpecification: {},
     animationDataParameter: {},
 
-    productSpecifyDataSet: []
+    productSpecifyDataSet: [],
+    lastcheckIds: '',
   }
   methods = {
     showService () {
@@ -192,18 +193,57 @@ export default class DetailService extends wepy.component {
 
     selectSpecify (idx, idy) {
       console.log(idx, idy)
+      // checkCount = 0/
+
       for (let index = 0; index < this.productSpecifyDataSet.length; index++) {
         if (idx === index) {
           this.productSpecifyDataSet[index].productSpecifyItemList.forEach((element, indey) => {
             if (indey ===idy ) {
-              element.checked = true
+              if (element.checked)
+                element.checked = false
+              else
+                element.checked = true
             } else {
               element.checked = false
             }
           }); 
         }
       }
-      console.log(this.productSpecifyDataSet)
+
+      let checkCount = 0
+      let checkIds = ''
+
+
+      this.productSpecifyDataSet.forEach(element => {
+        element.productSpecifyItemList.forEach(element2 => {
+          if (element2.checked){
+            checkIds += element2.id
+            checkCount += 1
+          }
+        })
+      })
+      console.log(checkCount, checkIds, this.lastcheckIds)
+      
+
+      if ((checkCount === this.productSpecifyDataSet.length) && (this.lastcheckIds !== checkIds)) {
+        console.log("wxrequest")
+        wepy.request({
+          url: this.$root.$parent.serviceRoute.productDetail + 'specify/pas',
+          method: 'post',
+          data: {
+            productId: 28,
+            specifyIds: checkIds,
+          }
+        })
+        .then(res => {
+          this.productInfo.productPrice = res.data.data.price
+          this.productInfo.productStock = res.data.data.stock
+          console.log(res)
+          this.$apply()
+        })
+      }
+      if (checkCount == 2)
+        this.lastcheckIds = checkIds
     }
   }
 
