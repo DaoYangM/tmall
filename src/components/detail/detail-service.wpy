@@ -63,21 +63,18 @@
           <image class="sku-img" src="https://img.alicdn.com/imgextra/i3/399230749/TB2FYZVl_nI8KJjSszbXXb4KFXa_!!399230749.jpg_120x120q50s150.jpg"/>
         </view>
         <view class="sku-pro-info">
-          <text class="sku-price">￥27.8-35.8</text>
-          <text class="sku-stock">库存259</text>
+          <text class="sku-price">￥{{productInfo.productPrice}}</text>
+          <text class="sku-stock">库存{{productInfo.productStock}}</text>
           <text class="sku-text">请选择: 颜色分类</text>
         </view>
       </view>
       <view class="sku-info">
-        <text class="sku-title">颜色分类</text>
-        <view class="sku-select-group">
-          <text class="normal">中号橙色</text>
-          <text class="normal">中号紫色</text>
-          <text class="normal">加小号蒂芙尼兰</text>
-          <text class="normal">加小号玫紫色</text>
-          <text class="normal">大号玫红</text>
-          <text class="normal">小号橙色</text>
-        </view>
+        <block wx:for="{{productSpecifyDataSet}}" wx:for-index="idx" wx:key="{{item.productSpecify.id}}">
+          <text class="sku-title">{{item.productSpecify.title}}</text>
+          <view class="sku-select-group">
+            <text wx:for="{{item.productSpecifyItemList}}" wx:for-index="idy" @tap="selectSpecify({{idx}}, {{idy}})" wx:for-item="desc" wx:key="{{desc.id}}" class="normal {{ desc.checked? 'checked': ''}}">{{desc.description}}</text>
+          </view>
+        </block>
         <view class="sku-quantity">
           <text class="sku-quantity-title">购买数量</text>
           <view class="sku-input-grounp">
@@ -132,12 +129,18 @@
 <script>
 import wepy from 'wepy'
 export default class DetailService extends wepy.component {
+  props = {
+    productInfo: {}
+  }
+
   data = {
     show: 0,
     maskScreen: false,
     animationDataService: {},
     animationDataSpecification: {},
     animationDataParameter: {},
+
+    productSpecifyDataSet: []
   }
   methods = {
     showService () {
@@ -185,6 +188,22 @@ export default class DetailService extends wepy.component {
           break;
       }
       this.maskScreen = false
+    },
+
+    selectSpecify (idx, idy) {
+      console.log(idx, idy)
+      for (let index = 0; index < this.productSpecifyDataSet.length; index++) {
+        if (idx === index) {
+          this.productSpecifyDataSet[index].productSpecifyItemList.forEach((element, indey) => {
+            if (indey ===idy ) {
+              element.checked = true
+            } else {
+              element.checked = false
+            }
+          }); 
+        }
+      }
+      console.log(this.productSpecifyDataSet)
     }
   }
 
@@ -196,6 +215,13 @@ export default class DetailService extends wepy.component {
     })
 
     this.animation = animation
+
+    wepy.request(this.$root.$parent.serviceRoute.productDetail + '28' + '/specify').then((d) => {
+      this.productSpecifyDataSet = d.data.data
+
+      this.$apply()
+      console.log(this.productSpecifyDataSet)
+    })
   }
 }
 </script>
@@ -375,6 +401,10 @@ export default class DetailService extends wepy.component {
             font-size 24rpx
             margin-right 28rpx
             margin-bottom 20rpx
+
+          .checked
+            background #f50
+            color #ffffff  
 
         .sku-quantity
           display flex

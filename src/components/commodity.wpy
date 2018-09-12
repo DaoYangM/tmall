@@ -1,53 +1,19 @@
 <template>
   <view class="commodity-container">
-    <view class="commodity-item" @tap="detail({{1}})">
-      <view class="item-image-wrap">
-        <image class="item-image" src="https://img.alicdn.com/bao/uploaded/i3/399230749/TB2FYZVl_nI8KJjSszbXXb4KFXa_!!399230749.jpg_300x300q85s150.jpg" />
+    <block wx:for="{{items}}" wx:key="{{index}}" >
+      <view class="commodity-item" @tap="detail({{item.id}})">
+        <view class="item-image-wrap">
+          <image class="item-image" src="{{item.mainImage}}" />
+        </view>
+        <view class="commodity-title-wrap">
+          <text class="commodity-title">{{item.name}}</text>
+        </view>
+        <view class="commodity-price-wrap">
+          <text class="commodity-price"><text class="rmb">￥</text>{{item.price}}</text>
+          <text class="buy-count">{{item.buyCount}}人付款</text>
+        </view>
       </view>
-      <view class="commodity-title-wrap">
-        <text class="commodity-title">[为你推荐]出口单不粘迷你奶锅汤锅泡面锅米糊锅巧克力马卡龙棒棒糖熬糖糖水</text>
-      </view>
-      <view class="commodity-price-wrap">
-        <text class="commodity-price"><text class="rmb">￥</text>1960</text>
-        <text class="buy-count">23人付款</text>
-      </view>
-    </view>
-    <view class="commodity-item">
-      <view class="item-image-wrap">
-        <image class="item-image" src="https://img.alicdn.com/bao/uploaded/i3/399230749/TB2FYZVl_nI8KJjSszbXXb4KFXa_!!399230749.jpg_300x300q85s150.jpg" />
-      </view>
-      <view class="commodity-title-wrap">
-        <text class="commodity-title">[为你推荐]出口单不粘迷你奶锅汤锅泡面锅米糊锅巧克力马卡龙棒棒糖熬糖糖水</text>
-      </view>
-      <view class="commodity-price-wrap">
-        <text class="commodity-price"><text class="rmb">￥</text>1960</text>
-        <text class="buy-count">23人付款</text>
-      </view>
-    </view>
-    <view class="commodity-item">
-      <view class="item-image-wrap">
-        <image class="item-image" src="https://img.alicdn.com/bao/uploaded/i3/399230749/TB2FYZVl_nI8KJjSszbXXb4KFXa_!!399230749.jpg_300x300q85s150.jpg" />
-      </view>
-      <view class="commodity-title-wrap">
-        <text class="commodity-title">[为你推荐]出口单不粘迷你奶锅汤锅泡面锅米糊锅巧克力马卡龙棒棒糖熬糖糖水</text>
-      </view>
-      <view class="commodity-price-wrap">
-        <text class="commodity-price"><text class="rmb">￥</text>1960</text>
-        <text class="buy-count">23人付款</text>
-      </view>
-    </view>
-    <view class="commodity-item">
-      <view class="item-image-wrap">
-        <image class="item-image" src="https://img.alicdn.com/bao/uploaded/i3/399230749/TB2FYZVl_nI8KJjSszbXXb4KFXa_!!399230749.jpg_300x300q85s150.jpg" />
-      </view>
-      <view class="commodity-title-wrap">
-        <text class="commodity-title">[为你推荐]出口单不粘迷你奶锅汤锅泡面锅米糊锅巧克力马卡龙棒棒糖熬糖糖水</text>
-      </view>
-      <view class="commodity-price-wrap">
-        <text class="commodity-price"><text class="rmb">￥</text>1960</text>
-        <text class="buy-count">23人付款</text>
-      </view>
-    </view>
+    </block>
   </view>
 </template>
 
@@ -55,6 +21,10 @@
 import wepy from 'wepy'
 
 export default class Commodity extends wepy.component {
+  data = {
+    items: []
+  }
+
   methods = {
     detail (id) {
       console.log(id)
@@ -63,6 +33,15 @@ export default class Commodity extends wepy.component {
       })
     }
   }
+
+  onLoad () {
+    wepy.request(this.$root.$parent.serviceRoute.indexProducts).then((d) => {
+      this.items = d.data.data.list
+      this.$apply()
+      console.log("items", this.items)
+    })
+  }
+
 }
 </script>
 
@@ -86,7 +65,6 @@ export default class Commodity extends wepy.component {
       .item-image-wrap
         width 100%
         height 70%
-        background red
         .item-image
           width 100%
           height 100%

@@ -15,15 +15,14 @@
 import wepy from 'wepy'
 import 'wepy-async-function'
 
-
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/detail',
+      'pages/index',
       'pages/cart',
       'pages/me',
       'pages/createOrder',
-      'pages/detail',
-      'pages/index',
       'pages/order',
     ],
     window: {
@@ -68,12 +67,22 @@ export default class extends wepy.app {
   }
 
   globalData = {
-    userInfo: null
+    userInfo: null,
+    service: 'http://localhost:8080',
+  }
+
+  service = 'http://localhost:8080'
+
+  serviceRoute = {
+    index: this.service + '/index',
+    indexProducts: this.service + '/products',
+    productDetail: this.service + '/products/', // /products/id
   }
 
   constructor () {
     super()
     this.use('requestfix')
+    this.use('promisify');
   }
 
   onLaunch() {

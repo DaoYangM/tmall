@@ -2,17 +2,17 @@
   <view class="info-container">
     <view class="price-container">
       <text style="font-size: 26rpx; align-self:flex-end;padding-bottom: 5rpx">￥</text>
-      <text class="price-text">27.8</text>
+      <text class="price-text">{{productInfo.productPrice}}</text>
     </view>
     <view class="title-container">
-      <text class="title-text">出口单不粘迷你奶锅汤锅泡面锅米糊锅巧克力马卡龙棒棒糖熬糖糖水</text>
+      <text class="title-text">{{productInfo.productName}}</text>
     </view>
     <view class="details-container">
       <view class="freight">
         <text>快递: </text><text>0.0</text><text>元</text>
       </view>
       <view class="sales-volume">
-        <text>月销量</text><text>253</text><text>笔</text>
+        <text>月销量</text><text>{{productInfo.productBuyCount}}</text><text>笔</text>
       </view>
       <view class="location">
         <text>浙江金华</text>
@@ -24,7 +24,13 @@
 <script>
 import wepy from 'wepy'
 export default class DetailInfo extends wepy.component{
-  
+  props = {
+    productInfo: {}
+  }
+
+  onLoad () {
+    console.log("productInfo", this.productInfo)
+  }
 }
 </script>
 

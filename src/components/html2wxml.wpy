@@ -60,6 +60,7 @@
         try {
           let htmlContent = WxParse.wxParse(this.parserName, this.parserType, this.parserContent || this.props.parserContent.default, this, this.parserPadding)
           this.htmlParserTpl = htmlContent[this.parserName]
+          this.$apply()
         } catch (e) {
           console.warn('kinerHtmlParser:', '没有任何内容需要转换', e)
         }

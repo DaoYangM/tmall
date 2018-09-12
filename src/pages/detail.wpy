@@ -1,12 +1,12 @@
 <template>
   <view class="detail-container">
-    <detail-swiper></detail-swiper>
-    <detail-info></detail-info>
-    <detail-service></detail-service>
+    <detail-swiper :swpierImages.sync="swiperImages"></detail-swiper>
+    <detail-info :productInfo.sync="productInfo"></detail-info>
+    <detail-service :productInfo.sync="productInfo"></detail-service>
     <detail-comment></detail-comment>
     <detail-desc></detail-desc>
     <detail-bottom-bar></detail-bottom-bar>
-    <html2wxml :parserName="name" :parserContent.sync="article"></html2wxml>
+    <html2wxml :parserName="name" :parserContent.sync="productDesc"></html2wxml>
 
   </view>
 </template>
@@ -30,28 +30,32 @@ export default class Detail extends wepy.page {
 
   data = {
     name: 'myHtmlParserKiner',
-    article: `<img class="desc-img" src="https://img.alicdn.com/imgextra/i4/399230749/O1CN011HP56EV6FiS2VB6_!!399230749.jpg_640x0q85s150_.webp">
-    <img class="desc-img" src="https://img.alicdn.com/imgextra/i2/399230749/O1CN011HP56EVf1anFxu8_!!399230749.jpg_640x0q85s150_.webp">
-    <img class="desc-img" src="https://img.alicdn.com/imgextra/i4/399230749/O1CN011HP56DAgQ5t8Hr4_!!399230749.jpg_640x0q85s150_.webp">
-    <img class="desc-img" src="https://img.alicdn.com/imgextra/i2/399230749/O1CN011HP56DqMNKv0hfl_!!399230749.jpg_640x0q85s150_.webp">
-    <img class="desc-img" src="https://img.alicdn.com/imgextra/i3/399230749/O1CN011HP56DqOBYMcZgl_!!399230749.jpg_640x0q85s150_.webp">
-    <img class="desc-img" src="https://img.alicdn.com/imgextra/i4/399230749/O1CN011HP56EV7rQ5mTZ4_!!399230749.jpg_640x0q85s150_.webp">
-    <img class="desc-img" src="https://img.alicdn.com/imgextra/i2/399230749/O1CN011HP56CxgnsrdCEd_!!399230749.jpg_640x0q85s150_.webp">
-    <img class="desc-img" src="https://img.alicdn.com/imgextra/i2/399230749/O1CN011HP56DIxHCb5xzz_!!399230749.jpg_640x0q85s150_.webp">
-    <p class="desc-txt">出口尾单，不是完美品质，会有一些小瑕疵但是不会影响使用，进仓时都是一一检查过的发货之前我们也会再检查一遍追求完美的朋友请慎拍！谢谢！</p>
-    <img class="desc-img" src="https://img.alicdn.com/imgextra/i3/399230749/O1CN011HP56Chgp01CYv4_!!399230749.jpg_640x0q85s150_.webp">
-    <p class="desc-txt">单导流嘴设计，倒出不滴漏，方便卫生大肚造型，加深锅身，有效降低熬糖浆的氧化和空气泡</p>
-    <p class="desc-txt">减少熬焦的几率，更易操作，烘焙熬糖浆的nice小锅</p>
-    <p class="desc-txt">订单本身是土耳其咖啡锅，有4个大小熬糖浆、化黄油巧克力、熬糖浆什么的都可以的做米糊、辅食什么的，量少的时候也是刚好的内双层黑色不粘涂层，外彩色高温烤漆客商及批次不一样，锅身拉胚会有点高度差的一般在&amp;plusmn;1cm左右，这点请注意下</p>
-    <img class="desc-img" src="https://img.alicdn.com/imgextra/i2/399230749/O1CN011HP56BbdfzGshQP_!!399230749.jpg_640x0q85s150_.webp">
-    <p class="desc-txt">我看买家秀里有用不锈钢勺子熬辅食或者米糊的</p>
-    <p class="desc-txt">千万不要！千万不要！千万不要！不粘锅，严禁使用铁制或钢制的厨具洗具，以免损坏涂层！刚开始用个几次，涂层挨得住天天用不锈钢勺铁勺塑料勺在锅里搅拌就跟天天拿去角质膏洗脸一样，会烂脸的o(╯□╰)o建议搭配硅胶搅拌棒，能有效延长不粘锅使用寿命~~PS：熬糖浆时候，请谨慎使用针式温度计直接搅拌！！</p>
-    <img class="desc-img" src="//gw.alicdn.com/tfs/TB1Yo1Js3mTBuNjy1XbXXaMrVXa-1125-960.png_640x0q85s150_.webp">`
+    article: '<img class="lazyImg" src="//img.alicdn.com/imgextra/i1/2616970884/O1CN011IOuZ6sw0xNkpgA_!!2616970884.jpg_1152x1920Q50s50.jpg_.webp" aria-label="商品详情图"><img class="lazyImg" src="//img.alicdn.com/imgextra/i2/2616970884/O1CN011IOuZ8vzVoVREWp_!!2616970884.jpg_1152x1920Q50s50.jpg_.webp" aria-label="商品详情图"><img class="lazyImg" src="//img.alicdn.com/imgextra/i1/2616970884/O1CN011IOuZ92tZXqvEnJ_!!2616970884.jpg_1152x1920Q50s50.jpg_.webp" aria-label="商品详情图">',
+    swiperImages: [],
+    productInfo: {},
+    productDesc: '',
   }
 
   onLoad () {
+    wepy.request(this.$root.$parent.serviceRoute.productDetail + '26').then((d) => {
+      let product = d.data.data
+
+      this.swiperImages = product.subImageList
+      this.productInfo = {
+        productName: product.name,
+        productPrice: product.price,
+        productBuyCount: product.buyCount,
+        productStock: product.stock,
+      }
+ 
+      this.productDesc = product.detail
+      
+
       this.$apply()
       this.$invoke('html2wxml', 'htmlParserNotice')
+
+      console.log(this.productDesc)
+    })
   }
   components = {
     'detail-swiper': DetailSwiper,
@@ -63,9 +67,6 @@ export default class Detail extends wepy.page {
     'html2wxml': html2wxml
   }
 
-  // onLoad (option){
-  //     console.log(option.id)
-  // }
 }
 </script>
 
@@ -79,8 +80,7 @@ export default class Detail extends wepy.page {
   .desc-txt
     font-size 16px
 
-  .desc-img 
+  .lazyImg 
     display block
     width 100%
-    // margin 0 auto
 </style>

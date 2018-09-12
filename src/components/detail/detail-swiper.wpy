@@ -2,7 +2,7 @@
   <view class="head-swiper-container">
     <swiper bindchange="swiperChange" indicator-dots="{{indicatorDots}}"
       autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-      <block wx:for="{{imgUrls}}" wx:key="{{index}}">
+      <block wx:for="{{swpierImages}}" wx:key="{{index}}">
         <swiper-item>
           <image class="head-swiper-image" src="{{item}}" />
         </swiper-item>
@@ -15,6 +15,10 @@
 <script>
 import wepy from 'wepy'
 export default class DetailSwiper extends wepy.component{
+  props = {
+    swpierImages: []
+  }
+
   data = {
     imgUrls: [
       'https://img.alicdn.com/imgextra/i2/399230749/TB2CS75spXXXXXLXFXXXXXXXXXX_!!399230749.jpg_640x640q85s150_.webp',
@@ -33,6 +37,10 @@ export default class DetailSwiper extends wepy.component{
     swiperChange (e) {
       this.currentImageIndex = e.detail.current
     }
+  }
+
+  onLoad () {
+    console.log("swiperImageList", this.swpierImages)
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <view class="order-container">
 
-    <scroll-view class="{{show == '0'? '': 'hiden'}}" scroll-y style="height:99vh;" lower-threshold="100" bindscrolltolower="lower" >
+    <scroll-view class="{{show == '0'? '': 'hiden'}}" scroll-y style="height:94vh;" lower-threshold="100" bindscrolltolower="lower" >
       <block wx:if="{{ allList === null }}">
         <empty></empty>
       </block>
@@ -12,7 +12,7 @@
       </block> 
     </scroll-view>
 
-    <scroll-view class="{{show == '1'? '': 'hiden'}}" scroll-y style="height:99vh;" lower-threshold="100" bindscrolltolower="lower" >
+    <scroll-view class="{{show == '1'? '': 'hiden'}}" scroll-y style="height:94vh;" lower-threshold="100" bindscrolltolower="lower" >
       <block wx:if="{{waitPayList.length == 0}}">
         <empty></empty>
       </block>
@@ -23,11 +23,11 @@
       </block> 
     </scroll-view>
 
-    <scroll-view class="{{show == '2'? '': 'hiden'}}" scroll-y style="height:100vh;" lower-threshold="100" bindscrolltolower="lower">
+    <scroll-view class="{{show == '2'? '': 'hiden'}}" scroll-y style="height:94vh;" lower-threshold="100" bindscrolltolower="lower">
       <view id="green" wx:for="{{30}}" style="background: blue;height:200rpx;border: 2rpx solid #ffffff">{{index}}</view>
     </scroll-view>
 
-    <scroll-view class="{{show == '3'? '': 'hiden'}}" scroll-y style="height:99vh;" lower-threshold="100" bindscrolltolower="lower" >
+    <scroll-view class="{{show == '3'? '': 'hiden'}}" scroll-y style="height:94vh;" lower-threshold="100" bindscrolltolower="lower" >
       <block wx:if="{{waitRecepit.length == 0}}">
         <empty></empty>
       </block>
@@ -39,7 +39,7 @@
 
     </scroll-view>
 
-    <scroll-view class="{{show == '4'? '': 'hiden'}}" scroll-y style="height:99vh;" lower-threshold="100" bindscrolltolower="lower" >
+    <scroll-view class="{{show == '4'? '': 'hiden'}}" scroll-y style="height:94vh;" lower-threshold="100" bindscrolltolower="lower" >
       <block wx:if="{{waitComment.length == 0}}">
         <empty></empty>
       </block>

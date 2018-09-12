@@ -4,7 +4,7 @@
       autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
       <block wx:for="{{imgUrls}}" wx:key="{{index}}">
         <swiper-item>
-          <image class="swiper-img" src="{{item}}"/>
+          <image class="swiper-img" src="{{item.image}}"/>
         </swiper-item>
       </block>
     </swiper>
@@ -15,13 +15,7 @@
 import wepy from 'wepy'
 export default class IndexSwiper extends wepy.component {
   data = {
-    imgUrls: [
-      'https://img.alicdn.com/imgextra/i4/173/TB2r4RXvCcqBKNjSZFgXXX_kXXa_!!173-0-luban.jpg',
-      'https://aecpm.alicdn.com/simba/img/TB1CWf9KpXXXXbuXpXXSutbFXXX.jpg_q50.jpg',
-      'https://aecpm.alicdn.com/simba/img/TB14ab1KpXXXXclXFXXSutbFXXX.jpg_q50.jpg',
-      'https://gw.alicdn.com/imgextra/i3/165/TB2w37XvA7mBKNjSZFyXXbydFXa_!!165-0-lubanu.jpg',
-      'https://gw.alicdn.com/imgextra/TB2hktzuBjTBKNjSZFDXXbVgVXa_!!51-0-lubanu.jpg',
-    ],
+    imgUrls: [],
     indicatorDots: true,
     autoplay: true,
     interval: 5000,
@@ -29,6 +23,13 @@ export default class IndexSwiper extends wepy.component {
     indicatorColor: "rgb(255, 255, 255)",
     indicatorActiveColor: "rgb(255, 80, 0)"
   }
+
+  onLoad () {
+    wepy.request(this.$root.$parent.serviceRoute.index).then((d) => {
+      this.imgUrls = d.data.data
+      this.$apply()
+    })
+  } 
 }
 </script>
 
