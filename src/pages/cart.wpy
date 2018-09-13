@@ -1,5 +1,5 @@
 <template>
-  <cart-item></cart-item>
+  <cart-item :cartItemList.sync="cartItemList" :isLogin.sync="isLogin"></cart-item>
   <car-bottom-bar></car-bottom-bar>
 </template>
 
@@ -16,6 +16,41 @@ export default class Cart extends wepy.page {
   components = {
     'cart-item': CartItem,
     'car-bottom-bar': CartBottomBar,
+  }
+
+  data = {
+    cartItemList: [],
+    isLogin: false
+  }
+
+  onLoad () {
+  }
+
+  onShow () {
+    if (wx.getStorageSync('userMd5') != null) {
+      this.isLogin = true
+      wx.request({
+        
+        url: this.$root.$parent.serviceRoute.cart,
+        header: {
+          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        },      
+        success: (s) => {
+          console.log(s)
+          if (s.statusCode == 200)
+            this.cartItemList = s.data.data.cartItemResponse
+
+          this.$apply()
+        },
+        fail: function(e) {
+          console.log('未登录', e)
+        }
+      })
+    } else {
+      this.isLogin = false
+    } 
+
+    this.$apply()
   }
 }
 </script>

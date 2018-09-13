@@ -48,18 +48,50 @@ import wepy from 'wepy'
 export default class MeInfo extends wepy.component {
   
   data = {
-    userInfo: null
+    userInfo: null,
   }
 
-  methods = {
+  methods = {    
     bindgetUserInfo: function(e) {
-      console.log("bindgetUserInfo")
-      console.log(e)
-      this.$root.$parent.globalData.userInfo = e.detail.userInfo
-      this.setData({
-        userInfo: e.detail.userInfo,
+      let that = this
+
+      wx.login({
+        success: function(res) {
+          if (res.code) {
+            wx.request({
+              url: that.$root.$parent.service +'/wx/login',
+              data: {
+                code: res.code
+              },
+              success: function(s) {
+                wx.setStorageSync('userMd5', s.data)
+      
+                that.$root.$parent.globalData.userInfo = e.detail.userInfo
+                that.setData({
+                  userInfo: e.detail.userInfo,
+                })
+                console.log("this", that.userInfo)
+                that.$apply()
+
+                wx.request({
+                  url: 'http://localhost:8080/wx/info', //仅为示例，并非真实的接口地址
+                  header: {
+                    'Authorization': 'Bearer ' + wx.getStorageSync('userMd5') // 默认值
+                  },
+                  success: function(res) {
+                    console.log(res.data)
+                  }
+                })
+              },
+              fail: function(e) {
+                console.log('fail', e)
+              }
+            })
+          } else {
+            console.log('登录失败！' + res.errMsg)
+          }
+        }
       })
-      console.log("this", this.userInfo)
     },
 
     allOrder () {

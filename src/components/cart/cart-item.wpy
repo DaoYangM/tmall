@@ -1,65 +1,49 @@
 <template>
   <view style="border-top: 20rpx solid rgb(238, 238, 238)">
-    <view wx:if="{{false}}" class="empty-cart">
-      <view class="cart-img-container">
-        <image class="cart-img" src="http://gw.alicdn.com/tfscom/TB1xdQSJFXXXXcuXXXXy7S8WFXX-176-176.png" />
-      </view>
-      <text style="font-size: 28rpx">购物车快饿瘪了T.T</text>
-      <text style="font-size: 26rpx; color:#999; margin: 10rpx 0">主人快给我挑点宝贝吧</text>
-      <button>去逛逛</button>
-    </view>
-    <view wx:else>
-      <view class="cart-item-container">
-        <view class="cart-item-head">
-          <radio style="display: block; margin-left: 20rpx;"/>
-          <i class="iconfont icon-shop"></i>
-          <text class="iconfont" style="font-size: 24rpx">XXX</text>
-          <i class="iconfont icon-right"></i>
+    <block wx:if="{{ isLogin }}">
+      <view wx:if="{{cartItemList.length === 0}}" class="empty-cart">
+        <view class="cart-img-container">
+          <image class="cart-img" src="http://gw.alicdn.com/tfscom/TB1xdQSJFXXXXcuXXXXy7S8WFXX-176-176.png" />
         </view>
-        <view class="cart-item">
-          <image class="item-img" src="https://gw.alicdn.com/bao/uploaded/i3/368939836/TB2awkvcf5TBuNjSspcXXbnGFXa_!!368939836.jpg_200x200q50s150.jpg_.webp" />
-          <view class="item-info">
-            <view class="item-title">
-              美国进口Schiff Move Free 氨基葡萄糖维骨力软骨素200粒正品现货
+        <text style="font-size: 28rpx">购物车快饿瘪了T.T</text>
+        <text style="font-size: 26rpx; color:#999; margin: 10rpx 0">主人快给我挑点宝贝吧</text>
+        <button>去逛逛</button>
+      </view>
+      <view wx:else>
+        <block wx:for="{{cartItemList}}" wx:key="{{index}}">
+          <view class="cart-item-container">
+            <view class="cart-item-head">
+              <radio style="display: block; margin-left: 20rpx;"/>
+              <i class="iconfont icon-shop"></i>
+              <text class="iconfont" style="font-size: 24rpx">XXX</text>
+              <i class="iconfont icon-right"></i>
             </view>
-            <view style="flex: 1"></view>
-            <view style="display: flex;justify-content: space-between">
-              <text class="item-price">￥178</text>
-              <view class="btn-group">
-                <text>-</text>
-                <input value="1" />
-                <text>+</text>
-              </view>
-            </view>    
-          </view>  
-        </view>
-      </view>
-      <view class="cart-item-container">
-        <view class="cart-item-head">
-          <radio style="display: block; margin-left: 20rpx;"/>
-          <i class="iconfont icon-shop"></i>
-          <text class="iconfont" style="font-size: 24rpx">XXX</text>
-          <i class="iconfont icon-right"></i>
-        </view>
-        <view class="cart-item">
-          <image class="item-img" src="https://gw.alicdn.com/bao/uploaded/i3/368939836/TB2awkvcf5TBuNjSspcXXbnGFXa_!!368939836.jpg_200x200q50s150.jpg_.webp" />
-          <view class="item-info">
-            <view class="item-title">
-              美国进口Schiff Move Free 氨基葡萄糖维骨力软骨素200粒正品现货
+            <view class="cart-item">
+              <image class="item-img" src="{{item.productMainImage}}" />
+              <view class="item-info">
+                <view class="item-title">
+                  {{item.productName}}
+                </view>
+                <view style="flex: 1; display:flex;align-items:center; color:#rgb(153, 153, 153);background-color: #f5f5f5;">
+                  {{item.specifyDescItems}}
+                </view>
+                <view style="display: flex;justify-content: space-between">
+                  <text class="item-price">￥{{item.productPrice}}</text>
+                  <view class="btn-group">
+                    <text>-</text>
+                    <input value="1" />
+                    <text>+</text>
+                  </view>
+                </view>    
+              </view>  
             </view>
-            <view style="flex: 1"></view>
-            <view style="display: flex;justify-content: space-between">
-              <text class="item-price">￥178</text>
-              <view class="btn-group">
-                <text>-</text>
-                <input value="1" />
-                <text>+</text>
-              </view>
-            </view>    
-          </view>  
-        </view>
+          </view>
+        </block>
       </view>
-    </view>  
+    </block>
+    <block wx:else>
+      <view>123</view>
+    </block>
   </view>  
 </template>
 
@@ -67,7 +51,30 @@
 import wepy from 'wepy'
 
 export default class CartItem extends wepy.component{
+  props = {
+    cartItemList: [],
+    isLogin: Boolean
+  }
 
+  // onLoad () {
+  //   wx.request({
+      
+  //     url: this.$root.$parent.serviceRoute.cart,
+  //     header: {
+  //       'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+  //     },      
+  //     success: (s) => {
+  //       console.log(s)
+  //       if (s.statusCode == 200)
+  //         this.cartItemList = s.data.data.cartItemResponse
+
+  //       this.$apply()
+  //     },
+  //     fail: function(e) {
+  //       console.log('未登录', e)
+  //     }
+  //   })
+  // }
 }
 </script>
 
@@ -129,7 +136,7 @@ export default class CartItem extends wepy.component{
       border-bottom-right-radius 20rpx
       
       .item-img
-        width 400rpx
+        width 200rpx
         height 200rpx
         margin-left 100rpx
         margin-right 20rpx
