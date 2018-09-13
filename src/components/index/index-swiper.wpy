@@ -1,7 +1,7 @@
 <template>
   <view class="swiper-img-container">
     <swiper indicator-dots="{{indicatorDots}}" indicator-color="{{indicatorColor}}" indicator-active-color="{{indicatorActiveColor}}"
-      autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+      autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="{{circular}}">
       <block wx:for="{{imgUrls}}" wx:key="{{index}}">
         <swiper-item>
           <image class="swiper-img" src="{{item.image}}"/>
@@ -21,7 +21,8 @@ export default class IndexSwiper extends wepy.component {
     interval: 5000,
     duration: 1000,
     indicatorColor: "rgb(255, 255, 255)",
-    indicatorActiveColor: "rgb(255, 80, 0)"
+    indicatorActiveColor: "rgb(255, 80, 0)",
+    circular: true
   }
 
   onLoad () {

@@ -29,7 +29,7 @@ export default class DetailInfo extends wepy.component{
   }
 
   onLoad () {
-    console.log("productInfo", this.productInfo)
+    // console.log("productInfo", this.productInfo)
   }
 }
 </script>

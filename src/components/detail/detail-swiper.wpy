@@ -1,7 +1,7 @@
 <template>
   <view class="head-swiper-container">
     <swiper bindchange="swiperChange" indicator-dots="{{indicatorDots}}"
-      autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+      autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="{{circular}}">
       <block wx:for="{{swpierImages}}" wx:key="{{index}}">
         <swiper-item>
           <image class="head-swiper-image" src="{{item}}" />
@@ -30,7 +30,8 @@ export default class DetailSwiper extends wepy.component{
     autoplay: false,
     interval: 5000,
     duration: 500,
-    currentImageIndex: 0
+    currentImageIndex: 0,
+    circular: true
   }
 
   methods = {
@@ -41,7 +42,9 @@ export default class DetailSwiper extends wepy.component{
 
   onLoad () {
     console.log("swiperImageList", this.swpierImages)
+    console.log(this.$parent)
   }
+
 }
 </script>
 

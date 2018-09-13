@@ -36,25 +36,26 @@ export default class Detail extends wepy.page {
     productDesc: '',
   }
 
-  onLoad () {
-    wepy.request(this.$root.$parent.serviceRoute.productDetail + '26').then((d) => {
+  onLoad (option) {
+    wepy.request(this.$root.$parent.serviceRoute.productDetail + option.id).then((d) => {
       let product = d.data.data
 
       this.swiperImages = product.subImageList
       this.productInfo = {
+        productId: product.id,
         productName: product.name,
         productPrice: product.price,
         productBuyCount: product.buyCount,
         productStock: product.stock,
+        productImage: product.mainImage,
       }
  
       this.productDesc = product.detail
-      
+
+      console.log(this.swiperImages)
 
       this.$apply()
       this.$invoke('html2wxml', 'htmlParserNotice')
-
-      console.log(this.productDesc)
     })
   }
   components = {
@@ -79,6 +80,11 @@ export default class Detail extends wepy.page {
 
   .desc-txt
     font-size 16px
+
+  .desc-img
+
+    display block
+    width 100%
 
   .lazyImg 
     display block

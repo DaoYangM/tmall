@@ -60,7 +60,7 @@
     <view animation="{{animationDataSpecification}}" class="mask-menu">
       <view class="sku-pro">
         <view class="sku-img-container">
-          <image class="sku-img" src="https://img.alicdn.com/imgextra/i3/399230749/TB2FYZVl_nI8KJjSszbXXb4KFXa_!!399230749.jpg_120x120q50s150.jpg"/>
+          <image class="sku-img" src="{{productInfo.productImage}}"/>
         </view>
         <view class="sku-pro-info">
           <text class="sku-price">￥{{productInfo.productPrice}}</text>
@@ -78,14 +78,14 @@
         <view class="sku-quantity">
           <text class="sku-quantity-title">购买数量</text>
           <view class="sku-input-grounp">
-            <button class="sku-input-minus" size="mini">-</button>
-            <input value="1"/>
-            <button class="sku-input-plus" size="mini">+</button>
+            <button class="sku-input-minus" size="mini" @tap="btnMinus" disabled="{{btnMinusDisable}}">-</button>
+            <input bindinput="inputInput" value="{{quantity}}"/>
+            <button class="sku-input-plus" size="mini" @tap="btnPlus" disabled="{{btnPlusDisable}}">+</button>
           </view>
         </view>
       </view>
       <view class="sku-button-group">
-        <button class="addcart" @tap="hideModal('{{show}}')">加入购物车</button>
+        <button class="addcart" @tap="hideModal('{{show}}')" >加入购物车</button>
         <button class="gobuy" @tap="hideModal('{{show}}')">立即购买</button>
       </view>
     </view>
@@ -94,30 +94,12 @@
         <text>产品参数</text>
       </view>
       <view class="base-info-list">
-        <view class="base-info-item param-item">
-          <text class="param-name">品牌</text>
-          <view text class="param-value"><text>尾单</text></view>
-        </view>
-        <view class="base-info-item param-item">
-          <text class="param-name">型号</text>
-          <view text class="param-value"><text>8</text></view>
-        </view>
-        <view class="base-info-item param-item">
-          <text class="param-name">颜色分类</text>
-          <view class="param-value">中号橙色,中号紫色,加小号蒂芙尼兰,加小号玫紫色,大号玫红,小号橙色,提示：不含盖子与锅架！,小号紫色,大号红色,中号玫红色,中号嫩绿色,加小号玫红,中号玫紫色,中号黑色,加小号红色,加小号橙色,中号西瓜红,大号黑色,加小号黑色,小号红色,大号玫紫色,中号红色,加小号磨砂蓝,中号绿色</view>
-        </view>
-        <view class="base-info-item param-item">
-          <text class="param-name">材质</text>
-          <view text class="param-value"><text>铝合金</text></view>
-        </view>
-        <view class="base-info-item param-item">
-          <text class="param-name">锅底类型</text>
-          <view text class="param-value"><text>单底</text></view>
-        </view>
-        <view class="base-info-item param-item">
-          <text class="param-name">产地</text>
-          <view text class="param-value"><text>中国大陆</text></view>
-        </view>
+        <block wx:for="{{productParameterDataSet}}" wx:key="{{index}}">
+          <view class="base-info-item param-item">
+            <text class="param-name">{{item.parameterName}}</text>
+            <view text class="param-value"><text>{{item.parameterValue}}</text></view>
+          </view>
+        </block>
       </view>
       <view class="dialog-button-group">
         <button class="btn-close" @tap="hideModal('{{show}}')">完成</button>
@@ -141,7 +123,13 @@ export default class DetailService extends wepy.component {
     animationDataParameter: {},
 
     productSpecifyDataSet: [],
+    productParameterDataSet: [],
+
     lastcheckIds: '',
+
+    quantity: 1,
+    btnMinusDisable: true,
+    btnPlusDisable: false,
   }
   methods = {
     showService () {
@@ -231,7 +219,7 @@ export default class DetailService extends wepy.component {
           url: this.$root.$parent.serviceRoute.productDetail + 'specify/pas',
           method: 'post',
           data: {
-            productId: 28,
+            productId: this.productInfo.productId,
             specifyIds: checkIds,
           }
         })
@@ -244,6 +232,44 @@ export default class DetailService extends wepy.component {
       }
       if (checkCount == 2)
         this.lastcheckIds = checkIds
+    },
+
+    btnMinus () {
+      if (this.quantity === 1) {
+        this.btnMinusDisable = true
+        this.btnPlusDisable = false
+      } else 
+        this.quantity -= 1
+      this.$apply()
+    },
+
+    btnPlus () {
+      if (this.quantity === this.productInfo.productStock) {
+        this.btnPlusDisable = true
+      }
+      else {
+        this.quantity += 1
+        this.btnMinusDisable = false
+      }
+
+      this.$apply()
+    },
+
+    inputInput (e) {
+      console.log(this.productInfo.productStock)
+
+      if (e.detail.value > this.productInfo.productStock) {
+        console.log("input newValue", e.detail.value, "stock ", this.productInfo.productStock)
+        
+        this.quantity = parseInt(this.productInfo.productStock)
+        
+        return this.productInfo.productStock
+
+      } else
+        this.quantity = parseInt(e.detail.value)
+      
+      this.$apply()
+      console.log("quantity", this.quantity)
     }
   }
 
@@ -255,13 +281,23 @@ export default class DetailService extends wepy.component {
     })
 
     this.animation = animation
+  }
 
-    wepy.request(this.$root.$parent.serviceRoute.productDetail + '28' + '/specify').then((d) => {
-      this.productSpecifyDataSet = d.data.data
+  watch = {
+    productInfo (newValue, oldValue) {
+      console.log(newValue)
+
+      wepy.request(this.$root.$parent.serviceRoute.productDetail + this.productInfo.productId + '/specify').then((d) => {
+        this.productSpecifyDataSet = d.data.data
+      })
+
+      wepy.request(this.$root.$parent.serviceRoute.productDetail + this.productInfo.productId + '/parameter').then((d) => {
+        this.productParameterDataSet = d.data.data
+      })
 
       this.$apply()
-      console.log(this.productSpecifyDataSet)
-    })
+
+    }
   }
 }
 </script>
@@ -339,7 +375,7 @@ export default class DetailService extends wepy.component {
         background #ffffff
         color rgb(153, 153, 153)
         font-size 28rpx
-        // overflow auto
+        overflow auto
 
         .base-info-item
           padding 20rpx
@@ -350,7 +386,6 @@ export default class DetailService extends wepy.component {
             color #999
             font-size 30rpx
             align-self flex-start
-            // word-break break-word
 
           .param-value
             display inline-block
@@ -379,6 +414,7 @@ export default class DetailService extends wepy.component {
         align-items flex-end
         padding 20rpx
         background #ffffff
+
 
         .btn-close
           width 100%
