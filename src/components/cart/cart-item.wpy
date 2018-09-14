@@ -13,7 +13,7 @@
         <block wx:for="{{cartItemList}}" wx:key="{{index}}">
           <view class="cart-item-container">
             <view class="cart-item-head">
-              <radio style="display: block; margin-left: 20rpx;"/>
+              <radio @tap="clickSelect({{item.productId}}, {{item.productChecked}})" style="display: block; margin-left: 20rpx;" checked="{{ item.productChecked == 1}}" />
               <i class="iconfont icon-shop"></i>
               <text class="iconfont" style="font-size: 24rpx">XXX</text>
               <i class="iconfont icon-right"></i>
@@ -24,31 +24,36 @@
                 <view class="item-title">
                   {{item.productName}}
                 </view>
-                <view style="flex: 1; display:flex;align-items:center; color:#rgb(153, 153, 153);background-color: #f5f5f5;">
-                  {{item.specifyDescItems}}
+                <view style="width:auto;display:flex;align-items:center;">
+                  <text style="display:inline-block; margin-right: 20rpx">类别:</text>{{item.specifyDescItems}}
                 </view>
                 <view style="display: flex;justify-content: space-between">
                   <text class="item-price">￥{{item.productPrice}}</text>
                   <view class="btn-group">
-                    <text>-</text>
-                    <input value="1" />
-                    <text>+</text>
+                    <text @tap="clickChangeQuantity({{item.productId}}, {{item.quantity}}, {{item.productStock}} ,minus)">-</text>
+                    <input bindinput="inputInput(({{item.productId}}, {{item.productStock}}, {{item.quantity}})" bindblur="inputBlur({{item.productId}}, {{item.productStock}}, {{item.quantity}})" value="{{item.quantity}}" />
+                    <text @tap="clickChangeQuantity({{item.productId}}, {{item.quantity}}, {{item.productStock}} ,plus)">+</text>
                   </view>
                 </view>    
               </view>  
             </view>
           </view>
+          <cart-bottom-bar></cart-bottom-bar>
         </block>
       </view>
     </block>
     <block wx:else>
-      <view>123</view>
+      <view class="need-login">
+        <text>需要登陆后才能访问</text>
+        <button @tap="switchLogin">登录</button>
+      </view>
     </block>
   </view>  
 </template>
 
 <script>
 import wepy from 'wepy'
+import CartBottomBar from './cart-bottom-bar'
 
 export default class CartItem extends wepy.component{
   props = {
@@ -56,29 +61,174 @@ export default class CartItem extends wepy.component{
     isLogin: Boolean
   }
 
-  // onLoad () {
-  //   wx.request({
-      
-  //     url: this.$root.$parent.serviceRoute.cart,
-  //     header: {
-  //       'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
-  //     },      
-  //     success: (s) => {
-  //       console.log(s)
-  //       if (s.statusCode == 200)
-  //         this.cartItemList = s.data.data.cartItemResponse
+  components = {
+    'cart-bottom-bar': CartBottomBar
+  }
 
-  //       this.$apply()
-  //     },
-  //     fail: function(e) {
-  //       console.log('未登录', e)
-  //     }
-  //   })
-  // }
+  data = {
+    route: {}
+  }
+
+  methods = {
+    switchLogin () {
+      wx.switchTab({
+        url: "me"
+      });
+    },
+
+    clickSelect (index, check) {
+
+      let rOj = {
+        url: this.route.cartItemSelect + index,
+        method: "PUT",
+        header: {
+          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        },
+        success: (s) => {
+          if (s.statusCode == 200)
+            this.cartItemList = s.data.data.cartItemResponse
+
+          this.$apply()
+        },
+        fail: function(e) {
+          console.log('未登录', e)
+        }
+      }
+
+      console.log('check', check)
+      if (check == 1)
+        rOj.url = this.route.cartItemUnselected + index
+
+      wx.request(rOj)
+    },
+
+    clickChangeQuantity (productId, quantity, stock, type) {
+      
+      if (type === 'plus') {
+        if (quantity === stock) {
+          wx.showToast({
+            title: "库存不足",
+            icon: "none"
+          })
+
+          return;
+
+        } else {
+          quantity += 1
+
+        }
+      } else {
+        if (quantity === 1) {
+          wx.showToast({
+            title: "不能再少了",
+            icon: "none"
+          })
+
+          return;
+
+        } else {
+          quantity -= 1
+
+        }
+      }
+
+      let rOj = {
+        url: this.route.cart,
+        method: "PUT",
+        data: {
+          "productId": productId,
+          "count": quantity
+        },
+        header: {
+          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        },
+        success: (s) => {
+          if (s.statusCode == 200)
+            this.cartItemList = s.data.data.cartItemResponse
+
+          this.$apply()
+        },
+        fail: function(e) {
+          console.log('未登录', e)
+        }
+      }
+      wx.request(rOj)
+    },
+
+    inputConfirm () {
+      console.log("confirm")
+    },
+
+    inputBlur (productId, stock, quantity, event) {
+      let newQuantity = parseInt(event.detail.value)
+      
+      if (newQuantity > stock) {
+        wx.showToast({
+          title: "库存不足",
+          icon: "none"
+        })
+      } else {
+        let rOj = {
+          url: this.route.cart,
+          method: "PUT",
+          data: {
+            "productId": productId,
+            "count": newQuantity
+          },
+          header: {
+            'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+          },
+          success: (s) => {
+            if (s.statusCode == 200)
+              this.cartItemList = s.data.data.cartItemResponse
+
+            this.$apply()
+          },
+          fail: function(e) {
+            console.log('未登录', e)
+          }
+        }
+        wx.request(rOj)        
+      }
+    },
+    inputInput (productId, stock, quantity, event) {
+      let newQuantity = parseInt(event.detail.value)
+      
+      if (newQuantity > stock) {
+        wx.showToast({
+          title: "库存不足",
+          icon: "none"
+        })
+        return stock
+      }
+    }
+  }
+
+  onLoad () {
+    this.route = this.$root.$parent.serviceRoute
+  }
 }
 </script>
 
 <style lang="stylus" scoped>
+  .need-login
+    width 100%
+    height 100vh
+    display flex
+    flex-direction column
+    align-items center
+    justify-content center
+    position fixed
+    bottom 0
+    left 0
+    z-index 110
+
+    button
+      width 200rpx
+      margin-top 20rpx
+      color #ffffff
+      background #f50
+
   .empty-cart
     width 100%
     height 800rpx

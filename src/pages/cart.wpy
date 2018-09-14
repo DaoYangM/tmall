@@ -1,6 +1,5 @@
 <template>
   <cart-item :cartItemList.sync="cartItemList" :isLogin.sync="isLogin"></cart-item>
-  <car-bottom-bar></car-bottom-bar>
 </template>
 
 <script>

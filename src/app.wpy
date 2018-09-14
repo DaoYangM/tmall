@@ -18,11 +18,11 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/cart',
       'pages/me',
       'pages/order',
       'pages/index',
       'pages/detail',
-      'pages/cart',
       'pages/createOrder',
     ],
     window: {
@@ -79,6 +79,8 @@ export default class extends wepy.app {
     indexProducts: this.service + '/products',
     productDetail: this.service + '/products/', // /products/id
     cart: this.service + '/cart',
+    cartItemSelect: this.service + '/cart/select/',
+    cartItemUnselected: this.service + '/cart/unselected/',
   }
 
   constructor () {
@@ -89,7 +91,7 @@ export default class extends wepy.app {
 
   onLaunch() {
     this.testAsync()
-    wx.setStorageSync('userMd5', null)
+    // wx.setStorageSync('userMd5', null)
   }
 
   sleep (s) {
