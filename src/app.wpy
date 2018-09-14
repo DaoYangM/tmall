@@ -81,6 +81,8 @@ export default class extends wepy.app {
     cart: this.service + '/cart',
     cartItemSelect: this.service + '/cart/select/',
     cartItemUnselected: this.service + '/cart/unselected/',
+    cartSelectAll: this.service + '/cart/selects',
+    cartUnselectAll: this.service + '/cart/unselects',
   }
 
   constructor () {

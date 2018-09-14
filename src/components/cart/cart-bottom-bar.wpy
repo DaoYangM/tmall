@@ -1,11 +1,14 @@
 <template>
   <view class="cart-bottom-container">
     <view class="select-all">
-      <radio />
+      <radio @tap="allCheck"  checked="{{allChecked}}"/>
       <text>全选</text>
     </view>
     <view class="finish-all">
-      <view style="font-size: 28rpx">合计: <text style="color:#f50">￥ 0.00</text></view>
+      <view style="font-size: 28rpx;display:flex">
+        <text> 合计: </text>
+        <text style="color:#f50">￥{{totalPrice}}</text>
+      </view>
       <button>结算</button>
     </view>
 
@@ -15,7 +18,26 @@
 <script>
 import wepy from 'wepy'
 export default class CartBottomBar extends wepy.component{
+  data = {
+    allChecked: false
+  }
 
+  props = {
+    totalPrice: Number
+  }
+
+  onLoad () {
+    console.log(this.$parent)
+  }
+
+  methods = {
+    allCheck () {
+      this.allChecked = !this.allChecked
+      this.$apply()
+
+      this.$emit('allCheck', this.allChecked)
+    }
+  }
 }
 </script>
 

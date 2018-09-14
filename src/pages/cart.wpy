@@ -1,5 +1,5 @@
 <template>
-  <cart-item :cartItemList.sync="cartItemList" :isLogin.sync="isLogin"></cart-item>
+  <cart-item :cartDataSet.sync="cartDataSet" :isLogin.sync="isLogin"></cart-item>
 </template>
 
 <script>
@@ -18,7 +18,7 @@ export default class Cart extends wepy.page {
   }
 
   data = {
-    cartItemList: [],
+    cartDataSet: {},
     isLogin: false
   }
 
@@ -29,7 +29,6 @@ export default class Cart extends wepy.page {
     if (wx.getStorageSync('userMd5') != null) {
       this.isLogin = true
       wx.request({
-        
         url: this.$root.$parent.serviceRoute.cart,
         header: {
           'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
@@ -37,7 +36,7 @@ export default class Cart extends wepy.page {
         success: (s) => {
           console.log(s)
           if (s.statusCode == 200)
-            this.cartItemList = s.data.data.cartItemResponse
+            this.cartDataSet = s.data.data
 
           this.$apply()
         },

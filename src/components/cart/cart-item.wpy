@@ -10,36 +10,50 @@
         <button>去逛逛</button>
       </view>
       <view wx:else>
-        <block wx:for="{{cartItemList}}" wx:key="{{index}}">
-          <view class="cart-item-container">
-            <view class="cart-item-head">
-              <radio @tap="clickSelect({{item.productId}}, {{item.productChecked}})" style="display: block; margin-left: 20rpx;" checked="{{ item.productChecked == 1}}" />
-              <i class="iconfont icon-shop"></i>
-              <text class="iconfont" style="font-size: 24rpx">XXX</text>
-              <i class="iconfont icon-right"></i>
-            </view>
-            <view class="cart-item">
-              <image class="item-img" src="{{item.productMainImage}}" />
-              <view class="item-info">
-                <view class="item-title">
-                  {{item.productName}}
+        <view class="cart-item-container">
+          <block wx:for="{{cartDataSet.cartItemResponse}}" wx:key="{{index}}">
+            <view style="background:#ffffff; margin-top:20rpx;border-radius:30rpx;margin:20rpx 20rpx">
+              <view class="cart-item-head">
+                <view style="display:flex; align-items:center">
+                  <radio @tap="clickSelect({{item.productId}}, {{item.productChecked}})" style="display: block; margin-left: 20rpx;" checked="{{ item.productChecked == 1}}" />
+                  <i class="iconfont icon-shop"></i>
+                  <text class="iconfont" style="font-size: 24rpx">XXX</text>
+                  <i class="iconfont icon-right"></i>
                 </view>
-                <view style="width:auto;display:flex;align-items:center;">
-                  <text style="display:inline-block; margin-right: 20rpx">类别:</text>{{item.specifyDescItems}}
-                </view>
-                <view style="display: flex;justify-content: space-between">
-                  <text class="item-price">￥{{item.productPrice}}</text>
-                  <view class="btn-group">
-                    <text @tap="clickChangeQuantity({{item.productId}}, {{item.quantity}}, {{item.productStock}} ,minus)">-</text>
-                    <input bindinput="inputInput(({{item.productId}}, {{item.productStock}}, {{item.quantity}})" bindblur="inputBlur({{item.productId}}, {{item.productStock}}, {{item.quantity}})" value="{{item.quantity}}" />
-                    <text @tap="clickChangeQuantity({{item.productId}}, {{item.quantity}}, {{item.productStock}} ,plus)">+</text>
+                <block wx:if="{{item.productChecked == 1}}">
+                  <view @tap="clickDel({{item.productId}})" class="del">
+                    <text>删除</text><i class="iconfont icon-delete"></i>
                   </view>
-                </view>    
-              </view>  
+                </block>  
+              </view>
+              <view class="cart-item">
+                <image class="item-img" src="{{item.productMainImage}}" />
+                <view class="item-info">
+                  <view class="item-title">
+                    {{item.productName}}
+                  </view>
+                  <view style="width:auto;display:flex;align-items:center;">
+                    <text style="display:inline-block; margin-right: 20rpx">类别:</text>{{item.specifyDescItems}}
+                  </view>
+                  <view style="display: flex;justify-content: space-between">
+                    <text class="item-price">￥{{item.productPrice}}</text>
+                    <view class="btn-group">
+                      <text @tap="clickChangeQuantity({{item.productId}}, {{item.quantity}}, {{item.productStock}} ,minus)">-</text>
+                      <input bindinput="inputInput(({{item.productId}}, {{item.productStock}}, {{item.quantity}})" bindblur="inputBlur({{item.productId}}, {{item.productStock}}, {{item.quantity}})" value="{{item.quantity}}" />
+                      <text @tap="clickChangeQuantity({{item.productId}}, {{item.quantity}}, {{item.productStock}} ,plus)">+</text>
+                    </view>
+                  </view>    
+                </view>  
+              </view>
             </view>
+          </block>
+        </view>
+        <block wx:if="{{checkCount > 1}}">
+          <view class="del-all">
+            <button @tap="delAllSelect">删除选中</button>
           </view>
-          <cart-bottom-bar></cart-bottom-bar>
         </block>
+        <cart-bottom-bar :totalPrice.sync="totalPrice"></cart-bottom-bar>
       </view>
     </block>
     <block wx:else>
@@ -57,6 +71,7 @@ import CartBottomBar from './cart-bottom-bar'
 
 export default class CartItem extends wepy.component{
   props = {
+    cartDataSet: {},
     cartItemList: [],
     isLogin: Boolean
   }
@@ -66,7 +81,9 @@ export default class CartItem extends wepy.component{
   }
 
   data = {
-    route: {}
+    route: {},
+    totalPrice: 0,
+    checkCount: 0,
   }
 
   methods = {
@@ -85,9 +102,9 @@ export default class CartItem extends wepy.component{
           'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
         },
         success: (s) => {
-          if (s.statusCode == 200)
-            this.cartItemList = s.data.data.cartItemResponse
-
+          if (s.statusCode == 200) {
+            this.cartDataSet = s.data.data
+          }
           this.$apply()
         },
         fail: function(e) {
@@ -144,7 +161,7 @@ export default class CartItem extends wepy.component{
         },
         success: (s) => {
           if (s.statusCode == 200)
-            this.cartItemList = s.data.data.cartItemResponse
+            this.cartDataSet = s.data.data
 
           this.$apply()
         },
@@ -153,10 +170,6 @@ export default class CartItem extends wepy.component{
         }
       }
       wx.request(rOj)
-    },
-
-    inputConfirm () {
-      console.log("confirm")
     },
 
     inputBlur (productId, stock, quantity, event) {
@@ -180,7 +193,7 @@ export default class CartItem extends wepy.component{
           },
           success: (s) => {
             if (s.statusCode == 200)
-              this.cartItemList = s.data.data.cartItemResponse
+              this.cartDataSet = s.data.data
 
             this.$apply()
           },
@@ -201,6 +214,88 @@ export default class CartItem extends wepy.component{
         })
         return stock
       }
+    },
+
+    clickDel (productId) {
+      let rOj = {
+        url: this.route.cart + '/' + productId,
+        method: "DELETE",
+        header: {
+          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        },
+        success: (s) => {
+          if (s.statusCode == 200)
+            this.cartDataSet = s.data.data
+
+          this.$apply()
+        },
+        fail: function(e) {
+          console.log('未登录', e)
+        }
+      }
+      wx.request(rOj) 
+    },
+
+    delAllSelect () {
+      let rOj = {
+        url: this.route.cart,
+        method: "DELETE",
+        header: {
+          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        },
+        success: (s) => {
+          if (s.statusCode == 200)
+            this.cartDataSet = s.data.data
+
+          this.$apply()
+        },
+        fail: function(e) {
+          console.log('未登录', e)
+        }
+      }
+      wx.request(rOj) 
+    },
+  }
+
+  events = {
+    'allCheck': (allChecked, $event) => {        
+        let rOj = {
+          url: this.route.cartSelectAll,
+          method: "PUT",
+          header: {
+            'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+          },
+          success: (s) => {
+            if (s.statusCode == 200)
+              this.cartDataSet = s.data.data
+
+            this.$apply()
+          },
+          fail: function(e) {
+            console.log('未登录', e)
+          }
+        }
+
+        if (!allChecked) {
+          rOj.url = this.route.cartUnselectAll
+        }
+
+        wx.request(rOj)
+    }
+  }
+
+  watch = {
+    cartDataSet (newValue, oldValue) {
+      this.checkCount = 0
+      this.totalPrice = newValue.cartTotalPrice
+      
+      newValue.cartItemResponse.forEach(element => {
+        if (element.productChecked == 1)
+          this.checkCount += 1
+      })
+      
+      this.$apply()
+      console.log(this.totalPrice)
     }
   }
 
@@ -264,7 +359,6 @@ export default class CartItem extends wepy.component{
 
   .cart-item-container
     border-bottom 20rpx solid rgb(238, 238, 238)
-    background #ffffff
     border-radius 20rpx
 
 
@@ -273,18 +367,26 @@ export default class CartItem extends wepy.component{
       align-items center
       color #666
       margin 10rpx 0
+      justify-content space-between
+      margin-top 20rpx
 
-      .iconfont
-        margin-left 20rpx
+      .icon-shop
+        margin 20rpx
+      
+      .del
+        display flex
+        align-items center
+        color: red
+        font-size 28rpx
         display inline-block
+        margin-right: 20rpx
 
     .cart-item
       display flex
       align-items center
       margin-bottom 20rpx
-      border-bottom-left-radius 20rpx
-      border-bottom-right-radius 20rpx
-      
+      padding-bottom 20rpx
+
       .item-img
         width 200rpx
         height 200rpx
@@ -324,4 +426,13 @@ export default class CartItem extends wepy.component{
             font-size 50rpx
             border 2rpx solid #f6f6f6
             text-align center
+
+  .del-all
+    position fixed
+    bottom 140rpx
+    left 30rpx
+    
+    button
+      background #f50
+      color #ffffff
 </style>
