@@ -1,8 +1,8 @@
 <template>
   <view>
     <wxaddress></wxaddress>
-    <order-item></order-item>
-    <order-bottom></order-bottom>
+    <order-item :productInfo.sync="productInfo" :specifyDesItems.sync="specifyDesItems"></order-item>
+    <order-bottom :totalPrice.sync="totalPrice" :buyCount.sync="buyCount"></order-bottom>
   </view>
 
 </template>
@@ -22,6 +22,52 @@ export default class CreateOrder extends wepy.page{
     'wxaddress': WxAddress,
     'order-item': OrderItem,
     'order-bottom': OrderBottom,
+  }
+
+  data = {
+    productInfo: {},
+    totalPrice: 0,
+    buyCount: 0,
+    specifyDesItems: []
+  }
+
+  onLoad (option) {
+    
+    console.log("ids" + option.productId, option.pasId, option.count)
+    // let productId = option.productId
+    // let pasId = option.pasId
+    let productId = option.productId
+    let pasId =  option.pasId
+    let count = option.count
+    let price = option.price
+    let stock = option.stock
+
+    wepy.request(this.$root.$parent.serviceRoute.productDetail + productId).then((d) => {
+      let product = d.data.data
+
+      this.productInfo = {
+        productId: product.id,
+        productName: product.name,
+        productImage: product.mainImage,
+        'pasId': pasId,
+        'count': count,
+        'price': price,
+        'stock': stock,
+      }
+
+      this.totalPrice = Math.floor(parseFloat(price*100 * count)) / 100;
+      this.buyCount = count
+
+      this.$apply()
+    })
+
+    if (pasId) {
+      wepy.request(this.$root.$parent.serviceRoute.productDetail + productId + '/specify/' + pasId).then((d) => {
+        this.specifyDesItems = d.data.data
+        console.log("speci", this.specifyDesItems)
+        this.$apply()
+      })
+    }
   }
 }
 </script>

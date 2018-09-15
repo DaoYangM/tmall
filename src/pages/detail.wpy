@@ -5,7 +5,7 @@
     <detail-service :productInfo.sync="productInfo"></detail-service>
     <detail-comment></detail-comment>
     <detail-desc></detail-desc>
-    <detail-bottom-bar></detail-bottom-bar>
+    <detail-bottom-bar :allChecked.sync="allChecked" :isFavorite.sync="isFavorite" :productInfo.sync="productInfo"></detail-bottom-bar>
     <html2wxml :parserName="name" :parserContent.sync="productDesc"></html2wxml>
 
   </view>
@@ -34,6 +34,8 @@ export default class Detail extends wepy.page {
     swiperImages: [],
     productInfo: {},
     productDesc: '',
+    allChecked: false,
+    isFavorite: false,
   }
 
   onLoad (option) {
@@ -57,6 +59,17 @@ export default class Detail extends wepy.page {
       this.$apply()
       this.$invoke('html2wxml', 'htmlParserNotice')
     })
+
+    wepy.request({
+      url: this.$root.$parent.serviceRoute.favorite + option.id,
+      header: {
+      'Authorization': 'Bearer ' + wx.getStorageSync('userMd5')
+      }}).then((d) => {
+      this.isFavorite = d.data.data
+      this.$apply()
+      console.log("isFavorite", this.isFavorite)
+    })
+
   }
   components = {
     'detail-swiper': DetailSwiper,
@@ -68,6 +81,11 @@ export default class Detail extends wepy.page {
     'html2wxml': html2wxml
   }
 
+  events = {
+    allSpecifyCheck (res) {
+      this.allChecked = res
+    }
+  }
 }
 </script>
 

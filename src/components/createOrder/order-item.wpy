@@ -6,23 +6,28 @@
     </view>
     <view class="item-info">
       <view class="info-img-container">
-        <image class="provide-avatar" src="https://gw.alicdn.com/bao/uploaded/i3/399230749/TB2oU7KqFXXXXXvXFXXXXXXXXXX_!!399230749.jpg_270x270q90.jpg"/>
+        <image class="provide-avatar" src="{{productInfo.productImage}}"/>
       </view>
       <view class="info-info">
-        <view class="info-title" style="margin: 18rpx">
-          出口单不粘迷你奶锅汤锅泡面锅米糊锅巧克力马卡龙棒棒糖熬糖糖水
+        <view class="info-title" style="color: rgb(102, 102, 102);font-size:28rpx;  ">
+          {{productInfo.productName}}
         </view>
-        <view class="info-price" style="color: #f50">
-          <text>￥</text><text>30.80</text>/ 件
+        <view class="info-specify" style="">
+          <view>颜色分类 <text>{{specifyDesItems}}</text></view>
+          <text style="color: #F5A623">发货时间: 卖家承诺72小时</text>
         </view>
       </view>
+      <view class="info-price">
+        <text>￥</text><text>{{productInfo.price}}</text>
+        <view>x{{productInfo.count}}</view>
+      </view>  
     </view>
     <view class="btn-group-container">
       <view class="btn-desc">购买数量</view>
       <view class="btn-gorup">
-        <button size="mini" plain="true">-</button>
-        <input value="1" />
-        <button size="mini" plain="true">+</button>
+        <button @tap="clickMinus" disabled="{{btnMinus}}" size="mini" plain="true">-</button>
+        <input value="{{productInfo.count}}" />
+        <button @tap="clickPlus" disabled="{{btnPlus}}" size="mini" plain="true">+</button>
       </view>
     </view>
     <view class="btn-group-container">
@@ -47,7 +52,50 @@
 import wepy from 'wepy'
 
 export default class OrderItem extends wepy.component{
+  props = {
+    productInfo: {},
+    specifyDesItems: []
+  }
 
+  data = {
+    btnMinus: false,
+    btnPlus: false,
+  }
+
+  methods = {
+    clickMinus () {
+      let count = this.productInfo.count
+      if (count == 1) {
+        this.btnMinus = true
+        this.btnPlus = false
+      } else {
+        this.productInfo.count = parseInt(this.productInfo.count) - 1
+      }
+
+      this.$apply()
+
+      this.$invoke('../order-bottom', 'changeTotalPrice', this.totalPrice, this.productInfo.count)
+    },
+
+    clickPlus () {
+      let count = this.productInfo.count
+      if (count == this.productInfo.stock) {
+        this.btnPlus = true
+      } else {
+        this.productInfo.count = parseInt(this.productInfo.count) + 1
+        this.btnMinus = false
+      }
+      this.$apply()
+
+      this.$invoke('../order-bottom', 'changeTotalPrice', this.totalPrice, this.productInfo.count)
+    }
+  }
+
+  computed = {
+    totalPrice () {
+      return  Math.floor(parseFloat(this.productInfo.price*100 * this.productInfo.count))/100;
+    }
+  }
 }
 </script>
 
@@ -94,6 +142,23 @@ export default class OrderItem extends wepy.component{
         font-size 30rpx
         height 184rpx
         margin-left 20rpx
+
+        .info-specify
+          color #999
+          font-size 24rpx
+          display flex
+          flex-direction column
+
+      .info-price
+        font-size 32rpx
+        color #f50  
+        height:184rpx;
+        margin 0 20rpx
+
+        view 
+          text-align right 
+          color #666
+
 
     .btn-group-container
       display flex

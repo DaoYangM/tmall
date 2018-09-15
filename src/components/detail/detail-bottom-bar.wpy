@@ -4,8 +4,8 @@
       <i class="iconfont icon-shop"></i>
       <text>店铺</text>
     </view>
-    <view class="bottom fav">
-      <i class="iconfont icon-favor"></i>
+    <view @tap="changFavorite" class="bottom fav">
+      <i class="iconfont  {{isFavorite ? 'icon-favorfill': 'icon-favor'}}" style="color: red"></i>
       <text>收藏</text>
     </view>
     <view class="btn-group">
@@ -18,11 +18,65 @@
 <script>
 import wepy from 'wepy'
 export default class DetailBottomBar extends wepy.component{
+
+  props = {
+    allChecked: Boolean,
+    isFavorite: Boolean,
+    productInfo: {},
+  }
+
   methods = {
     goBuy () {
-      wx.navigateTo({
-        url: 'createOrder?id=1'
-      })
+      if (wx.getStorageSync('userMd5') != null) {
+        if (this.allChecked) {
+          this.$invoke('../detail-service', 'gobuy')
+        } else {
+          this.$invoke('../detail-service', 'showModal', '2')
+        }
+      } else {
+        wx.showToast({
+          title: "请先登录",
+          icon: "none",
+          duration: 1500,
+        })
+        setTimeout(()=> {
+          wx.switchTab({
+            url: "me"
+          });          
+        },1000)
+      } 
+    },
+
+    changFavorite () {
+      if (!wx.getStorageSync('userMd5')) {
+        wx.showToast({
+          title: "请先登录",
+          icon: "none"
+        })
+      } else {
+        let req = {
+          url: this.$root.$parent.serviceRoute.favorite + this.productInfo.productId,
+          method: "GET",
+          header: {
+          'Authorization': 'Bearer ' + wx.getStorageSync('userMd5')
+        }}
+            
+        if (this.isFavorite) {
+          req.method = "PUT"
+          wepy.request(req).then((d) => {
+            this.isFavorite = (d.data.data == 1)? false : true 
+            this.$apply()
+
+          })        
+        } else {
+          req.method = "POST"
+          wepy.request(req).then((d) => {
+            this.isFavorite = (d.data.data == 1)? true : false 
+            this.$apply()
+
+          })     
+        }        
+      }
     }
   }
 }

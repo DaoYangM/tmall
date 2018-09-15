@@ -18,12 +18,12 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/index',
+      'pages/createOrder',
       'pages/cart',
       'pages/me',
       'pages/order',
-      'pages/index',
       'pages/detail',
-      'pages/createOrder',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -83,6 +83,7 @@ export default class extends wepy.app {
     cartItemUnselected: this.service + '/cart/unselected/',
     cartSelectAll: this.service + '/cart/selects',
     cartUnselectAll: this.service + '/cart/unselects',
+    favorite: this.service + '/favorite/',
   }
 
   constructor () {

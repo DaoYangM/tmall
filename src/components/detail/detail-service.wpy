@@ -86,7 +86,7 @@
       </view>
       <view class="sku-button-group">
         <button class="addcart" @tap="hideModal('{{show}}')" >加入购物车</button>
-        <button class="gobuy" @tap="hideModal('{{show}}')">立即购买</button>
+        <button class="gobuy" @tap="gobuy">立即购买</button>
       </view>
     </view>
     <view animation="{{animationDataParameter}}" class="mask-menu">
@@ -130,19 +130,24 @@ export default class DetailService extends wepy.component {
     quantity: 1,
     btnMinusDisable: true,
     btnPlusDisable: false,
+
+    allCheckedFlag: false,
+    allChecked: false,
+
+    createOrderParams: {},
   }
   methods = {
     showService () {
       this.maskScreen = true
     },
     toggleMask () {
-      this.maskScreen = false
+      this.maskScreen = falses
     },
 
     showModal (index) {
         // 显示遮罩层
       this.show = index
-      console.log("show1 " + this.show)
+      console.log("show " + this.show)
       this.animation.height('83%').step()
       switch (index) {
         case '1':
@@ -213,8 +218,11 @@ export default class DetailService extends wepy.component {
       console.log(checkCount, checkIds, this.lastcheckIds)
       
 
-      if ((checkCount === this.productSpecifyDataSet.length) && (this.lastcheckIds !== checkIds)) {
+      if ((checkCount == this.productSpecifyDataSet.length)) {
         console.log("wxrequest")
+
+        this.allChecked = true
+
         wepy.request({
           url: this.$root.$parent.serviceRoute.productDetail + 'specify/pas',
           method: 'post',
@@ -226,11 +234,18 @@ export default class DetailService extends wepy.component {
         .then(res => {
           this.productInfo.productPrice = res.data.data.price
           this.productInfo.productStock = res.data.data.stock
-          console.log(res)
+
+          this.createOrderParams = res.data.data
+          console.log("create", this.createOrderParams )
+          
           this.$apply()
+          this.$emit("allSpecifyCheck", true)
         })
+      } else {
+        this.allChecked = false
+        this.$emit("allSpecifyCheck", false)
       }
-      if (checkCount == 2)
+      if (checkCount == this.productSpecifyDataSet.length)
         this.lastcheckIds = checkIds
     },
 
@@ -270,6 +285,48 @@ export default class DetailService extends wepy.component {
       
       this.$apply()
       console.log("quantity", this.quantity)
+    },
+
+    gobuy () {
+      if (wx.getStorageSync('userMd5') != null) {
+        if (this.allChecked) {
+          this.animation.height('0').step()
+          this.animationDataSpecification = this.animation.export()
+          this.maskScreen = false
+
+          let params = this.createOrderParams
+
+          this.allChecked = false
+
+          for (let index = 0; index < this.productSpecifyDataSet.length; index++) {
+              this.productSpecifyDataSet[index].productSpecifyItemList.forEach((element, indey) => {
+                  element.checked = false
+              }); 
+          }
+          this.$emit("allSpecifyCheck", false)
+
+          wx.navigateTo({
+            url: 'createOrder?'+'productId=' + params.productId + '&pasId=' + params.id + '&count=' + this.quantity + '&price=' + params.price + '&stock=' + params.stock
+          })
+        } else {
+          wx.showToast({
+            title: "请选择分类",
+            icon: "none"
+          })
+        }
+
+      } else {
+        wx.showToast({
+          title: "请先登录",
+          icon: "none",
+          duration: 1500,
+        })
+        setTimeout(()=> {
+          wx.switchTab({
+            url: "me"
+          });          
+        },1000)
+      } 
     }
   }
 
@@ -285,10 +342,24 @@ export default class DetailService extends wepy.component {
 
   watch = {
     productInfo (newValue, oldValue) {
-      console.log(newValue)
-
+      
       wepy.request(this.$root.$parent.serviceRoute.productDetail + this.productInfo.productId + '/specify').then((d) => {
         this.productSpecifyDataSet = d.data.data
+        
+        if (!this.allCheckedFlag) {
+          if (this.productSpecifyDataSet.length === 0) {
+            this.createOrderParams = {
+              id: null,
+              price: newValue.productPrice,
+              productId: newValue.productId,
+              stock: newValue.productStock,
+            }
+            console.log("createOrderParams", this.createOrderParams)
+            this.$emit("allSpecifyCheck", true)
+            this.allChecked = true
+          }
+          this.allCheckedFlag = true
+        }
       })
 
       wepy.request(this.$root.$parent.serviceRoute.productDetail + this.productInfo.productId + '/parameter').then((d) => {

@@ -1,8 +1,8 @@
 <template>
   <view class="order-bottom-container">
     <view>
-      共<text style="color:#ff5000">1</text>件, 总金额
-      <view style="display: inline-block; color:#ff5000; font-size: 32rpx" >￥<text>30.90</text></view>
+      共<text style="color:#ff5000">{{buyCount}}</text>件, 总金额
+      <view style="display: inline-block; color:#ff5000; font-size: 32rpx" >￥<text>{{totalPrice}}</text></view>
     </view>
     <button class="btn-submit">提交订单</button>  
   </view>
@@ -11,7 +11,20 @@
 <script>
 import wepy from 'wepy'
 export default class OrderBottom extends wepy.component{
-  
+
+  props = {
+    totalPrice: 0,
+    buyCount: 0
+  }
+  methods = {
+    changeTotalPrice (totalPrice, count) {
+      this.totalPrice = totalPrice
+      this.buyCount = count
+
+      this.$apply()
+    }
+  }
+
 }
 </script>
 
