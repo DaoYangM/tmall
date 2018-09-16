@@ -1,7 +1,7 @@
 <template>
   <view style="border-top: 20rpx solid rgb(238, 238, 238)">
     <block wx:if="{{ isLogin }}">
-      <view wx:if="{{cartItemList.length === 0}}" class="empty-cart">
+      <view wx:if="{{cartDataSet.cartItemResponse.length == 0}}" class="empty-cart">
         <view class="cart-img-container">
           <image class="cart-img" src="http://gw.alicdn.com/tfscom/TB1xdQSJFXXXXcuXXXXy7S8WFXX-176-176.png" />
         </view>
@@ -73,7 +73,7 @@ export default class CartItem extends wepy.component{
   props = {
     cartDataSet: {},
     cartItemList: [],
-    isLogin: Boolean
+    isLogin: false
   }
 
   components = {
@@ -300,7 +300,14 @@ export default class CartItem extends wepy.component{
   }
 
   onLoad () {
+    if (wx.getStorageSync('userMd5') != null) {
+      this.isLogin = true
+    } else {
+      this.isLogin = false
+    }
+
     this.route = this.$root.$parent.serviceRoute
+    this.$apply()
   }
 }
 </script>

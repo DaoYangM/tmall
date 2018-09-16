@@ -9,7 +9,7 @@
       <text>收藏</text>
     </view>
     <view class="btn-group">
-      <bottom size="" class="btn-cart">加入购物车</bottom>
+      <bottom size="" @tap="goCart" class="btn-cart">加入购物车</bottom>
       <bottom @tap="goBuy" class="btn-buy">立即购买</bottom>
     </view>
   </view>
@@ -25,9 +25,14 @@ export default class DetailBottomBar extends wepy.component{
     productInfo: {},
   }
 
+  data = {
+    quantity: 1,
+    isLogin: false,
+  }
+
   methods = {
     goBuy () {
-      if (wx.getStorageSync('userMd5') != null) {
+      if (this.isLogin) {
         if (this.allChecked) {
           this.$invoke('../detail-service', 'gobuy')
         } else {
@@ -48,7 +53,7 @@ export default class DetailBottomBar extends wepy.component{
     },
 
     changFavorite () {
-      if (!wx.getStorageSync('userMd5')) {
+      if (!this.isLogin) {
         wx.showToast({
           title: "请先登录",
           icon: "none"
@@ -77,7 +82,55 @@ export default class DetailBottomBar extends wepy.component{
           })     
         }        
       }
+    },
+
+    goCart () {
+        if (this.isLogin) {
+          wepy.request({
+            url: this.$root.$parent.serviceRoute.cart,
+            method: "POST",
+            header: {
+              'Authorization': 'Bearer ' + wx.getStorageSync('userMd5')
+            },
+            data: {
+              "productId": this.productInfo.productId,
+              "count": this.quantity
+            }
+        }).then(res => {
+          if (res.data.status == 200) {
+            wx.showToast({
+              title: "添加购物车成功"
+            })
+          } else {
+            wx.showToast({
+              title: '添加购物车失败',
+              icon: 'none'
+            })
+          }
+        })
+      } else {
+        wx.showToast({
+          title: '请先登录',
+          icon: 'none'
+        })
+      }
+    },
+
+    getQuantity (quantity) {
+      this.quantity = quantity
+      this.$apply()
     }
+  }
+  onLoad () {
+    if (wx.getStorageSync('userMd5') != null) {
+      this.isLogin = true
+      console.log("login")
+    } else {
+      this.isLogin = false
+      console.log("Nologin")
+    }
+
+    this.$apply()
   }
 }
 </script>

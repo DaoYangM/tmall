@@ -23,21 +23,27 @@ export default class Cart extends wepy.page {
   }
 
   onLoad () {
+    if (wx.getStorageSync('userMd5') != null) {
+      this.isLogin = true
+    } else {
+      this.isLogin = false
+    }
+
+    this.$apply()
   }
 
   onShow () {
     if (wx.getStorageSync('userMd5') != null) {
-      this.isLogin = true
       wx.request({
         url: this.$root.$parent.serviceRoute.cart,
         header: {
           'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
         },      
         success: (s) => {
-          console.log(s)
-          if (s.statusCode == 200)
+          if (s.statusCode == 200) {
+            this.isLogin = true
             this.cartDataSet = s.data.data
-
+          }
           this.$apply()
         },
         fail: function(e) {
@@ -46,9 +52,8 @@ export default class Cart extends wepy.page {
       })
     } else {
       this.isLogin = false
-    } 
-
-    this.$apply()
+      this.$apply()
+    }
   }
 }
 </script>
