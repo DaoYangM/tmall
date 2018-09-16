@@ -1,5 +1,5 @@
 <template>
-  <view class="head">
+  <view @tap="goSearch" class="head">
     <!-- <view class="head-left-img"><view> -->
     <navigator class="head-input"><i class="iconfont icon-search" style="display:inline-block; padding-right: 10rpx; font-size: 30rpx"></i><text class="display:inline-block; padding-left: 20rpx">寻找宝贝店铺</text></navigator>
   </view>
@@ -8,7 +8,13 @@
 <script>
 import wepy from 'wepy';
 export default class Head extends wepy.component {
-
+  methods = {
+    goSearch () {
+      wx.navigateTo({
+        url: 'search'
+      })
+    }
+  }
 }
 </script>
 

@@ -1,0 +1,29 @@
+<template>
+	<view>
+		<search-bar></search-bar>
+		<search-popular></search-popular>
+	</view>		
+</template>
+
+<script>
+
+import wepy from 'wepy'
+import SearchBar from '../components/search/search-bar'
+import SearchPopular from '../components/search/search-popular'
+
+export default class Search extends wepy.page {
+  config = {
+    navigationBarTitleText: "搜索"
+  }
+
+	components = {
+		'search-bar': SearchBar,
+		'search-popular': SearchPopular,
+	}
+}
+</script>
+
+<style lang="stylus">
+	page
+		background #ffffff
+</style>
