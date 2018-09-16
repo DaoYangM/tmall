@@ -2,19 +2,41 @@
 	<view class="search-bar-wrap">
 		<view class="search-input-wrap">
 			<text class="search-type">宝贝</text>
-			<input />
+			<input bindinput="sbi" bindconfirm="bcf"/>
 			<view class="search-type search-icon"><i class="iconfont icon-search"></i></view>
 		</view>
 		<view class="search-btn-wrap ">
 			<view>搜索</view>
-		</view>		
+		</view>
 	</view>
 </template>
 
 <script>
 import wepy from 'wepy'
 export default class SearchBar extends wepy.component {
+	data = {
+		iTime: null
+	}
 
+	methods = {
+		sbi (e) {
+			this.iTime = new Date().getTime()
+			let content = e.detail.value
+			if (!content) {
+				this.$invoke('../search-popular', 'getEmpty')
+			} else {
+				setTimeout(() => {
+					if (new Date().getTime() - this.iTime >= 500) {
+						if (content) {
+							wepy.request(this.$root.$parent.serviceRoute.searchBar +'?q=' + e.detail.value).then((res) => {
+								this.$invoke('../search-popular', 'getSearchContent', res.data.data)
+							})						
+						}
+					}
+				}, 500);				
+			}
+		}
+	}
 }
 </script>
 
@@ -33,7 +55,6 @@ export default class SearchBar extends wepy.component {
 		.search-input-wrap
 			height 64rpx
 			border-radius 8rpx
-			// background #e3e3e5
 			margin-left 24rpx
 			flex 1
 			display flex

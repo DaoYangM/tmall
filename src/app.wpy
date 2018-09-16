@@ -18,8 +18,8 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index',
       'pages/search',
+      'pages/index',
       'pages/createOrder',
       'pages/cart',
       'pages/me',
@@ -46,7 +46,7 @@ export default class extends wepy.app {
         },
         {
           text: "搜索",
-          pagePath: "pages/index",
+          pagePath: "pages/search",
           iconPath: "images/icons/search.png",
           selectedIconPath: "images/icons/search-actived.png"
         },
@@ -85,6 +85,7 @@ export default class extends wepy.app {
     cartSelectAll: this.service + '/cart/selects',
     cartUnselectAll: this.service + '/cart/unselects',
     favorite: this.service + '/favorite/',
+    searchBar: this.service + '/products/search/bar',
   }
 
   constructor () {

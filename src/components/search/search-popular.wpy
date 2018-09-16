@@ -1,54 +1,83 @@
 <template>
-	<view class="search-popular-wrap">
-    <view class="search-popular-head">
-      <text>大家都在搜</text>
-    </view>
-    
-    <view class="search-popular-content">
-      <view class="search-popular-item">
-        <text>净水器</text>
+  <view>
+    <block wx:if="{{!hasSearch}}">
+      <view class="search-popular-wrap">
+        <view class="search-popular-head">
+          <text>大家都在搜</text>
+        </view>
+        
+        <view class="search-popular-content">
+          <view class="search-popular-item">
+            <text>净水器</text>
+          </view>
+          <view class="search-popular-item">
+            <text>西门子冰箱</text>
+          </view>
+          <view class="search-popular-item">
+            <text>iphone XS</text>
+          </view>
+          <view class="search-popular-item">
+            <text>牛奶锅</text>
+          </view>
+          <view class="search-popular-item">
+            <text>礼服</text>
+          </view>
+          <view class="search-popular-item">
+            <text>运动鞋</text>
+          </view>
+          <view class="search-popular-item">
+            <text>双肩包女</text>
+          </view>
+          <view class="search-popular-item">
+            <text>衣服</text>
+          </view>
+          <view class="search-popular-item">
+            <text>钱包男</text>
+          </view>
+          <view class="search-popular-item">
+            <text>孕妇装</text>
+          </view>
+          <view class="search-popular-item">
+            <text>童装</text>
+          </view>
+          <view class="search-popular-item">
+            <text>潮男秋装</text>
+          </view>
+        </view>
       </view>
-      <view class="search-popular-item">
-        <text>西门子冰箱</text>
+    </block>
+
+    <block wx:else>
+      <view wx:for="{{searchDataSet}}" wx:key="{{index}}" class="search-res">
+        <text>{{item}}</text>
       </view>
-      <view class="search-popular-item">
-        <text>iphone XS</text>
-      </view>
-      <view class="search-popular-item">
-        <text>牛奶锅</text>
-      </view>
-      <view class="search-popular-item">
-        <text>礼服</text>
-      </view>
-      <view class="search-popular-item">
-        <text>运动鞋</text>
-      </view>
-      <view class="search-popular-item">
-        <text>双肩包女</text>
-      </view>
-      <view class="search-popular-item">
-        <text>衣服</text>
-      </view>
-      <view class="search-popular-item">
-        <text>钱包男</text>
-      </view>
-      <view class="search-popular-item">
-        <text>孕妇装</text>
-      </view>
-      <view class="search-popular-item">
-        <text>童装</text>
-      </view>
-      <view class="search-popular-item">
-        <text>潮男秋装</text>
-      </view>
-    </view>
-	</view>
+    </block>  
+  </view>  
 </template>
 
 <script>
 import wepy from 'wepy'
 export default class SearchPopular extends wepy.component {
+  data = {
+    hasSearch: false,
+    searchDataSet: [],
+  }
 
+  methods = {
+    getSearchContent (content) {
+      if (content.length > 0) {
+        console.log(content)
+        this.searchDataSet = content
+        this.hasSearch = true
+        this.$apply()
+      }
+    },
+
+    getEmpty () {
+        this.hasSearch = false
+        this.$apply()
+    }
+  }
 }
 </script>
 
@@ -81,4 +110,13 @@ export default class SearchPopular extends wepy.component {
         margin-bottom 24rpx
         color #666
         font-size 28rpx
+
+  .search-res
+    height 90rpx
+    line-height 90rpx
+    color #999
+    font-size 28rpx
+    padding-left 40rpx
+    background #f9f9f9
+    border-bottom 2rpx solid #dedede
 </style>
