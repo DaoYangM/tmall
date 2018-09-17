@@ -1,0 +1,67 @@
+<template>
+	<view class="search-item-wrap">
+    <scroll-view scroll-y style="height: 90vh;">
+      <view wx:for="{{10}}" wx:key="{{index}}" class="item-wrap">
+        <image src="https://img.alicdn.com/imgextra/i4/115731779/TB2RkrrJv1TBuNjy0FjXXajyXXa_!!0-saturn_solar.jpg_210x210.jpg"/>
+        <view class="item-info-wrap">
+          <view class="item-title">欧式真皮沙发实木雕花客厅白色家具123组合</view>
+          <text class="item-price">￥2184</text>
+          <view class="item-info">
+            <text>免运费</text>
+            <text>11人付款</text>
+            <text>佛山</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+	</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class SearchDetailItem extends wepy.component {
+}
+</script>
+
+<style lang="stylus" scoped>
+  .search-item-wrap
+    .item-wrap
+      display flex
+      justify-content center
+      align-items center
+      margin 20rpx 0
+      
+      image
+        height 200rpx
+        width 200rpx
+        margin 20rpx
+
+      .item-info-wrap
+        flex 1
+        margin-right 20rpx
+        display flex
+        flex-direction column
+        justify-content space-between
+        height 200rpx
+
+        .item-title
+          font-size 30rpx
+          height 88rpx
+          line-height 44rpx
+          overflow hidden
+          word-break break-all
+          color #4b566a
+          font-weight bold
+          text-overflow ellipsis
+
+        .item-price
+          font-size 32rpx
+          color #f50
+        
+        .item-info
+          display flex
+          justify-content space-between
+          align-items center
+          font-size 24rpx
+          color #666
+</style>

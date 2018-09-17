@@ -1,0 +1,36 @@
+<template>
+	<view>
+		<searchDetail-bar></searchDetail-bar>
+    <searchDetail-sort></searchDetail-sort>
+    <searchDetail-item></searchDetail-item>
+	</view>		
+</template>
+
+<script>
+
+import wepy from 'wepy'
+import SearchDetailBar from '../components/searchDetail/searchDetail-bar'
+import SearchDetailSort from '../components/searchDetail/searchDetail-sort'
+import SearchDetailItem from '../components/searchDetail/searchDetail-item'
+
+export default class SearchDetail extends wepy.page {
+  config = {
+    navigationBarTitleText: "搜索结果"
+  }
+
+  components = {
+      'searchDetail-bar': SearchDetailBar,
+      'searchDetail-sort': SearchDetailSort,
+      'searchDetail-item': SearchDetailItem,
+  }
+}
+</script>
+
+<style lang="stylus">
+  ::-webkit-scrollbar
+    width 0
+    height 0
+    color transparent
+	page
+		background #ffffff
+</style>

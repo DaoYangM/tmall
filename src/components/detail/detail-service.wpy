@@ -166,7 +166,6 @@ export default class DetailService extends wepy.component {
       this.maskScreen = true
     },
     hideModal (index) {
-      console.log(index)
       this.animation.height('0').step()
       switch (index) {
         case '1':
