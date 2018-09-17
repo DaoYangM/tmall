@@ -10,36 +10,38 @@
         </text>        
       </block>
       <block wx:else>
-          <button style="background: #f50; color: #fff" wx:if="{{!userInfo}}" open-type="getUserInfo" bindgetuserinfo="bindgetUserInfo"> 获取头像昵称 </button>
+          <button style="background: #f50; color: #fff" wx:if="{{!userInfo}}" open-type="getUserInfo" bindgetuserinfo="bindgetUserInfo"> 使用微信登录</button>
       </block>  
     </view>  
-    <view class="user-behavior">
-      <view class="behavior-head">
-        <text class="behavior-title">我的订单</text>
-        <view @tap="allOrder">
-          <text class="behavior-all">查看全部</text>
-          <i class="iconfont icon-right"></i>
+    <block wx:if="{{userInfo}}">
+      <view class="user-behavior">
+        <view class="behavior-head">
+          <text class="behavior-title">我的订单</text>
+          <view @tap="allOrder">
+            <text class="behavior-all">查看全部</text>
+            <i class="iconfont icon-right"></i>
+          </view>
+        </view>
+        <view class="behavior-container">
+          <view class="behavior">
+            <i class="iconfont icon-pay"></i>
+            <text class="behavior-text">待付款</text>
+          </view>
+          <view class="behavior">
+            <i class="iconfont icon-time"></i>
+            <text class="behavior-text">代发货</text>
+          </view>
+          <view class="behavior">
+            <i class="iconfont icon-deliver"></i>
+            <text class="behavior-text">待收货</text>
+          </view>
+          <view class="behavior">
+            <i class="iconfont icon-evaluate"></i>
+            <text class="behavior-text">待评价</text>
+          </view>
         </view>
       </view>
-      <view class="behavior-container">
-        <view class="behavior">
-          <i class="iconfont icon-pay"></i>
-          <text class="behavior-text">待付款</text>
-        </view>
-        <view class="behavior">
-          <i class="iconfont icon-time"></i>
-          <text class="behavior-text">代发货</text>
-        </view>
-        <view class="behavior">
-          <i class="iconfont icon-deliver"></i>
-          <text class="behavior-text">待收货</text>
-        </view>
-        <view class="behavior">
-          <i class="iconfont icon-evaluate"></i>
-          <text class="behavior-text">待评价</text>
-        </view>
-      </view>
-    </view>    
+    </block>
   </view>
 </template>
 

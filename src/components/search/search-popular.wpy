@@ -7,49 +7,16 @@
         </view>
         
         <view class="search-popular-content">
-          <view class="search-popular-item">
-            <text>净水器</text>
-          </view>
-          <view class="search-popular-item">
-            <text>西门子冰箱</text>
-          </view>
-          <view class="search-popular-item">
-            <text>iphone XS</text>
-          </view>
-          <view class="search-popular-item">
-            <text>牛奶锅</text>
-          </view>
-          <view class="search-popular-item">
-            <text>礼服</text>
-          </view>
-          <view class="search-popular-item">
-            <text>运动鞋</text>
-          </view>
-          <view class="search-popular-item">
-            <text>双肩包女</text>
-          </view>
-          <view class="search-popular-item">
-            <text>衣服</text>
-          </view>
-          <view class="search-popular-item">
-            <text>钱包男</text>
-          </view>
-          <view class="search-popular-item">
-            <text>孕妇装</text>
-          </view>
-          <view class="search-popular-item">
-            <text>童装</text>
-          </view>
-          <view class="search-popular-item">
-            <text>潮男秋装</text>
+          <view wx:for="{{hotSearch}}" @tap="goSearchDetail({{item}})" wx:key="{{item}}" class="search-popular-item">
+            <text>{{item}}</text>
           </view>
         </view>
       </view>
     </block>
 
     <block wx:else>
-      <view wx:for="{{searchDataSet}}" wx:key="{{index}}" class="search-res">
-        <text>{{item}}</text>
+      <view wx:for="{{searchDataSet}}" @tap="goSearchDetail({{item.name}})" wx:key="{{index}}" class="search-res">
+        <text>{{item.name}}</text>
       </view>
     </block>  
   </view>  
@@ -61,6 +28,7 @@ export default class SearchPopular extends wepy.component {
   data = {
     hasSearch: false,
     searchDataSet: [],
+    hotSearch: ['净水器', '西门子冰箱', 'iphone XS', '牛奶锅', '礼服', '运动鞋', '双肩包女', '衣服', '钱包男']
   }
 
   methods = {
@@ -71,6 +39,13 @@ export default class SearchPopular extends wepy.component {
         this.hasSearch = true
         this.$apply()
       }
+    },
+
+    goSearchDetail (cname) {
+      this.$invoke('../search-bar', 'setCname', cname)
+      wx.navigateTo({
+        url: 'searchDetail?name=' + cname
+      })
     },
 
     getEmpty () {
@@ -117,6 +92,6 @@ export default class SearchPopular extends wepy.component {
     color #999
     font-size 28rpx
     padding-left 40rpx
-    background #f9f9f9
+    background #ffffff
     border-bottom 2rpx solid #dedede
 </style>

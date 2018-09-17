@@ -2,10 +2,10 @@
 	<view class="search-bar-wrap">
 		<view class="search-input-wrap">
 			<text class="search-type">宝贝</text>
-			<input @tap="goSearch"/>
-			<view class="search-type search-icon"><i class="iconfont icon-search"></i></view>
+			<input value="{{cname}}" @tap="goSearch"/>
+			<view @tap="newSearch" class="search-type search-icon"><i class="iconfont icon-search"></i></view>
 		</view>
-		<view class="search-btn-wrap ">
+		<view @tap="goHome" class="search-btn-wrap ">
 			<i class="iconfont icon-home"></i>
 		</view>
 	</view>
@@ -15,13 +15,41 @@
 import wepy from 'wepy'
 export default class SearchDetailBar extends wepy.component {
 
+  data = {
+    cname: ''
+  }
+
 	methods = {
     goSearch () {
-      wx.switchTab({
-        url: 'search'
+      wx.navigateBack({
+          delta: 1
       })
+    },
+    
+    goHome () {
+      wx.switchTab({
+        url: 'index'
+      })
+    },
+
+    newSearch () {
+      this.$emit('setCname', this.cname)
     }
 	}
+
+  events = {
+    changeName (name) {
+      this.cname = name
+      this.$apply()
+    }
+  }
+  watch = {
+    name (newValue, oldValue) {
+      console.log("bname" + newValue)
+      this.cname = newValue
+      this.$apply()
+    }
+  }
 }
 </script>
 

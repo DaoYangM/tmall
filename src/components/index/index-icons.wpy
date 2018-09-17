@@ -30,14 +30,14 @@ export default class IndexIcons extends wepy.component {
 <style lang="stylus" scoped>
   .icons-container
     width 100%
-    height 520rpx
+    height 400rpx
     display flex
     flex-wrap wrap
     border-bottom 20rpx solid #eee
 
     .icons-item
       width 20%
-      // height 260rpx
+      height 200rpx
       display flex
       flex-direction column
       justify-content center

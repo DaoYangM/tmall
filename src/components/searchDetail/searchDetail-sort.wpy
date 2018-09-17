@@ -1,18 +1,18 @@
 <template>
 	<view class="search-sort-wrap">
-    <view class="sort-item activated">
+    <view class="sort-item {{ !isSaleFirst? 'activated': '' }}">
       <view @tap="showSort">
-        <text>综合排序</text>
+        <text>{{sortType[0].name}}</text>
         <i class="arrow"></i>        
       </view>
 
       <view animation="{{animationData}}" class="sort-items">
-        <view>价格升序</view>
-        <view>价格降序</view>
+        <view @tap="changeSort(1)">{{sortType[1].name}}</view>
+        <view @tap="changeSort(2)">{{sortType[2].name}}</view>
       </view>
 
     </view>
-    <view class="sort-item">
+    <view @tap="saleFirst" class="sort-item {{ isSaleFirst? 'activated': '' }}">
       <text>销量优先</text>
     </view>
 	</view>
@@ -23,12 +23,20 @@ import wepy from 'wepy'
 export default class SearchDetailSort extends wepy.component {
   data = {
     animationData: {},
-    show: true
+    show: true,
+    sortType: [
+      {type: 'comprehensive', name: '综合排序'},
+      {type: 'price_asc', name:'价格升序'},
+      {type: 'price_desc', name: '价格降序'},
+    ],
+    cname: '',
+
+    isSaleFirst: false
   }
+
   methods = {
     showSort () {
       if (this.show) {
-        console.log(this.animation)
         this.animation.height('160rpx').step()
         this.animationData = this.animation.export()
         this.show = false
@@ -38,6 +46,36 @@ export default class SearchDetailSort extends wepy.component {
         this.show = true
       }
       this.$apply()
+    },
+    
+    changeSort (i) {
+      this.isSaleFirst = false
+      let temp = this.sortType[i]
+      this.sortType[i] = this.sortType[0]
+      this.sortType[0] = temp
+      this.animation.height('0').step()
+      this.animationData = this.animation.export()
+      this.show = true
+      this.$apply()
+    },
+
+    saleFirst () {
+      this.isSaleFirst = true
+      this.$invoke('../searchDetail-item', 'changeSort', 'sale_first')
+
+      this.$apply()
+    }
+  }
+
+  events = {
+    changeName (name) {
+      this.cname = name
+    }
+  }
+
+  watch = {
+    sortType (newValue, oldValue) {
+      this.$invoke('../searchDetail-item', 'changeSort', newValue[0].type)
     }
   }
 

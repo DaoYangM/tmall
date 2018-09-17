@@ -2,7 +2,7 @@
 	<view>
 		<searchDetail-bar></searchDetail-bar>
     <searchDetail-sort></searchDetail-sort>
-    <searchDetail-item></searchDetail-item>
+    <searchDetail-item :dataSet.sync="dataSet"></searchDetail-item>
 	</view>		
 </template>
 
@@ -22,6 +22,37 @@ export default class SearchDetail extends wepy.page {
       'searchDetail-bar': SearchDetailBar,
       'searchDetail-sort': SearchDetailSort,
       'searchDetail-item': SearchDetailItem,
+  }
+
+  data = {
+    name: '',
+    dataSet: [],
+  }
+
+  watch = {
+    name (newValue, oldValue) {
+      
+      let url = this.$root.$parent.serviceRoute.productSearch +'?q=' + newValue
+      
+      if (newValue == null) {
+        url = this.$root.$parent.serviceRoute.indexProducts
+      }
+      
+      wepy.request({
+        'url': url
+      }).then((res) => {
+        if (res.data.status == 200) {
+          this.dataSet = res.data.data.list
+          this.$broadcast('changeName', newValue)
+          this.$apply()
+        }
+      })
+    }
+  }
+
+  onLoad (option) {
+    this.name = option.name
+    this.$apply()
   }
 }
 </script>

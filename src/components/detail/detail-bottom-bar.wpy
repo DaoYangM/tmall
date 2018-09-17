@@ -1,6 +1,6 @@
 <template>
   <view class="bottom-bar">
-    <view class="bottom shop">
+    <view @tap="goShop" class="bottom shop">
       <i class="iconfont icon-shop"></i>
       <text>店铺</text>
     </view>
@@ -119,6 +119,12 @@ export default class DetailBottomBar extends wepy.component{
     getQuantity (quantity) {
       this.quantity = quantity
       this.$apply()
+    },
+
+    goShop () {
+      wx.navigateTo({
+        url: 'searchDetail?id=""'
+      })
     }
   }
   onLoad () {

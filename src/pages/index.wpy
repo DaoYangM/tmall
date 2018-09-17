@@ -1,10 +1,12 @@
 <template>
   <view class="container">
       <head></head>
-      <index-swiper></index-swiper>
-      <index-icons></index-icons>
-      <index-like></index-like>
-      <commodity></commodity>          
+      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="goMore">
+        <index-swiper></index-swiper>
+        <index-icons></index-icons>
+        <index-like></index-like>
+        <commodity></commodity>
+      </scroll-view>
   </view>
 </template>
 
@@ -19,9 +21,9 @@ import Commodity from '../components/commodity'
 import IndexTailBar from '../components/index/index-tail-bar'
 
 export default class Index extends wepy.page {
-  data = {
-    index: 'me'
-  }
+  // data = {
+  //   index: 'me'
+  // }
 
   config = {
     navigationBarTitleText: "Tmall"
@@ -37,15 +39,24 @@ export default class Index extends wepy.page {
   }
 
   methods = {
-    changeIndex(str, evt) {
-      console.log("fa " + str)
-      this.index = str
+    // changeIndex(str, evt) {
+    //   console.log("fa " + str)
+    //   this.index = str
+    // }
+
+    goMore () {
+      console.log("index more");
+      
     }
   }
 }
 </script>
 
 <style lang="stylus">
+  ::-webkit-scrollbar
+    width 0
+    height 0
+    color transparent
   page
     height 100%
 </style>

@@ -59,7 +59,7 @@
     <block wx:else>
       <view class="need-login">
         <text>需要登陆后才能访问</text>
-        <button @tap="switchLogin">登录</button>
+        <button @tap="switchLogin">立即登录</button>
       </view>
     </block>
   </view>  

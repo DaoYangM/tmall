@@ -2,10 +2,10 @@
 	<view class="search-bar-wrap">
 		<view class="search-input-wrap">
 			<text class="search-type">宝贝</text>
-			<input bindinput="sbi" bindconfirm="bcf"/>
-			<view class="search-type search-icon"><i class="iconfont icon-search"></i></view>
+			<input value="{{name}}" bindinput="sbi" bindconfirm="bcf"/>
+			<view @tap="goSearchDetail" class="search-type search-icon"><i class="iconfont icon-search"></i></view>
 		</view>
-		<view class="search-btn-wrap ">
+		<view @tap="goSearchDetail" class="search-btn-wrap ">
 			<view>搜索</view>
 		</view>
 	</view>
@@ -15,27 +15,40 @@
 import wepy from 'wepy'
 export default class SearchBar extends wepy.component {
 	data = {
-		iTime: null
+		iTime: null,
+		name: "",
 	}
 
 	methods = {
 		sbi (e) {
 			this.iTime = new Date().getTime()
 			let content = e.detail.value
+      this.name = content
 			if (!content) {
 				this.$invoke('../search-popular', 'getEmpty')
 			} else {
 				setTimeout(() => {
 					if (new Date().getTime() - this.iTime >= 500) {
 						if (content) {
-							wepy.request(this.$root.$parent.serviceRoute.searchBar +'?q=' + e.detail.value).then((res) => {
+							wepy.request(this.$root.$parent.serviceRoute.categorySearch +'?q=' + e.detail.value).then((res) => {
 								this.$invoke('../search-popular', 'getSearchContent', res.data.data)
 							})						
 						}
 					}
 				}, 500);				
 			}
-		}
+		},
+
+    goSearchDetail () {
+      if (this.name) {
+        this.$invoke('../search-popular', 'goSearchDetail', this.name)
+      }
+    },
+
+    setCname(name) {
+      this.name = name
+      this.$apply()
+    }
 	}
 }
 </script>
@@ -79,9 +92,8 @@ export default class SearchBar extends wepy.component {
 
 		.search-btn-wrap
 			padding 0 30rpx
-			color #ffffff
+			color #666
 			font-size 24rpx
-			background #f50
 			height 64rpx
 			line-height 64rpx
 			margin 0 20rpx
