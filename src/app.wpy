@@ -99,7 +99,7 @@ export default class extends wepy.app {
 
   onLaunch() {
     this.testAsync()
-    wx.setStorageSync('userMd5', null)
+    // wx.setStorageSync('userMd5', null)
   }
 
   sleep (s) {

@@ -31,7 +31,7 @@ export default class SearchDetailItem extends wepy.component {
   methods = {
     goDetail (pid) {
       wx.navigateTo({
-        url: 'detail?id' + pid
+        url: 'detail?id=' + pid
       })
     },
 

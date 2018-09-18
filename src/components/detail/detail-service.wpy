@@ -209,11 +209,12 @@ export default class DetailService extends wepy.component {
       this.productSpecifyDataSet.forEach(element => {
         element.productSpecifyItemList.forEach(element2 => {
           if (element2.checked){
-            checkIds += element2.id
+            checkIds += element2.id + ","
             checkCount += 1
           }
         })
       })
+      // checkIds = checkIds.substr(0, checkIds.length - 1)
       console.log(checkCount, checkIds, this.lastcheckIds)
       
 
