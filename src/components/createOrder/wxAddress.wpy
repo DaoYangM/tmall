@@ -1,7 +1,7 @@
 <template>
   <view class="wx-address-container">
     <view wx:if="{{showGetAddress}}" class="get-wx-address" @tap="getAddress">
-      <view>
+      <view style="display:flex; align-items:center">
         <image class="wx-icon" src="https://image.anruan.com/imglist/20170407/2017040754430995250.png" />
         <text class="wx-text">一件获取微信地址</text>        
       </view>
@@ -15,14 +15,14 @@
       </view>
       <view class="address-container">
         <view class="name-phone">
-          <text class="name">叶德杨</text>
-          <text class="phone">18359056538</text>
+          <text class="name">{{address.username}}</text>
+          <text class="phone">{{address.telNumber}}</text>
         </view>
         <view class="detail">
-          <text class="info">福建省</text>
-          <text class="info">三明市</text>
-          <text class="info">永安市</text>
-          <text class="info">益溪村 121</text>
+          <text class="info">{{address.provinceName}}</text>
+          <text class="info">{{address.cityName}}</text>
+          <text class="info">{{address.countyName}}</text>
+          <text class="info">{{address.detailInfo}}</text>
         </view>
       </view>    
     </view>  
@@ -31,17 +31,18 @@
 
 <script>
 import wepy from 'wepy'
-export default class WxAddress extends wepy.component{
+export default class WxAddress extends wepy.component {
 
   data = {
-    showGetAddress: true
+    showGetAddress: true,
+    address: {},
   }
 
   methods = {
     getAddress () {
      
       wx.chooseAddress({
-        success: function (res) {
+        success: (res) => {
           let userAddress = {
             username: res.userName,
             telNumber: res.telNumber,
@@ -51,8 +52,9 @@ export default class WxAddress extends wepy.component{
             detailInfo: res.detailInfo
           }
           wx.setStorageSync('userAddress', userAddress)
+          this.address = userAddress
 
-          console.log(wx.getStorageSync('userAddress'))
+          this.$apply()
         }
       })      
     }
@@ -61,8 +63,13 @@ export default class WxAddress extends wepy.component{
 
   onLoad () {
     let userAddress = wx.getStorageSync('userAddress')
-    if (userAddress) {
+    console.log("add", userAddress)
+
+    if (userAddress != null) {
       this.showGetAddress = false
+      this.address = userAddress
+
+      this.$apply()
     }
   }
 }

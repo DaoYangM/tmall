@@ -59,7 +59,7 @@
     <block wx:else>
       <view class="need-login">
         <text>需要登陆后才能访问</text>
-        <button @tap="switchLogin">立即登录</button>
+        <button @tap="switchLogin">登录</button>
       </view>
     </block>
   </view>  
@@ -328,8 +328,8 @@ export default class CartItem extends wepy.component{
     button
       width 200rpx
       margin-top 20rpx
-      color #ffffff
-      background #f50
+      color #666
+      background #eee
 
   .empty-cart
     width 100%

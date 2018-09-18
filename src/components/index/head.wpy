@@ -44,7 +44,7 @@ export default class Head extends wepy.component {
       text-align center
       border-radius 8rpx
       width 87%
-      height 60%
+      height 50rpx
       line-height : 50rpx
       font-size 26rpx
       color #F0E0DC

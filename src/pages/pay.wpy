@@ -1,0 +1,26 @@
+<template>
+  <web-view src="{{url}}" bindmessage="handlePostMessage"></web-view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class Pay extends wepy.page {
+
+  data  = {
+    url: 'http://daoyang.natapp1.cc/order/pay/1534689708357'
+  }
+
+  methods = {
+
+    goPay () {
+      wepy.request('http://localhost:8080/order/pay/1534689708357').then((res) => {
+        console.log(res)
+      })
+    }
+  }
+
+}
+</script>
+
+<style lang="stylus" scoped>
+</style>

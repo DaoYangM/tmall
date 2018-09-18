@@ -4,7 +4,7 @@
       共<text style="color:#ff5000">{{buyCount}}</text>件, 总金额
       <view style="display: inline-block; color:#ff5000; font-size: 32rpx" >￥<text>{{totalPrice}}</text></view>
     </view>
-    <button class="btn-submit">提交订单</button>  
+    <button @tap="goPay" class="btn-submit">提交订单</button>  
   </view>
 </template>
 
@@ -22,6 +22,15 @@ export default class OrderBottom extends wepy.component{
       this.buyCount = count
 
       this.$apply()
+    },
+
+    goPay () {
+      // wepy.request('http://localhost:8080/order/pay/1534689708357').then((res) => {
+      //   console.log(res)
+      // })
+      wx.navigateTo({
+        url: 'pay'
+      })
     }
   }
 

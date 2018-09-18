@@ -19,6 +19,7 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
+      'pages/pay',
       'pages/search',
       'pages/searchDetail',
       'pages/createOrder',
@@ -70,10 +71,9 @@ export default class extends wepy.app {
 
   globalData = {
     userInfo: null,
-    service: 'http://localhost:8080',
   }
 
-  service = 'http://localhost:8080'
+  service = 'http://daoyang.natapp1.cc'
 
   serviceRoute = {
     jwtToken: 'Bearer ',
@@ -99,7 +99,7 @@ export default class extends wepy.app {
 
   onLaunch() {
     this.testAsync()
-    // wx.setStorageSync('userMd5', null)
+    wx.setStorageSync('userMd5', null)
   }
 
   sleep (s) {
