@@ -1,0 +1,152 @@
+<template>
+  <view style="position: relative">
+    <repeat for="{{dataSet}}" item="item">
+      <shipping-item :address.sync="item"></shipping-item>
+    </repeat>
+
+    <view class="mask">
+      <view class="dialog">
+        <view class="title">
+          编辑地址
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import ShippingItem from '../components/shipping/shipping-item'
+export default class Shipping extends wepy.page {
+  config = {
+    navigationBarTitleText: " 收货地址"
+  }
+
+  data  = {
+    dataSet: []
+  }
+
+  methods = {
+
+  }
+
+  components = {
+    'shipping-item': ShippingItem,
+  }
+
+  events = {
+    changeDefault (id) {
+      wepy.request({
+        url: this.$root.$parent.serviceRoute.shipping + '/' + id + '/checked/',
+        method: "PUT",
+        header: {
+          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        }
+      }).then((res) => {
+        if (res.data.status == 200) {
+          this.dataSet = res.data.data.list
+          this.dataSet.forEach(element => {
+            if (element.checked) {
+              element.isCurrentCheck = true
+            } else {
+              element.isCurrentCheck = false
+            }
+          }); 
+          this.$apply()
+          console.log(this.dataSet);
+        }
+      })
+    },
+
+    changeCurrentAddress (id) {
+      this.dataSet.forEach(element => {
+        if (element.id == id) {
+          element.isCurrentCheck = true
+        } else {
+          element.isCurrentCheck = false
+        }
+      })
+      this.$apply()
+    }
+  }
+
+  onLoad () {
+    wepy.request({
+      url: this.$root.$parent.serviceRoute.shipping,
+      header: {
+        'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+      }
+    }).then((res) => {
+      if (res.data.status == 200) {
+        this.dataSet = res.data.data.list
+        
+        let cAdd = this.$root.$parent.globalData.currentaddress
+        
+        if (cAdd != null) {
+          this.dataSet.forEach(element => {
+            if (element.id == cAdd.id) {
+              element.isCurrentCheck = true
+            } else {
+              element.isCurrentCheck = false
+            }
+          });          
+        } else {
+          this.dataSet.forEach(element => {
+            if (element.checked) {
+              element.isCurrentCheck = true
+            } else {
+              element.isCurrentCheck = false
+            }
+          });   
+        }
+        this.$apply()
+        console.log(this.dataSet);
+      }
+    })
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+
+  .mask
+    height 100%
+    width 100%
+    position fixed
+    top 0
+    bottom 0
+    left 0
+    right 0
+    background #000000
+    opacity 0.6
+    z-index 1000
+    display flex
+    justify-content center
+    overflow hidden
+
+
+    .dialog
+      height 400rpx
+      width 80%
+      position fixed 
+      top 40rpx 
+      z-index 2000
+      display flex
+      flex-direction column
+      align-items center
+      background #ffffff
+      opacity 1
+      overflow hidden
+
+      .title
+        height 15%
+        background red
+        display flex
+        justify-content center
+        align-items center
+        border-radius 20rpx 20rpx 0 0
+        font-size 30rpx
+        color #333
+        background #ffffff
+        overflow hidden
+</style>

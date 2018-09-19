@@ -38,7 +38,8 @@ export default class Detail extends wepy.page {
     isFavorite: false,
   }
 
-  onLoad (option) {
+  onLoad (option) { 
+    // option.id
     wepy.request(this.$root.$parent.serviceRoute.productDetail + option.id).then((d) => {
       let product = d.data.data
 

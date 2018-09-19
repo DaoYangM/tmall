@@ -2,24 +2,27 @@
   <view class="order-item">
     <view class="provide-container">
       <i class="iconfont icon-shop provide-avatar"/>
-      <text class="provide-name">{{dataSet.provideName}}</text> <i class="iconfont icon-right"/>
+      <text class="provide-name">充值中心</text> <i class="iconfont icon-right"/>
     </view>
+    <block wx:for="{{dataSet.orderItems}}" wx:key="{{index}}">
     <view class="item-info">
       <view class="info-img-container">
-        <image class="provide-avatar" src="{{dataSet.avatarUrl}}"/>
+        <image class="provide-avatar" src="{{item.productImage}}"/>
       </view>
       <view class="info-info">
         <view class="info-title" style="margin: 18rpx">
-          {{dataSet.desc}}
+          {{item.productName}}
         </view>
       </view>
       <view class="info-price" style="font-size: 26rpx;color: #f50;margin-right: 20rpx">
-        <text>￥</text><text>{{dataSet.price}}</text>/ 件
+        <text>￥</text><text>{{item.currentUnitPrice}}</text>/ 件
+        <view style="text-align: right">x{{item.quantity}}</view>
       </view>
     </view>
+    </block>
     <view class="total-info">
-      <view style="margin-right: 20rpx">共<text>1</text>件商品</view>
-      <view>合计: <text>￥19.96</text></view>
+      <view style="margin-right: 20rpx">共<text>{{dataSet.totalCount}}</text>件商品</view>
+      <view>合计: <text>￥{{dataSet.payment}}</text></view>
     </view>
     <view class="btn-wrap">
       <view class="btn">
@@ -35,15 +38,13 @@ export default class OrderItem extends wepy.component {
   props = {
     dataSet: {}
   }
-
-  onLoad () {
-  }
 }
 </script>
 
 <style lang="stylus" scoped>
 .order-item {
-  border-top: 10rpx solid #f5f5f5;
+  border-top: 20rpx solid #f5f5f5;
+  border-radius: 50rpx
   }
 
   .provide-container {

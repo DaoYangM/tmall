@@ -1,6 +1,6 @@
 <template>
-  <view class="wx-address-container">
-    <view wx:if="{{showGetAddress}}" class="get-wx-address" @tap="getAddress">
+  <view @tap="goAdressMore" class="wx-address-container">
+    <view wx:if="{{!checkAddress}}" class="get-wx-address" @tap="getAddress">
       <view style="display:flex; align-items:center">
         <image class="wx-icon" src="https://image.anruan.com/imglist/20170407/2017040754430995250.png" />
         <text class="wx-text">一件获取微信地址</text>        
@@ -15,23 +15,30 @@
       </view>
       <view class="address-container">
         <view class="name-phone">
-          <text class="name">{{address.username}}</text>
-          <text class="phone">{{address.telNumber}}</text>
+          <text class="name">{{checkAddress.receiverName}}</text>
+          <text class="phone">{{checkAddress.receiverPhone}}</text>
         </view>
         <view class="detail">
-          <text class="info">{{address.provinceName}}</text>
-          <text class="info">{{address.cityName}}</text>
-          <text class="info">{{address.countyName}}</text>
-          <text class="info">{{address.detailInfo}}</text>
+          <text class="info">{{checkAddress.receiverProvince}}</text>
+          <text class="info">{{checkAddress.receiverCity}}</text>
+          <text class="info">{{checkAddress.receiverDistrict}}</text>
+          <text class="info">{{checkAddress.receiverAddress}}</text>
         </view>
       </view>    
-    </view>  
+    </view>
+    <view wx:if="{{checkAddress}}" class="get-more">
+      <i class="iconfont icon-right"></i>
+    </view>    
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
 export default class WxAddress extends wepy.component {
+
+  props = {
+    checkAddress: {},
+  }
 
   data = {
     showGetAddress: true,
@@ -44,34 +51,41 @@ export default class WxAddress extends wepy.component {
       wx.chooseAddress({
         success: (res) => {
           let userAddress = {
-            username: res.userName,
-            telNumber: res.telNumber,
-            provinceName: res.provinceName,
-            cityName: res.cityName,
-            countyName: res.countyName,
-            detailInfo: res.detailInfo
+            receiverName: res.userName,
+            receiverPhone: res.telNumber,
+            receiverProvince: res.provinceName,
+            receiverCity: res.cityName,
+            receiverDistrict: res.countyName,
+            receiverAddress: res.detailInfo,
+            checked: 1,
           }
-          wx.setStorageSync('userAddress', userAddress)
-          this.address = userAddress
+          // wx.setStorageSync('userAddress', userAddress)
+          // this.address = userAddress
+          wepy.request({
+            url: this.$root.$parent.serviceRoute.shipping,
+            method: "POST",
+            data: userAddress,
+            header: {
+              'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+            }
+          }).then((res) => {
+            if (res.data.status == 200) {
+              this.checkAddress = res.data.data
+              this.$apply()
+              console.log("add", this.checkAddress)
+            }
+          })
 
-          this.$apply()
         }
       })      
-    }
-
-  }
-
-  onLoad () {
-    let userAddress = wx.getStorageSync('userAddress')
-    console.log("add", userAddress)
-
-    if (userAddress != null) {
-      this.showGetAddress = false
-      this.address = userAddress
-
-      this.$apply()
+    },
+    goAdressMore () {
+      wx.navigateTo({
+          url: 'shipping'
+      })
     }
   }
+
 }
 </script>
 
@@ -79,6 +93,9 @@ export default class WxAddress extends wepy.component {
   .wx-address-container
     width 100%
     box-shadow 0 2rpx 0 0 rgba(0,0,0,.1), 0 1rpx 1rpx 0 rgba(0,0,0,.2)
+    display flex
+    align-items center
+    background #ffffff
 
     .get-wx-address
       display flex
@@ -110,6 +127,7 @@ export default class WxAddress extends wepy.component {
         justify-content center
         font-size 26rpx
         color #999
+        width 450rpx
 
         .name-phone
           margin-bottom 10rpx
@@ -127,4 +145,11 @@ export default class WxAddress extends wepy.component {
       height 150rpx
       justify-content flex-start
 
+    .get-more
+      display flex
+      flex-direction row-reverse
+      align-items center
+      text-align right
+      flex 1
+      margin-right 20rpx
 </style>

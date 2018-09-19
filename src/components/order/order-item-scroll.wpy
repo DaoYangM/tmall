@@ -1,56 +1,16 @@
 <template>
   <view class="order-container">
 
-    <scroll-view class="{{show == '0'? '': 'hiden'}}" scroll-y style="height:94vh;" lower-threshold="100" bindscrolltolower="lower" >
-      <block wx:if="{{ allList === null }}">
+    <scroll-view scroll-y style="height:94vh;" lower-threshold="100" bindscrolltolower="lower" >
+      <block wx:if="{{ dataSet.length == 0 }}">
         <empty></empty>
       </block>
       <block wx:else>
-        <repeat for="{{allList}}">
+        <repeat for="{{dataSet}}">
           <order-item :dataSet.sync="item"></order-item>
         </repeat>        
       </block> 
     </scroll-view>
-
-    <scroll-view class="{{show == '1'? '': 'hiden'}}" scroll-y style="height:94vh;" lower-threshold="100" bindscrolltolower="lower" >
-      <block wx:if="{{waitPayList.length == 0}}">
-        <empty></empty>
-      </block>
-      <block wx:else>
-        <repeat for="{{waitPayList}}">
-          <order-item :dataSet.sync="item"></order-item>
-        </repeat>        
-      </block> 
-    </scroll-view>
-
-    <scroll-view class="{{show == '2'? '': 'hiden'}}" scroll-y style="height:94vh;" lower-threshold="100" bindscrolltolower="lower">
-      <view id="green" wx:for="{{30}}" style="background: blue;height:200rpx;border: 2rpx solid #ffffff">{{index}}</view>
-    </scroll-view>
-
-    <scroll-view class="{{show == '3'? '': 'hiden'}}" scroll-y style="height:94vh;" lower-threshold="100" bindscrolltolower="lower" >
-      <block wx:if="{{waitRecepit.length == 0}}">
-        <empty></empty>
-      </block>
-      <block wx:else>
-        <repeat for="{{waitRecepit}}">
-          <order-item :dataSet.sync="item"></order-item>
-        </repeat>        
-      </block> 
-
-    </scroll-view>
-
-    <scroll-view class="{{show == '4'? '': 'hiden'}}" scroll-y style="height:94vh;" lower-threshold="100" bindscrolltolower="lower" >
-      <block wx:if="{{waitComment.length == 0}}">
-        <empty></empty>
-      </block>
-      <block wx:else>
-        <repeat for="{{waitComment}}">
-          <order-item :dataSet.sync="item"></order-item>
-        </repeat>        
-      </block> 
-
-    </scroll-view>
-
   </view>
 </template>
 
@@ -61,34 +21,68 @@ import Empty from '../empty'
 
 export default class orderItemScroll extends wepy.component {
   props = {
-    type: String
+    type: 0,
+    dataSet: [],
   }
 
   data = {
     show: '0',
-    allList: [
-      {id: '0001', provideName: '充值中心', avatarUrl: 'https://gw.alicdn.com/bao/uploaded/i3/399230749/TB2oU7KqFXXXXXvXFXXXXXXXXXX_!!399230749.jpg_270x270q90.jpg', desc:"出口单不粘迷你奶锅汤锅泡面锅米糊锅巧克力马卡龙棒棒糖熬糖糖水", price: '30.08'}
-    ],
-    waitPayList: [],
-    waitRecepit: [],
-    waitComment: [],
-  }
-
-  onLoad () {
-    console.log(this.type); // mytitle
+    page: 1,
   }
 
   methods = {
     lower () {
       console.log("lower")
-      this.list = this.list.concat([11, 12, 13])
+      
+      let url = this.$root.$parent.serviceRoute.order
+      this.page += 1
+
+      switch (this.type) {
+        case 0:
+          url = url + '?type=all&page=' + this.page
+          break
+        case 1:
+          url = url + '?type=wait_pay&page=' + this.page
+          break
+        case 2:
+          url = url + '?type=wait_delivery&page=' + this.page
+          break
+        case 3:
+          url = url + '?type=wait_receipt&page=' + this.page
+          break
+        case 4:
+          url = url + '?type=wait_comment&page=' + this.page
+          break
+        default:
+          url = url + '?type=all&page=' + this.page
+          break
+      }
+
+      wepy.request({
+        'url': url,
+        header: {
+          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        }
+      }).then((res) => {
+        console.log("res", res)
+        let moreData = res.data.data.list
+        if (res.data.data.list.length != 0) {
+          console.log(moreData);
+          
+          this.dataSet = this.dataSet.concat(moreData)
+
+          this.$apply()   
+        }
+      })
     }
   }
 
   watch = {
     type (newValue, oldValue) {
-      this.show = newValue
+      this.type = newValue
+      this.page = 1
       this.$apply()
+      console.log("changeType", this.type) 
     }
   }
   

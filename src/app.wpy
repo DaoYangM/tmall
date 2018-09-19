@@ -18,15 +18,16 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/shipping',
       'pages/index',
+      'pages/createOrder',
+      'pages/detail',
+      'pages/order',
+      'pages/me',
       'pages/pay',
       'pages/search',
       'pages/searchDetail',
-      'pages/createOrder',
       'pages/cart',
-      'pages/me',
-      'pages/order',
-      'pages/detail',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -71,6 +72,7 @@ export default class extends wepy.app {
 
   globalData = {
     userInfo: null,
+    currentaddress: null,
   }
 
   service = 'http://daoyang.natapp1.cc'
@@ -89,6 +91,8 @@ export default class extends wepy.app {
     searchBar: this.service + '/products/search/bar',
     categorySearch: this.service + '/category',
     productSearch: this.service + '/products/search',
+    order: this.service + '/order',
+    shipping: this.service + '/shipping',
   }
 
   constructor () {
@@ -99,7 +103,7 @@ export default class extends wepy.app {
 
   onLaunch() {
     this.testAsync()
-    wx.setStorageSync('userMd5', null)
+    // wx.setStorageSync('userMd5', null)
   }
 
   sleep (s) {
