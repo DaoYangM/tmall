@@ -1,37 +1,115 @@
 <template>
-  <view style="position: relative">
-    <repeat for="{{dataSet}}" item="item">
-      <shipping-item :address.sync="item"></shipping-item>
-    </repeat>
-
-    <view class="mask">
-      <view class="dialog">
-        <view class="title">
-          编辑地址
+  <view>
+    <view >
+      <repeat for="{{dataSet}}" item="item">
+        <shipping-item :address.sync="item"></shipping-item>
+      </repeat>
+    </view>
+    <block wx:if="{{showChangeAddress}}">
+      <view style="display: flex;justify-content: center;">
+        <view class="mask">
+        </view>
+        <view class="dialog">
+          <view class="title divid-line">
+            编辑地址
+          </view>
+          <view class="item divid-line">
+            <text>联系人</text>
+            <input bindinput="inputChangeName" value="{{modifyAddressData.receiverName}}"/>
+          </view>
+          <view class="item divid-line">
+            <text>手机号码</text>
+            <input bindblur="inputChangePhone" value="{{modifyAddressData.receiverPhone}}"/>
+          </view>
+          <view @tap="showCityPicker" class="item divid-line">
+            <text>选择地区</text>
+            <view>
+              {{modifyAddressData.receiverProvince}}{{modifyAddressData.receiverCity}}{{modifyAddressData.receiverDistrict}}
+            </view>
+          </view>
+          <view class="item">
+            <text>详细地址</text>
+            <input value="{{modifyAddressData.receiverAddress}}"/>
+          </view>
+          <view @tap="goSaveAddress" class="btn">保存</view>
+        </view>
+        <view @tap="closeChangeAddress" class="close-wrap">
+          <view>x</view>
+        </view>
+        <view class="city-picker">
+          <city-picker></city-picker>
         </view>
       </view>
-    </view>
+    </block>  
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
 import ShippingItem from '../components/shipping/shipping-item'
+import CityPicker from '..//components/city-picker'
+
 export default class Shipping extends wepy.page {
   config = {
     navigationBarTitleText: " 收货地址"
   }
 
   data  = {
-    dataSet: []
+    dataSet: [], 
+    showChangeAddress: false,
+    modifyAddressData: {},
   }
 
   methods = {
+    showCityPicker () {
+      this.$broadcast('showSelectDistrict')
+    },
 
+    closeChangeAddress () {
+      this.showChangeAddress = false
+      this.$apply()
+    },
+
+    goSaveAddress () {
+      wepy.request({
+        url: this.$root.$parent.serviceRoute.shipping + '/' + this.modifyAddressData.id,
+        method: "PUT",
+        header: {
+          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        },
+        data: this.modifyAddressData
+
+      }).then((res) => {
+        if (res.data.status == 200)
+          this.getInitList()
+          this.showChangeAddress = false
+
+          this.$apply()
+      })
+    },
+
+    inputChangeName (e) {
+      this.modifyAddressData.receiverName = e.detail.value
+      this.$apply()
+    },
+
+    inputChangePhone (e) {
+      let phone = e.detail.value
+      if (phone.length != 11) {
+        wx.showToast({
+          title: "手机号码格式不正确",
+          icon: "none",
+        })
+      } else {
+        this.modifyAddressData.receiverPhone = e.detail.value
+        this.$apply()        
+      }
+    },
   }
 
   components = {
     'shipping-item': ShippingItem,
+    'city-picker': CityPicker,
   }
 
   events = {
@@ -67,10 +145,60 @@ export default class Shipping extends wepy.page {
         }
       })
       this.$apply()
+    },
+
+    changeArea (area) {
+      console.log("fa", area)
+      // 辽宁省,沈阳市,市辖区
+      let splitAddress = area.split(',')
+      this.modifyAddressData.receiverProvince = splitAddress[0]
+      this.modifyAddressData.receiverCity = splitAddress[1]
+      this.modifyAddressData.receiverDistrict = splitAddress[2]
+
+      this.$apply()
+    },
+
+    goChangeAddress (id) {
+      console.log("chagneAdId", this.modifyAddressData)
+      
+      wepy.request({
+        url: this.$root.$parent.serviceRoute.shipping + '/' + id,
+        header: {
+          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        }
+    
+      }).then((res) => {
+        if (res.data.status == 200) {
+          this.modifyAddressData = res.data.data
+          this.showChangeAddress = true
+          this.$apply()
+        }
+      })
+
+    },
+
+    goDeleteAddress (id) {
+      wepy.request({
+        url: this.$root.$parent.serviceRoute.shipping + '/' + id,
+        header: {
+          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        },
+        method: "DELETE"
+    
+      }).then((res) => {
+        if (res.data.status == 200) {
+          this.getInitList()
+          this.$apply()
+        }
+      })
     }
   }
 
   onLoad () {
+    this.getInitList()
+  }
+
+  getInitList () {
     wepy.request({
       url: this.$root.$parent.serviceRoute.shipping,
       header: {
@@ -109,44 +237,91 @@ export default class Shipping extends wepy.page {
 
 <style lang="stylus" scoped>
 
+  .divid-line
+    border-bottom 2rpx solid #eeeeee
+
   .mask
     height 100%
     width 100%
     position fixed
     top 0
-    bottom 0
-    left 0
-    right 0
-    background #000000
+    background #000
+    color #fff
     opacity 0.6
-    z-index 1000
+    z-index 100
     display flex
     justify-content center
     overflow hidden
 
 
-    .dialog
-      height 400rpx
-      width 80%
-      position fixed 
-      top 40rpx 
-      z-index 2000
-      display flex
-      flex-direction column
-      align-items center
-      background #ffffff
-      opacity 1
-      overflow hidden
+  .dialog
+    width 90%
+    position fixed 
+    top 60rpx
+    z-index 200
+    display flex
+    flex-direction column
+    background #ffffff
+    border-radius 20rpx
+    overflow hidden
 
-      .title
-        height 15%
-        background red
-        display flex
-        justify-content center
-        align-items center
-        border-radius 20rpx 20rpx 0 0
-        font-size 30rpx
-        color #333
-        background #ffffff
-        overflow hidden
+
+    .title
+      display flex
+      justify-content center
+      align-items center
+      font-size 30rpx
+      color #333
+      background #ffffff
+      overflow hidden
+      font-size 30rpx
+      height 100rpx
+      line-height 100rpx
+      width 100%
+
+    .item
+      padding 0 20rpx
+      height 80rpx
+      line-height 80rpx
+      display flex
+      font-size 28rpx  
+      align-items center
+
+      text
+        width 140rpx
+
+    .btn
+      width 90%
+      background red
+      height 80rpx
+      line-height 80rpx  
+      border-radius 10rpx
+      margin 60rpx auto 10rpx
+      text-align center
+      color #ffffff
+      font-size 28rpx
+
+  .close-wrap
+    position fixed
+    right 20rpx
+    top 40rpx
+    background #999
+    border-radius 50%
+    z-index 300
+    display flex
+    justify-content center
+    align-items center
+    color #eee
+    height 60rpx
+    width 60rpx
+  
+    view
+      display inline-block
+      line-height 60rpx
+
+  .city-picker
+    position fixed
+    z-index 300
+    bottom 0
+    left 0
 </style>

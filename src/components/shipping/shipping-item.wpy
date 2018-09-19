@@ -30,11 +30,11 @@
         </block>
       </view>
       <view class="ops-g">
-        <view style="margin-right: 20rpx">
+        <view @tap="goChangeAddress({{address.id}})" style="margin-right: 20rpx">
           <i class="iconfont icon-edit"></i>
           <text>编辑</text>
         </view>
-        <view>
+        <view @tap="goDeleteAddress({{address.id}})">
           <i class="iconfont icon-delete"></i>
           <text>删除</text>
         </view>
@@ -45,6 +45,7 @@
 
 <script>
 import wepy from 'wepy'
+
 export default class ShippingItem extends wepy.component {
 
   props = {
@@ -76,6 +77,23 @@ export default class ShippingItem extends wepy.component {
       wx.navigateBack({
           delta: 1
       })
+    },
+
+    goChangeAddress (id) {
+      this.$emit('goChangeAddress', id)
+    },
+
+    goDeleteAddress (id) {
+      wx.showModal({
+        title: '删除地址',
+        content: '是否要删除选中地址',
+        success: (confirm, cancel) => {
+          if (confirm) {
+            this.$emit('goDeleteAddress', id)
+          }
+        }
+      })
+      
     }
   }
 }
