@@ -34,7 +34,6 @@ export default class CreateOrder extends wepy.page{
 
   onLoad (option) {
     
-    console.log("ids" + option.productId, option.pasId, option.count)
     let productId = option.productId
     let pasId =  option.pasId
     let count = option.count
@@ -49,12 +48,12 @@ export default class CreateOrder extends wepy.page{
     }).then((res) => {
       if (res.data.data) {
         this.checkAddress = res.data.data
+        this.$root.$parent.globalData.currentaddress = this.checkAddress
       } else {
         this.checkAddress = null
       }
       this.$apply()
 
-      console.log("check", this.checkAddress);
     })
 
     wepy.request(this.$root.$parent.serviceRoute.productDetail + productId).then((d) => {
@@ -84,17 +83,18 @@ export default class CreateOrder extends wepy.page{
       })
     }
 
-    console.log("onload")
   }
 
   
   onShow () {
     let cAddress = this.$root.$parent.globalData.currentaddress
-    if (cAddress) {
+    if (cAddress != null) {
       this.checkAddress = cAddress
-      this.$apply()
-      console.log(this.checkAddress);
+      
+    } else {
+      this.checkAddress = null
     }
+    this.$apply()
   }
 
   onUnload() {

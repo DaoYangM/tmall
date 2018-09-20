@@ -1,0 +1,46 @@
+<template>
+  <view @tap="goWxAddress" class="btn-add">
+    <view><i class="iconfont icon-weixin"></i>微信添加</view>
+  </view>  
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class WxAddressBar extends wepy.component{
+  methods = {
+    goWxAddress () {
+      console.log("goWxaddress");
+      
+      wx.chooseAddress({
+        success: (res) => {
+          this.$emit('wxGetAddress', res)
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+  .btn-add
+    width 100%
+    display flex
+    justify-content center
+    align-items center
+    position fixed
+    bottom 30rpx
+    font-size 30rpx
+    color #ffffff
+    height 100rpx
+    line-height 100rpx
+    margin auto
+
+    view
+      background #39D239
+      width 90%
+      border-radius 10rpx
+      text-align center
+
+      .iconfont
+        margin-right 20rpx
+</style>

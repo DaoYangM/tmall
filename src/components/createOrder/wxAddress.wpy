@@ -1,7 +1,7 @@
 <template>
-  <view @tap="goAdressMore" class="wx-address-container">
+  <view class="wx-address-container">
     <view wx:if="{{!checkAddress}}" class="get-wx-address" @tap="getAddress">
-      <view style="display:flex; align-items:center">
+      <view @tap="getAddressy" style="display:flex; align-items:center">
         <image class="wx-icon" src="https://image.anruan.com/imglist/20170407/2017040754430995250.png" />
         <text class="wx-text">一件获取微信地址</text>        
       </view>
@@ -13,7 +13,7 @@
       <view style="margin: 0 40rpx">
         <i class="iconfont icon-location"></i>
       </view>
-      <view class="address-container">
+      <view @tap="goAdressMore" class="address-container">
         <view class="name-phone">
           <text class="name">{{checkAddress.receiverName}}</text>
           <text class="phone">{{checkAddress.receiverPhone}}</text>

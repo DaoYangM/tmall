@@ -1,10 +1,18 @@
 <template>
   <view>
-    <view >
-      <repeat for="{{dataSet}}" item="item">
-        <shipping-item :address.sync="item"></shipping-item>
-      </repeat>
-    </view>
+    <block wx:if="{{dataSet.length > 0}}">
+      <view>
+        <repeat for="{{dataSet}}" item="item">
+          <shipping-item :address.sync="item"></shipping-item>
+        </repeat>
+      </view>      
+    </block>
+    <block wx:else>
+      <view class="empty">
+        <text>这里什么都没有</text>
+      </view>
+    </block>  
+
     <block wx:if="{{showChangeAddress}}">
       <view style="display: flex;justify-content: center;">
         <view class="mask">
@@ -40,13 +48,16 @@
           <city-picker></city-picker>
         </view>
       </view>
-    </block>  
+    </block>
+
+    <wx-address-bar></wx-address-bar>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
 import ShippingItem from '../components/shipping/shipping-item'
+import WxAddressBar from '../components/shipping/wx-address-bar'
 import CityPicker from '..//components/city-picker'
 
 export default class Shipping extends wepy.page {
@@ -109,6 +120,7 @@ export default class Shipping extends wepy.page {
 
   components = {
     'shipping-item': ShippingItem,
+    'wx-address-bar': WxAddressBar,
     'city-picker': CityPicker,
   }
 
@@ -178,6 +190,9 @@ export default class Shipping extends wepy.page {
     },
 
     goDeleteAddress (id) {
+
+      let cAddress = this.$root.$parent.globalData.currentaddress
+
       wepy.request({
         url: this.$root.$parent.serviceRoute.shipping + '/' + id,
         header: {
@@ -189,8 +204,65 @@ export default class Shipping extends wepy.page {
         if (res.data.status == 200) {
           this.getInitList()
           this.$apply()
+          if (cAddress != null) {
+            if (cAddress.id == id) {
+              this.dataSet.forEach(element => {
+                if (element.checked == 1) {
+                  cAddress = element
+                  element.isCurrentCheck = true
+                }
+              })
+            }
+
+            this.$root.$parent.globalData.currentaddress = cAddress
+          }
+          this.$apply()
         }
       })
+    },
+
+    wxGetAddress (res) {
+
+      let repeatFlag = false 
+
+      this.dataSet.forEach(element => {
+        if ((element.receiverAddress.trim() == res.detailInfo.trim()) 
+        && (element.receiverName.trim() == res.userName)
+        && (element.receiverPhone.trim() == res.telNumber)) {
+          
+          repeatFlag = true
+        }
+      })
+
+      if (repeatFlag) {
+        wx.showToast({
+          title: '地址已存在',
+          icon: 'none'
+        })
+      } else {
+        let userAddress = {
+          receiverName: res.userName,
+          receiverPhone: res.telNumber,
+          receiverProvince: res.provinceName,
+          receiverCity: res.cityName,
+          receiverDistrict: res.countyName,
+          receiverAddress: res.detailInfo,
+          checked: 1,
+        }
+        wepy.request({
+          url: this.$root.$parent.serviceRoute.shipping,
+          method: "POST",
+          data: userAddress,
+          header: {
+            'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+          }
+        }).then((res) => {
+          if (res.data.status == 200) {
+            this.getInitList()
+            this.$apply()
+          }
+        })
+      }
     }
   }
 
@@ -207,6 +279,10 @@ export default class Shipping extends wepy.page {
     }).then((res) => {
       if (res.data.status == 200) {
         this.dataSet = res.data.data.list
+
+        if (this.dataSet.length == 0) {
+          this.$root.$parent.globalData.currentaddress = null
+        }
         
         let cAdd = this.$root.$parent.globalData.currentaddress
         
@@ -222,13 +298,13 @@ export default class Shipping extends wepy.page {
           this.dataSet.forEach(element => {
             if (element.checked) {
               element.isCurrentCheck = true
+              this.$root.$parent.globalData.currentaddress = element
             } else {
               element.isCurrentCheck = false
             }
           });   
         }
         this.$apply()
-        console.log(this.dataSet);
       }
     })
   }
@@ -236,6 +312,13 @@ export default class Shipping extends wepy.page {
 </script>
 
 <style lang="stylus" scoped>
+
+  .empty
+    padding-top 300rpx
+    font-size 30rpx
+    color #666
+    margin 0 auto
+    text-align center
 
   .divid-line
     border-bottom 2rpx solid #eeeeee
