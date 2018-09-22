@@ -37,7 +37,7 @@
           </view>
           <view class="item">
             <text>详细地址</text>
-            <input value="{{modifyAddressData.receiverAddress}}"/>
+            <input bindblur="inputChangeDetail"  value="{{modifyAddressData.receiverAddress}}"/>
           </view>
           <view @tap="goSaveAddress" class="btn">保存</view>
         </view>
@@ -69,6 +69,7 @@ export default class Shipping extends wepy.page {
     dataSet: [], 
     showChangeAddress: false,
     modifyAddressData: {},
+    isEmpty: false
   }
 
   methods = {
@@ -116,6 +117,11 @@ export default class Shipping extends wepy.page {
         this.$apply()        
       }
     },
+
+    inputChangeDetail (e) {
+      this.modifyAddressData.receiverAddress = e.detail.value
+      this.$apply()
+    }
   }
 
   components = {
@@ -160,7 +166,6 @@ export default class Shipping extends wepy.page {
     },
 
     changeArea (area) {
-      console.log("fa", area)
       // 辽宁省,沈阳市,市辖区
       let splitAddress = area.split(',')
       this.modifyAddressData.receiverProvince = splitAddress[0]
@@ -204,17 +209,21 @@ export default class Shipping extends wepy.page {
         if (res.data.status == 200) {
           this.getInitList()
           this.$apply()
-          if (cAddress != null) {
-            if (cAddress.id == id) {
-              this.dataSet.forEach(element => {
-                if (element.checked == 1) {
-                  cAddress = element
-                  element.isCurrentCheck = true
-                }
-              })
-            }
+          if (this.isEmpty) {
+          this.$root.$parent.globalData.currentaddress = null
+          } else {
+            if (cAddress != null) {
+              if (cAddress.id == id) {
+                this.dataSet.forEach(element => {
+                  if (element.checked == 1) {
+                    cAddress = element
+                    element.isCurrentCheck = true
+                  }
+                })
+              }
 
-            this.$root.$parent.globalData.currentaddress = cAddress
+              this.$root.$parent.globalData.currentaddress = cAddress
+            }            
           }
           this.$apply()
         }
@@ -282,27 +291,29 @@ export default class Shipping extends wepy.page {
 
         if (this.dataSet.length == 0) {
           this.$root.$parent.globalData.currentaddress = null
-        }
-        
-        let cAdd = this.$root.$parent.globalData.currentaddress
-        
-        if (cAdd != null) {
-          this.dataSet.forEach(element => {
-            if (element.id == cAdd.id) {
-              element.isCurrentCheck = true
-            } else {
-              element.isCurrentCheck = false
-            }
-          });          
+          this.isEmpty = true
+          this.$apply()
         } else {
-          this.dataSet.forEach(element => {
-            if (element.checked) {
-              element.isCurrentCheck = true
-              this.$root.$parent.globalData.currentaddress = element
-            } else {
-              element.isCurrentCheck = false
-            }
-          });   
+          let cAdd = this.$root.$parent.globalData.currentaddress
+          
+          if (cAdd != null) {
+            this.dataSet.forEach(element => {
+              if (element.id == cAdd.id) {
+                element.isCurrentCheck = true
+              } else {
+                element.isCurrentCheck = false
+              }
+            });          
+          } else {
+            this.dataSet.forEach(element => {
+              if (element.checked) {
+                element.isCurrentCheck = true
+                this.$root.$parent.globalData.currentaddress = element
+              } else {
+                element.isCurrentCheck = false
+              }
+            });   
+          }          
         }
         this.$apply()
       }

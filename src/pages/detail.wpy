@@ -55,7 +55,6 @@ export default class Detail extends wepy.page {
  
       this.productDesc = product.detail
 
-      console.log(this.swiperImages)
 
       this.$apply()
       this.$invoke('html2wxml', 'htmlParserNotice')
@@ -68,7 +67,6 @@ export default class Detail extends wepy.page {
       }}).then((d) => {
       this.isFavorite = d.data.data
       this.$apply()
-      console.log("isFavorite", this.isFavorite)
     })
 
   }

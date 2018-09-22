@@ -19,12 +19,12 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
+      'pages/pay',
       'pages/shipping',
       'pages/createOrder',
       'pages/detail',
       'pages/order',
       'pages/me',
-      'pages/pay',
       'pages/search',
       'pages/searchDetail',
       'pages/cart',
@@ -92,6 +92,7 @@ export default class extends wepy.app {
     categorySearch: this.service + '/category',
     productSearch: this.service + '/products/search',
     order: this.service + '/order',
+    preOrder: this.service + '/order/pre/create',
     shipping: this.service + '/shipping',
   }
 

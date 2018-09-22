@@ -81,6 +81,10 @@ export default class OrderItem extends wepy.component{
       let count = this.productInfo.count
       if (count == this.productInfo.stock) {
         this.btnPlus = true
+        wx.showToast({
+          title: '库存不足',
+          icon: 'none',
+        })
       } else {
         this.productInfo.count = parseInt(this.productInfo.count) + 1
         this.btnMinus = false

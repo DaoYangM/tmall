@@ -2,7 +2,7 @@
   <view>
     <wxaddress :checkAddress.sync="checkAddress"></wxaddress>
     <order-item :productInfo.sync="productInfo" :specifyDesItems.sync="specifyDesItems"></order-item>
-    <order-bottom :totalPrice.sync="totalPrice" :buyCount.sync="buyCount"></order-bottom>
+    <order-bottom :productInfo.sync="productInfo" :totalPrice.sync="totalPrice" :buyCount.sync="buyCount"></order-bottom>
   </view>
 
 </template>
@@ -53,7 +53,6 @@ export default class CreateOrder extends wepy.page{
         this.checkAddress = null
       }
       this.$apply()
-
     })
 
     wepy.request(this.$root.$parent.serviceRoute.productDetail + productId).then((d) => {
@@ -85,14 +84,14 @@ export default class CreateOrder extends wepy.page{
 
   }
 
-  
   onShow () {
     let cAddress = this.$root.$parent.globalData.currentaddress
     if (cAddress != null) {
       this.checkAddress = cAddress
-      
     } else {
       this.checkAddress = null
+      this.$broadcast("toNull")
+      this.$apply()
     }
     this.$apply()
   }

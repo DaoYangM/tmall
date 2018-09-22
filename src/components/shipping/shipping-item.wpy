@@ -62,18 +62,10 @@ export default class ShippingItem extends wepy.component {
 
     changeCurrentAddress (id) {
       this.$root.$parent.globalData.currentaddress = this.address
-      
-      if (id == this.$root.$parent.globalData.currentaddress.id) {
-        this.address.isCurrentCheck = true
-        this.$emit('changeCurrentAddress', id)
-      } else {
-        this.address.isCurrentCheck = false
-      }
-      
-      
+    
+      this.address.isCurrentCheck = true
+      this.$emit('changeCurrentAddress', id)
       this.$apply()
-
-      console.log(this.address)
       wx.navigateBack({
           delta: 1
       })

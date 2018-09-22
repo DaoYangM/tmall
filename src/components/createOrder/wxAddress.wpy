@@ -1,12 +1,12 @@
 <template>
   <view class="wx-address-container">
-    <view wx:if="{{!checkAddress}}" class="get-wx-address" @tap="getAddress">
-      <view @tap="getAddressy" style="display:flex; align-items:center">
+    <view wx:if="{{checkAddress == null}}" class="get-wx-address" @tap="getAddress">
+      <view style="display:flex; align-items:center">
         <image class="wx-icon" src="https://image.anruan.com/imglist/20170407/2017040754430995250.png" />
         <text class="wx-text">一件获取微信地址</text>        
       </view>
       <view>
-        <i class="iconfont icon-right" style="margin-right: 18rpx"></i>
+        <i class="iconfont icon-right" style="margin-left: 30rpx"></i>
       </view>  
     </view>
     <view wx:else class="get-wx-address wx-address">
@@ -47,7 +47,6 @@ export default class WxAddress extends wepy.component {
 
   methods = {
     getAddress () {
-     
       wx.chooseAddress({
         success: (res) => {
           let userAddress = {
@@ -59,8 +58,7 @@ export default class WxAddress extends wepy.component {
             receiverAddress: res.detailInfo,
             checked: 1,
           }
-          // wx.setStorageSync('userAddress', userAddress)
-          // this.address = userAddress
+
           wepy.request({
             url: this.$root.$parent.serviceRoute.shipping,
             method: "POST",
@@ -71,11 +69,11 @@ export default class WxAddress extends wepy.component {
           }).then((res) => {
             if (res.data.status == 200) {
               this.checkAddress = res.data.data
+              this.$root.$parent.globalData.currentaddress = res.data.data
               this.$apply()
-              console.log("add", this.checkAddress)
+              console.log("add", this.$root.$parent.globalData.currentaddress)
             }
           })
-
         }
       })      
     },
@@ -83,6 +81,13 @@ export default class WxAddress extends wepy.component {
       wx.navigateTo({
           url: 'shipping'
       })
+    }
+  }
+
+  events = {
+    toNull () {
+      this.checkAddress = null
+      this.$apply()
     }
   }
 

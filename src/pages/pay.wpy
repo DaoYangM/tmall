@@ -1,5 +1,12 @@
 <template>
-  <web-view src="{{url}}" bindmessage="handlePostMessage"></web-view>
+  <view class="container">
+    <view style="width: 500rpx; font-size: 35rpx; text-align: center;">请使用支付宝进行支付</view>
+    <image class="qr-image" src="{{qrUrl}}" />
+    <view class="text-wrap">
+      <text style="color: #f50;">已完成支付</text>
+      <text>支付失败</text>
+    </view>  
+  </view>  
 </template>
 
 <script>
@@ -7,7 +14,7 @@ import wepy from 'wepy'
 export default class Pay extends wepy.page {
 
   data  = {
-    url: 'http://daoyang.natapp1.cc/order/pay/1534689708357'
+    qrUrl: 'http://img.daoyang.top//alipayQRCode/240c01d6-3dba-4912-a991-7c8f5e89baea.jpg'
   }
 
   methods = {
@@ -19,8 +26,40 @@ export default class Pay extends wepy.page {
     }
   }
 
+  onLoad (option) {
+    this.qrUrl = option.qrurl
+    this.$apply()
+    console.log("qrurl", option.qrurl)
+  }
 }
 </script>
 
 <style lang="stylus" scoped>
+  .container
+    margin-top 100rpx
+    font-size 28rpx
+    height 100%
+    width 100%
+    justify-content center
+
+    .qr-image
+      width 600rpx
+      height 600rpx
+
+    .text-wrap
+      margin-top 100rpx
+      width 500rpx
+      display flex
+      justify-content space-between
+
+      text
+        display inline-block
+        border-radius 10rpx
+        border 2rpx solid #eee
+        height 60rpx
+        width 200rpx
+        text-align center
+        line-height 60rpx
+        color #ffffff
+        background #666
 </style>

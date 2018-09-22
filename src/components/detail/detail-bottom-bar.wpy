@@ -9,8 +9,8 @@
       <text>收藏</text>
     </view>
     <view class="btn-group">
-      <bottom size="" @tap="goCart" class="btn-cart">加入购物车</bottom>
-      <bottom @tap="goBuy" class="btn-buy">立即购买</bottom>
+      <view @tap="goCart" class="btn-cart">加入购物车</view>
+      <view @tap="goBuy" class="btn-buy">立即购买</view>
     </view>
   </view>
 </template>
@@ -177,7 +177,7 @@ export default class DetailBottomBar extends wepy.component{
       justify-content center
       align-items center
       font-size 28rpx
-      cursor pointer
+      // cursor pointer
       text-align center
       color #ffffff
       
