@@ -1,0 +1,71 @@
+<template>
+  <view class="head-wrap">
+    <view class="head-img-wrap">
+      <view class="img">
+        <view class="status-desc">
+          等待买家付款
+        </view>
+        <view class="status-img-wrap">
+          <view class="status-img">
+
+          </view>
+        </view>
+      </view>  
+    </view>
+    <view class="user-shipping">
+
+    </view>
+  </view>      
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class OrderDetailHead extends wepy.component {
+  
+}
+</script>
+
+<style lang="stylus" scoped>
+  .head-wrap
+    display flex
+    flex-direction column
+    width 100%
+
+    .head-img-wrap
+      flex 1
+      height 200rpx
+
+      .img
+        width 100%
+        height 100%
+        background: linear-gradient(to right, rgb(255, 144, 0), rgb(255, 80, 0)) center center / cover no-repeat
+        position relative
+
+        .status-desc
+          position absolute
+          margin-left 80rpx
+          overflow hidden
+          height 80rpx
+          line-height 80rpx
+          top 50%
+          margin-top -40rpx
+          font-size 32rpx
+          color #ffffff
+
+        .status-img-wrap
+          position absolute
+          margin-left 410rpx
+          height 100%
+          display flex
+          justify-content center
+          align-items center
+          width 300rpx
+
+          .status-img
+            width 100%
+            height 100%
+            background-image: url(//img.alicdn.com/tps/TB1TRj7PVXXXXbXXXXXXXXXXXXX-420-300.png_200x200q85s150.jpg_.webp);
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: contain;
+</style>

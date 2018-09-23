@@ -1,0 +1,35 @@
+<template>
+  <view class="bottom-wrap">
+    <view class="ops-wrap">取消订单</view>
+    <view class="ops-wrap" style="color:rgb(255, 85, 0); border-color:rgb(255, 85, 0);">付款</view>
+  </view>      
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class OrderDetailBottom extends wepy.component {
+  
+}
+</script>
+
+<style lang="stylus" scoped>
+  .bottom-wrap
+    display flex
+    position fixed
+    bottom 0
+    left 0
+    width 100%
+    justify-content flex-end
+    background #ffffff
+
+    .ops-wrap
+      border 1rpx solid rgb(204, 204, 204)
+      border-radius 27rpx
+      height 56rpx
+      line-height 56rpx
+      width 150rpx
+      color rgb(102, 102, 102)
+      text-align center
+      font-size 24rpx
+      margin 22rpx 20rpx
+</style>

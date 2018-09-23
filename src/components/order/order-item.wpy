@@ -24,7 +24,7 @@
       <view style="margin-right: 20rpx">共<text>{{dataSet.totalCount}}</text>件商品</view>
       <view>合计: <text>￥{{dataSet.payment}}</text></view>
     </view>
-    <view class="btn-wrap">
+    <view @tap="goOrderDetail" class="btn-wrap">
       <view class="btn">
         查看订单
       </view>
@@ -37,6 +37,14 @@ import wepy from 'wepy'
 export default class OrderItem extends wepy.component {
   props = {
     dataSet: {}
+  }
+
+  methods = {
+    goOrderDetail (orderId) {
+      wx.navigateTo({
+        url: 'orderDetail?orderId=' + this.dataSet.orderNo
+      })
+    }
   }
 }
 </script>

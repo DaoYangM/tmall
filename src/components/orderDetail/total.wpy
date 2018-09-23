@@ -1,0 +1,74 @@
+<template>
+  <view class="total-wrap">
+    <view class="price-info">
+      <view class="freight-wrap item">
+        <text>运费</text>
+        <text>￥0.00</text>
+      </view>  
+      <view class="ac-price-wrap item">
+        <text>实付款 (含运费)</text>
+        <text style="color: rgb(255, 85, 0); font-size: 32rpx;">￥{{order.payment}}</text>
+      </view>  
+    </view>
+    <view class="order-info">
+      <view class="order-no">
+        <text class="order-name">订单编号:</text>
+        <text>{{order.orderNo}}</text>        
+      </view>
+      <view class="order-no">
+        <text class="order-name">支付宝交易号:</text>
+        <text>2018092322001192160533192995</text>        
+      </view>
+      <view class="order-no">
+        <text class="order-name">创建时间:</text>
+        <text>{{order.createTime}}</text> 
+      </view>
+    </view>
+  </view>      
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class OrderDetailTotal extends wepy.component {
+  props = {
+    order: {}
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+  .total-wrap
+    display flex
+    flex-direction column
+    align-items center
+    width 100%
+    background-color #ffffff
+    font-size 24rpx
+    
+    .price-info
+      display flex
+      flex-direction column
+      width 100%
+      margin-bottom 40rpx
+
+      .item
+        display flex
+        justify-content space-between
+        margin 0 20rpx
+        height 54rpx
+        line-height 54rpx
+        
+    .order-info
+      display flex
+      flex-direction column
+      width 100%
+
+      .order-no
+        display flex
+        margin 0 20rpx
+        height 54rpx
+        line-height 54rpx
+
+        .order-name
+          margin-right 20rpx
+</style>

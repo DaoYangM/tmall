@@ -1,0 +1,80 @@
+<template>
+  <view class="item-wrap">
+    <view class="product-img-wrap">
+      <image src="{{order.productImage}}" />
+    </view>
+    <view class="product-info-wrap">
+      <view class="product-info">
+        <view class="product-name">{{order.productName}}</view>
+        <view class="product-specify">官方标配;微软时尚键盘（带指纹识别功能）</view>
+      </view>
+    </view>
+    <view class="product-price-count">
+      <view class="price">￥{{order.totalPrice}}</view>
+      <view class="count">x{{order.quantity}}</view>
+    </view>
+    <view>
+    </view>      
+  </view>      
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class OrderDetailItem extends wepy.component {
+  props = {
+    order: {}
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+  .item-wrap
+    display flex
+    flex-direction row
+    align-items center
+    width 100%
+    background-color rgb(250, 250, 250)
+    padding-bottom 50rpx
+
+    .product-img-wrap
+      margin-left 20rpx
+      width 152rpx
+      height 152rpx
+      margin-top 12rpx
+      
+      image
+        width 100%
+        height 100%
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+
+    .product-info-wrap
+      display flex
+      flex-direction column
+      align-items center
+      flex 1 1 0%;
+      text-overflow ellipsis
+      overflow hidden
+      font-size 24rpx
+      margin 12rpx 20rpx
+
+      .product-info
+        flex 1 1 0%;
+
+        .product-name
+          color rgb(51, 51, 51)
+        .product-specify
+          color rgb(153, 153, 153)
+          margin-top 8rpx
+
+    .product-price-count
+      font-size 24rpx
+      align-self flex-start
+      margin-top 12rpx
+      margin-right 20rpx
+
+      .count
+        text-align right 
+        color rgb(153, 153, 153)
+</style>

@@ -1,0 +1,69 @@
+<template>
+  <view class="detail-wrap">
+    <order-detail-head></order-detail-head>
+    <order-detail-shipping :shipping.sync="shipping"></order-detail-shipping>
+    <order-detail-provide></order-detail-provide>
+    <repeat for="{{orderItems}}" item="item">
+      <order-detail-item :order.sync="item"></order-detail-item>
+    </repeat>
+    <order-detail-total :order.sync="order"></order-detail-total>
+    <order-detail-bottom></order-detail-bottom>
+  </view> 
+</template>
+
+<script>
+import wepy from 'wepy'
+import OrderDetailHead from '../components/orderDetail/head'
+import OrderDetailShipping from '../components/orderDetail/shipping'
+import OrderDetailProvide from '../components/orderDetail/provide'
+import OrderDetailItem from '../components/orderDetail/item'
+import OrderDetailTotal from '../components/orderDetail/total'
+import OrderDetailBottom from '../components/orderDetail/bottom'
+
+export default class Pay extends wepy.page {
+  data = {
+    order: {},
+    shipping: {},
+    orderItems: [],
+  }
+
+  methods = {}
+
+  onLoad(option) {
+    // let orderId = '1537604339089'
+    let orderId = option.orderId
+    console.log('orderId', orderId)
+
+    wepy.request({
+      url: this.$root.$parent.serviceRoute.order + '/' + orderId,
+      header: {
+        'Authorization': 'Bearer ' + wx.getStorageSync('userMd5')
+      }}).then((d) => {
+      
+        this.order = d.data.data
+        this.shipping = this.order.shipping
+        this.orderItems = this.order.orderItems
+
+        this.$apply()
+
+        console.log(this.orderItems)
+    })
+
+  }
+
+  components = {
+    'order-detail-head': OrderDetailHead,
+    'order-detail-shipping': OrderDetailShipping,
+    'order-detail-provide': OrderDetailProvide,
+    'order-detail-item': OrderDetailItem,
+    'order-detail-total': OrderDetailTotal,
+    'order-detail-bottom': OrderDetailBottom,
+  }
+}
+</script>
+
+<style lang="stylus">
+  page
+    background-color #f2f2f2
+    color rgb(51, 51, 51)
+</style>
