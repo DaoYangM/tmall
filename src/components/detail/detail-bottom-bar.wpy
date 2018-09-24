@@ -28,12 +28,13 @@ export default class DetailBottomBar extends wepy.component{
   data = {
     quantity: 1,
     isLogin: false,
+    isFromCart: false,
   }
 
   methods = {
     goBuy () {
       if (this.isLogin) {
-        if (this.allChecked) {
+        if (this.allChecked.all) {
           this.$invoke('../detail-service', 'gobuy')
         } else {
           this.$invoke('../detail-service', 'showModal', '2')
@@ -117,7 +118,10 @@ export default class DetailBottomBar extends wepy.component{
           })
         }
       } else {
+        this.isFromCart = true
+        this.$apply()
         this.$invoke('../detail-service', 'showModal', '2')
+        this.$invoke('../detail-service', 'isComeFromCart', true)
       }
     },
 

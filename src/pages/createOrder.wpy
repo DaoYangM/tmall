@@ -1,7 +1,7 @@
 <template>
   <view>
     <wxaddress :checkAddress.sync="checkAddress"></wxaddress>
-    <block wx:if="{{cartDataSet == null}}">
+    <block wx:if="{{!isFromCart}}">
       <order-item :productInfo.sync="productInfo" :specifyDesItems.sync="specifyDesItems"></order-item>
     </block>
     <block wx:else>
@@ -40,16 +40,19 @@ export default class CreateOrder extends wepy.page{
     specifyDesItems: [],
     checkAddress: {},
     cartDataSet: {},
+    isFromCart: false,
   }
 
   onLoad (option) {
-    if (!option.isFromCart) {
+    if (option.isFromCart == 'false') {
       let productId = option.productId
       let pasId =  option.pasId
       let count = option.count
       let price = option.price
       let stock = option.stock
-      
+
+      this.isFromCart = false
+
       wepy.request({
         url: this.$root.$parent.serviceRoute.shipping + '/checked',
         header: {
@@ -84,7 +87,7 @@ export default class CreateOrder extends wepy.page{
         this.$apply()
       })
 
-      if (pasId) {
+      if (pasId != 'null') {
         wepy.request(this.$root.$parent.serviceRoute.productDetail + productId + '/specify/' + pasId).then((d) => {
           this.specifyDesItems = d.data.data
           console.log("speci", this.specifyDesItems)
@@ -92,6 +95,7 @@ export default class CreateOrder extends wepy.page{
         })
       }      
     } else {
+      this.isFromCart = true
       wx.request({
         url: this.$root.$parent.serviceRoute.cart,
         header: {

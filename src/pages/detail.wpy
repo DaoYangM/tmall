@@ -34,12 +34,11 @@ export default class Detail extends wepy.page {
     swiperImages: [],
     productInfo: {},
     productDesc: '',
-    allChecked: false,
+    allChecked: {},
     isFavorite: false,
   }
 
   onLoad (option) { 
-    // option.id
     wepy.request(this.$root.$parent.serviceRoute.productDetail + option.id).then((d) => {
       let product = d.data.data
 
@@ -55,6 +54,16 @@ export default class Detail extends wepy.page {
  
       this.productDesc = product.detail
 
+      wepy.request(this.$root.$parent.serviceRoute.productDetail + this.productInfo.productId + '/specify').then((d) => {
+        if (d.data.status == 200) {
+          if (d.data.data.length == 0) {
+             this.allChecked = {
+              all: true,
+            }
+          }
+        }
+         
+      })
 
       this.$apply()
       this.$invoke('html2wxml', 'htmlParserNotice')
@@ -83,6 +92,8 @@ export default class Detail extends wepy.page {
   events = {
     allSpecifyCheck (res) {
       this.allChecked = res
+      this.$apply()
+      console.log("allChecked", this.allChecked)
     }
   }
 }

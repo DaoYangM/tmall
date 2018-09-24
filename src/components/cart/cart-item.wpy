@@ -10,7 +10,7 @@
         <button>去逛逛</button>
       </view>
       <view wx:else>
-        <view class="cart-item-container">
+        <scroll-view style="height: 90vh;" scroll-y class="cart-item-container">
           <block wx:for="{{cartDataSet.cartItemResponse}}" wx:key="{{index}}">
             <view style="background:#ffffff; margin-top:20rpx;border-radius:30rpx;margin:20rpx 20rpx">
               <view class="cart-item-head">
@@ -21,13 +21,15 @@
                   <i class="iconfont icon-right"></i>
                 </view>
                 <block wx:if="{{item.productChecked == 1}}">
-                  <view @tap="clickDel({{item.productId}})" class="del">
+                  <view @tap="clickDel({{item.productId}}, {{item.specifyId}})" class="del">
                     <text>删除</text><i class="iconfont icon-delete"></i>
                   </view>
                 </block>  
               </view>
               <view class="cart-item">
-                <image class="item-img" src="{{item.productImage}}" />
+                <view class="cart-img-wrap">
+                  <view class="item-img" src="{{item.productImage}}" />
+                </view>
                 <view class="item-info">
                   <view class="item-title">
                     {{item.productName}}
@@ -36,7 +38,7 @@
                     <text style="display:inline-block; margin-right: 20rpx">类别:</text>{{item.specifyDescItems}}
                   </view>
                   <view style="display: flex;justify-content: space-between">
-                    <text class="item-price">￥{{item.productPrice}}</text>
+                    <text class="item-price">￥{{item.price}}</text>
                     <view class="btn-group">
                       <text @tap="clickChangeQuantity({{item.productId}}, {{item.quantity}}, {{item.productStock}} ,minus, {{item.specifyId}})">-</text>
                       <input bindinput="inputInput(({{item.productId}}, {{item.productStock}}, {{item.quantity}})" bindblur="inputBlur({{item.productId}}, {{item.productStock}}, {{item.quantity}}, {{item.specifyId}})" value="{{item.quantity}}" />
@@ -47,7 +49,7 @@
               </view>
             </view>
           </block>
-        </view>
+        </scroll-view>
         <block wx:if="{{checkCount > 1}}">
           <view class="del-all">
             <button @tap="delAllSelect">删除选中</button>
@@ -216,12 +218,19 @@ export default class CartItem extends wepy.component{
       }
     },
 
-    clickDel (productId) {
+    clickDel (productId, specifyId) {
+      if (specifyId.active) {
+        specifyId = null
+      }
       let rOj = {
-        url: this.route.cart + '/' + productId,
+        url: this.route.cart,
         method: "DELETE",
         header: {
           'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        },
+        data: {
+          'productId': productId,
+          'specifyId': specifyId,
         },
         success: (s) => {
           if (s.statusCode == 200)
@@ -238,7 +247,7 @@ export default class CartItem extends wepy.component{
 
     delAllSelect () {
       let rOj = {
-        url: this.route.cart,
+        url: this.route.cart + '/all',
         method: "DELETE",
         header: {
           'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
@@ -394,11 +403,18 @@ export default class CartItem extends wepy.component{
       margin-bottom 20rpx
       padding-bottom 20rpx
 
-      .item-img
+      .cart-img-wrap
         width 200rpx
         height 200rpx
         margin-left 100rpx
         margin-right 20rpx
+
+        .item-img
+          width 100%
+          height 100%
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-size: cover;
 
       .item-info
         display flex

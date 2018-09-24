@@ -5,11 +5,13 @@
       <text class="service">7天无理由 · 运费险 · 72小时内发货</text>
       <view><i class="iconfont icon-right" style="height: 20rpx width: 20rpx;"></i></view>
     </view>
+
     <view class="detail-service" @tap="showModal(2)">
       <text class="service-title">规格</text>
       <text class="service">请选择 颜色分类 </text>
       <view><i class="iconfont icon-right" style="height: 20rpx width: 20rpx;"></i></view>
     </view>
+
     <view class="detail-service" @tap="showModal(3)">
       <text class="service-title">参数</text>
       <text class="service">品牌 型号...</text>
@@ -85,8 +87,13 @@
         </view>
       </view>
       <view class="sku-button-group">
-        <button class="addcart" @tap="addcart" >加入购物车</button>
-        <button class="gobuy" @tap="gobuy">立即购买</button>
+        <block wx:if="{{isFromCart}}">
+          <button class="isFromCart" @tap="addcart">确认</button>
+        </block>
+        <block wx:else>
+          <button class="addcart" @tap="addcart" >加入购物车</button>
+          <button class="gobuy" @tap="gobuy">立即购买</button>
+        </block>
       </view>
     </view>
     <view animation="{{animationDataParameter}}" class="mask-menu">
@@ -136,6 +143,10 @@ export default class DetailService extends wepy.component {
     allChecked: false,
 
     createOrderParams: {},
+
+    isFromCart: false,
+
+    isSpecifyLengthZero: false,
   }
   methods = {
     showService () {
@@ -148,7 +159,10 @@ export default class DetailService extends wepy.component {
     showModal (index) {
         // 显示遮罩层
       this.show = index
-      console.log("show " + this.show)
+      this.isFromCart = false
+      this.$apply()
+      
+
       this.animation.height('83%').step()
       switch (index) {
         case '1':
@@ -163,7 +177,6 @@ export default class DetailService extends wepy.component {
         default:
           break;
       }
-      
       this.maskScreen = true
     },
     hideModal (index) {
@@ -182,6 +195,8 @@ export default class DetailService extends wepy.component {
           break;
       }
       this.maskScreen = false
+      this.isFromCart = false
+      this.$apply()
     },
 
     selectSpecify (idx, idy) {
@@ -309,8 +324,16 @@ export default class DetailService extends wepy.component {
               this.animation.height('0').step()
               this.animationDataSpecification = this.animation.export()
               this.maskScreen = false
-              
-              this.$emit("allSpecifyCheck", true)
+
+              if (!this.isSpecifyLengthZero) {
+                  this.allChecked = false
+                  for (let index = 0; index < this.productSpecifyDataSet.length; index++) {
+                      this.productSpecifyDataSet[index].productSpecifyItemList.forEach((element, indey) => {
+                          element.checked = false
+                      }); 
+                  }
+                this.$emit("allSpecifyCheck", {all: false})
+              }
 
               this.$apply()
             } else if (res.data.status == 705) {
@@ -322,18 +345,24 @@ export default class DetailService extends wepy.component {
             })  
            
         }  else {
-        wx.showToast({
-          title: "请先登录",
-          icon: "none",
-          duration: 1500,
-        })
-        setTimeout(()=> {
-          wx.switchTab({
-            url: "me"
-          });          
-        },1000)
-      }
-    }
+          wx.showToast({
+            title: "请先选择分类",
+            icon: "none",
+            duration: 1500,
+          })
+        }
+      } else {
+          wx.showToast({
+            title: "请先登录",
+            icon: "none",
+            duration: 1500,
+          })
+          setTimeout(()=> {
+            wx.switchTab({
+              url: "me"
+            });          
+          },1000)
+        }
     },
 
     gobuy () {
@@ -344,20 +373,21 @@ export default class DetailService extends wepy.component {
           this.maskScreen = false
 
           let params = this.createOrderParams
-          this.$emit("allSpecifyCheck", true)
+          this.$emit("allSpecifyCheck", {all: false})
 
-          this.allChecked = false
+          if (!this.isSpecifyLengthZero) {
+            this.allChecked = false
 
-          for (let index = 0; index < this.productSpecifyDataSet.length; index++) {
-              this.productSpecifyDataSet[index].productSpecifyItemList.forEach((element, indey) => {
-                  element.checked = false
-              }); 
+            for (let index = 0; index < this.productSpecifyDataSet.length; index++) {
+                this.productSpecifyDataSet[index].productSpecifyItemList.forEach((element, indey) => {
+                    element.checked = false
+                }); 
+            }
           }
-
           this.$apply()
 
           wx.navigateTo({
-            url: 'createOrder?'+'productId=' + params.productId + '&pasId=' + params.id + '&count=' + this.quantity + '&price=' + params.price + '&stock=' + params.stock
+            url: 'createOrder?isFromCart=false&' + 'productId=' + params.productId + '&pasId=' + params.id + '&count=' + this.quantity + '&price=' + params.price + '&stock=' + params.stock
           })
         } else {
           wx.showToast({
@@ -378,6 +408,12 @@ export default class DetailService extends wepy.component {
           });          
         },1000)
       } 
+    },
+
+    isComeFromCart () {
+      this.isFromCart = true
+
+      this.$apply()
     }
   }
 
@@ -406,7 +442,8 @@ export default class DetailService extends wepy.component {
               stock: newValue.productStock,
             }
             console.log("createOrderParams", this.createOrderParams)
-            this.$emit("allSpecifyCheck", true)
+            this.$emit("allSpecifyCheck", {all: true})
+            this.isSpecifyLengthZero = true
             this.allChecked = true
           }
           this.allCheckedFlag = true
@@ -641,6 +678,8 @@ export default class DetailService extends wepy.component {
         align-items flex-end
         background #ffffff
         padding-bottom 20rpx
+        padding-left 20rpx
+        padding-right 20rpx
 
         button
           flex 1
@@ -656,5 +695,9 @@ export default class DetailService extends wepy.component {
         
         .gobuy
           border-radius 0 40rpx 40rpx 0
+          background-image linear-gradient(to right, #FF7A00, #FE560A)
+
+        .isFromCart
+          border-radius 40rpx 40rpx 40rpx 40rpx
           background-image linear-gradient(to right, #FF7A00, #FE560A)
 </style>
