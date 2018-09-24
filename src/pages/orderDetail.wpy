@@ -1,13 +1,13 @@
 <template>
   <view class="detail-wrap">
-    <order-detail-head></order-detail-head>
+    <order-detail-head :status.sync="status"></order-detail-head>
     <order-detail-shipping :shipping.sync="shipping"></order-detail-shipping>
     <order-detail-provide></order-detail-provide>
     <repeat for="{{orderItems}}" item="item">
       <order-detail-item :order.sync="item"></order-detail-item>
     </repeat>
     <order-detail-total :order.sync="order"></order-detail-total>
-    <order-detail-bottom></order-detail-bottom>
+    <order-detail-bottom :order.sync="order" :status.sync="status"></order-detail-bottom>
   </view> 
 </template>
 
@@ -25,6 +25,7 @@ export default class Pay extends wepy.page {
     order: {},
     shipping: {},
     orderItems: [],
+    status: "",
   }
 
   methods = {}
@@ -43,6 +44,7 @@ export default class Pay extends wepy.page {
         this.order = d.data.data
         this.shipping = this.order.shipping
         this.orderItems = this.order.orderItems
+        this.status = this.order.status
 
         this.$apply()
 

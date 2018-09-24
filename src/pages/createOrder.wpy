@@ -1,7 +1,16 @@
 <template>
   <view>
     <wxaddress :checkAddress.sync="checkAddress"></wxaddress>
-    <order-item :productInfo.sync="productInfo" :specifyDesItems.sync="specifyDesItems"></order-item>
+    <block wx:if="{{cartDataSet == null}}">
+      <order-item :productInfo.sync="productInfo" :specifyDesItems.sync="specifyDesItems"></order-item>
+    </block>
+    <block wx:else>
+      <repeat for="{{cartDataSet.cartItemResponse}}" item="productInfo">
+        <block wx:if="{{productInfo.productChecked == 1}}">
+          <order-item :productInfo.sync="productInfo" :specifyDesItems.sync="specifyDesItems" :isFromCart.sync="true"></order-item>
+        </block>
+      </repeat>
+    </block>
     <order-bottom :productInfo.sync="productInfo" :totalPrice.sync="totalPrice" :buyCount.sync="buyCount"></order-bottom>
   </view>
 
@@ -30,58 +39,75 @@ export default class CreateOrder extends wepy.page{
     buyCount: 0,
     specifyDesItems: [],
     checkAddress: {},
+    cartDataSet: {},
   }
 
   onLoad (option) {
-    
-    let productId = option.productId
-    let pasId =  option.pasId
-    let count = option.count
-    let price = option.price
-    let stock = option.stock
-    
-    wepy.request({
-      url: this.$root.$parent.serviceRoute.shipping + '/checked',
-      header: {
-        'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
-      }
-    }).then((res) => {
-      if (res.data.data) {
-        this.checkAddress = res.data.data
-        this.$root.$parent.globalData.currentaddress = this.checkAddress
-      } else {
-        this.checkAddress = null
-      }
-      this.$apply()
-    })
-
-    wepy.request(this.$root.$parent.serviceRoute.productDetail + productId).then((d) => {
-      let product = d.data.data
-
-      this.productInfo = {
-        productId: product.id,
-        productName: product.name,
-        productImage: product.mainImage,
-        'pasId': pasId,
-        'count': count,
-        'price': price,
-        'stock': stock,
-      }
-
-      this.totalPrice = Math.floor(parseFloat(price*100 * count)) / 100;
-      this.buyCount = count
-
-      this.$apply()
-    })
-
-    if (pasId) {
-      wepy.request(this.$root.$parent.serviceRoute.productDetail + productId + '/specify/' + pasId).then((d) => {
-        this.specifyDesItems = d.data.data
-        console.log("speci", this.specifyDesItems)
+    if (!option.isFromCart) {
+      let productId = option.productId
+      let pasId =  option.pasId
+      let count = option.count
+      let price = option.price
+      let stock = option.stock
+      
+      wepy.request({
+        url: this.$root.$parent.serviceRoute.shipping + '/checked',
+        header: {
+          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        }
+      }).then((res) => {
+        if (res.data.data) {
+          this.checkAddress = res.data.data
+          this.$root.$parent.globalData.currentaddress = this.checkAddress
+        } else {
+          this.checkAddress = null
+        }
         this.$apply()
       })
-    }
 
+      wepy.request(this.$root.$parent.serviceRoute.productDetail + productId).then((d) => {
+        let product = d.data.data
+
+        this.productInfo = {
+          productId: product.id,
+          productName: product.name,
+          productImage: product.mainImage,
+          'pasId': pasId,
+          'count': count,
+          'price': price,
+          'stock': stock,
+        }
+
+        this.totalPrice = Math.floor(parseFloat(price*100 * count)) / 100;
+        this.buyCount = count
+
+        this.$apply()
+      })
+
+      if (pasId) {
+        wepy.request(this.$root.$parent.serviceRoute.productDetail + productId + '/specify/' + pasId).then((d) => {
+          this.specifyDesItems = d.data.data
+          console.log("speci", this.specifyDesItems)
+          this.$apply()
+        })
+      }      
+    } else {
+      wx.request({
+        url: this.$root.$parent.serviceRoute.cart,
+        header: {
+          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        },      
+        success: (s) => {
+          if (s.statusCode == 200) {
+            this.cartDataSet = s.data.data
+          }
+          this.$apply()
+        },
+        fail: function(e) {
+          console.log('未登录', e)
+        }
+      })
+    }
   }
 
   onShow () {

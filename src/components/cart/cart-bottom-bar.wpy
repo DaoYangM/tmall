@@ -9,7 +9,7 @@
         <text> 合计: </text>
         <text style="color:#f50">￥{{totalPrice}}</text>
       </view>
-      <button>结算</button>
+      <button @tap="goCreateOrder">结算</button>
     </view>
 
   </view>
@@ -36,6 +36,12 @@ export default class CartBottomBar extends wepy.component{
       this.$apply()
 
       this.$emit('allCheck', this.allChecked)
+    },
+
+    goCreateOrder () {
+      wx.navigateTo({
+        url: 'createOrder?isFromCart=' + true
+      })
     }
   }
 }

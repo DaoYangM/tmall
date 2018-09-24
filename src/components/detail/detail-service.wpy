@@ -85,7 +85,7 @@
         </view>
       </view>
       <view class="sku-button-group">
-        <button class="addcart" @tap="hideModal('{{show}}')" >加入购物车</button>
+        <button class="addcart" @tap="addcart" >加入购物车</button>
         <button class="gobuy" @tap="gobuy">立即购买</button>
       </view>
     </view>
@@ -126,6 +126,7 @@ export default class DetailService extends wepy.component {
     productParameterDataSet: [],
 
     lastcheckIds: '',
+    specifyIds: '',
 
     quantity: 1,
     btnMinusDisable: true,
@@ -185,7 +186,6 @@ export default class DetailService extends wepy.component {
 
     selectSpecify (idx, idy) {
       console.log(idx, idy)
-      // checkCount = 0/
 
       for (let index = 0; index < this.productSpecifyDataSet.length; index++) {
         if (idx === index) {
@@ -214,13 +214,12 @@ export default class DetailService extends wepy.component {
           }
         })
       })
-      // checkIds = checkIds.substr(0, checkIds.length - 1)
+
       console.log(checkCount, checkIds, this.lastcheckIds)
-      
 
       if ((checkCount == this.productSpecifyDataSet.length)) {
-        console.log("wxrequest")
-
+        this.lastcheckIds = checkIds
+        this.specifyIds = checkIds
         this.allChecked = true
 
         wepy.request({
@@ -236,17 +235,18 @@ export default class DetailService extends wepy.component {
           this.productInfo.productStock = res.data.data.stock
 
           this.createOrderParams = res.data.data
-          console.log("create", this.createOrderParams )
           
           this.$apply()
-          this.$emit("allSpecifyCheck", true)
+          this.$emit("allSpecifyCheck", {
+            all: true,
+            specifyIds: checkIds,
+          })
         })
+
       } else {
         this.allChecked = false
         this.$emit("allSpecifyCheck", false)
-      }
-      if (checkCount == this.productSpecifyDataSet.length)
-        this.lastcheckIds = checkIds
+      }        
     },
 
     btnMinus () {
@@ -287,6 +287,55 @@ export default class DetailService extends wepy.component {
       console.log("quantity", this.quantity)
     },
 
+    addcart () {
+      if (wx.getStorageSync('userMd5') != null) {
+        if (this.allChecked) {
+          wepy.request({
+            url: this.$root.$parent.serviceRoute.cart,
+            method: "POST",
+            header: {
+              'Authorization': 'Bearer ' + wx.getStorageSync('userMd5')
+            },
+            data: {
+              'productId': this.productInfo.productId,
+              'count': this.quantity,
+              'specifyIds': this.specifyIds
+            }
+          }).then(res => {
+            if (res.data.status == 200) {
+              wx.showToast({
+                title: "添加购物车成功"
+              })
+              this.animation.height('0').step()
+              this.animationDataSpecification = this.animation.export()
+              this.maskScreen = false
+              
+              this.$emit("allSpecifyCheck", true)
+
+              this.$apply()
+            } else if (res.data.status == 705) {
+              wx.showToast({
+                title: '库存不足',
+                icon: 'none'
+              })
+              }
+            })  
+           
+        }  else {
+        wx.showToast({
+          title: "请先登录",
+          icon: "none",
+          duration: 1500,
+        })
+        setTimeout(()=> {
+          wx.switchTab({
+            url: "me"
+          });          
+        },1000)
+      }
+    }
+    },
+
     gobuy () {
       if (wx.getStorageSync('userMd5') != null) {
         if (this.allChecked) {
@@ -295,6 +344,7 @@ export default class DetailService extends wepy.component {
           this.maskScreen = false
 
           let params = this.createOrderParams
+          this.$emit("allSpecifyCheck", true)
 
           this.allChecked = false
 
@@ -303,7 +353,8 @@ export default class DetailService extends wepy.component {
                   element.checked = false
               }); 
           }
-          this.$emit("allSpecifyCheck", false)
+
+          this.$apply()
 
           wx.navigateTo({
             url: 'createOrder?'+'productId=' + params.productId + '&pasId=' + params.id + '&count=' + this.quantity + '&price=' + params.price + '&stock=' + params.stock

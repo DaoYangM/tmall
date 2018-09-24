@@ -1,14 +1,68 @@
 <template>
   <view class="bottom-wrap">
-    <view class="ops-wrap">取消订单</view>
-    <view class="ops-wrap" style="color:rgb(255, 85, 0); border-color:rgb(255, 85, 0);">付款</view>
+    <block wx:if="{{status == 40}}">
+      <view class="ops-wrap">订单已取消</view>
+    </block>
+
+    <block wx:else>
+      <view class="ops-wrap">取消订单</view>
+    </block>
+
+    <block wx:if="{{status == 0}}">
+      <view @tap="goPay" class="ops-wrap" style="color:rgb(255, 85, 0); border-color:rgb(255, 85, 0);">付款</view>
+    </block>
+
+    <block wx:elif="{{status == 10}}">
+      <view class="ops-wrap" style="color:rgb(255, 85, 0); border-color:rgb(255, 85, 0);">确认收货</view>
+    </block>
+
+    <block wx:elif="{{status == 70}}">
+      <view class="ops-wrap" style="color:rgb(255, 85, 0); border-color:rgb(255, 85, 0);">去评价</view>
+    </block>
+
+    <block wx:else>
+    </block>
   </view>      
 </template>
 
 <script>
 import wepy from 'wepy'
 export default class OrderDetailBottom extends wepy.component {
-  
+  props = {
+    status: String,
+    order: Object,
+  }
+
+  methods = {
+    goPay () {
+        wx.showLoading({
+          title: '正在生成二维码',
+          mask: true
+        })
+
+        wepy.request({
+          url: this.$root.$parent.serviceRoute.payOrder + this.order.orderNo,
+          method: 'POST',
+          header: {
+            'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+          }
+        }).then((res) => {
+          if (res.data.status == 200) {
+            console.log(res.data.data)
+            wx.navigateTo({
+              url: 'pay?qrurl=' + res.data.data
+            })
+            wx.hideLoading()
+        } else {
+          wx.hideLoading()
+          wx.showToast({
+            title: '可能连接超时了, 请在试一次',
+            icon: 'none',
+          })
+        }
+      }) 
+    }
+  }
 }
 </script>
 

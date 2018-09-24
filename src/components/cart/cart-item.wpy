@@ -27,7 +27,7 @@
                 </block>  
               </view>
               <view class="cart-item">
-                <image class="item-img" src="{{item.productMainImage}}" />
+                <image class="item-img" src="{{item.productImage}}" />
                 <view class="item-info">
                   <view class="item-title">
                     {{item.productName}}
@@ -38,9 +38,9 @@
                   <view style="display: flex;justify-content: space-between">
                     <text class="item-price">￥{{item.productPrice}}</text>
                     <view class="btn-group">
-                      <text @tap="clickChangeQuantity({{item.productId}}, {{item.quantity}}, {{item.productStock}} ,minus)">-</text>
-                      <input bindinput="inputInput(({{item.productId}}, {{item.productStock}}, {{item.quantity}})" bindblur="inputBlur({{item.productId}}, {{item.productStock}}, {{item.quantity}})" value="{{item.quantity}}" />
-                      <text @tap="clickChangeQuantity({{item.productId}}, {{item.quantity}}, {{item.productStock}} ,plus)">+</text>
+                      <text @tap="clickChangeQuantity({{item.productId}}, {{item.quantity}}, {{item.productStock}} ,minus, {{item.specifyId}})">-</text>
+                      <input bindinput="inputInput(({{item.productId}}, {{item.productStock}}, {{item.quantity}})" bindblur="inputBlur({{item.productId}}, {{item.productStock}}, {{item.quantity}}, {{item.specifyId}})" value="{{item.quantity}}" />
+                      <text @tap="clickChangeQuantity({{item.productId}}, {{item.quantity}}, {{item.productStock}} ,plus, {{item.specifyId}})">+</text>
                     </view>
                   </view>    
                 </view>  
@@ -119,20 +119,16 @@ export default class CartItem extends wepy.component{
       wx.request(rOj)
     },
 
-    clickChangeQuantity (productId, quantity, stock, type) {
-      
+    clickChangeQuantity (productId, quantity, stock, type, specifyId) {
       if (type === 'plus') {
         if (quantity === stock) {
           wx.showToast({
             title: "库存不足",
             icon: "none"
           })
-
           return;
-
         } else {
           quantity += 1
-
         }
       } else {
         if (quantity === 1) {
@@ -140,13 +136,14 @@ export default class CartItem extends wepy.component{
             title: "不能再少了",
             icon: "none"
           })
-
           return;
-
         } else {
           quantity -= 1
-
         }
+      }
+
+      if (specifyId.active) {
+        specifyId = null
       }
 
       let rOj = {
@@ -154,7 +151,8 @@ export default class CartItem extends wepy.component{
         method: "PUT",
         data: {
           "productId": productId,
-          "count": quantity
+          "count": quantity,
+          'specifyId': specifyId
         },
         header: {
           'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
@@ -169,10 +167,11 @@ export default class CartItem extends wepy.component{
           console.log('未登录', e)
         }
       }
+
       wx.request(rOj)
     },
 
-    inputBlur (productId, stock, quantity, event) {
+    inputBlur (productId, stock, quantity, specifyId, event) {
       let newQuantity = parseInt(event.detail.value)
       
       if (newQuantity > stock) {
@@ -186,7 +185,8 @@ export default class CartItem extends wepy.component{
           method: "PUT",
           data: {
             "productId": productId,
-            "count": newQuantity
+            "count": newQuantity,
+            'specifyId': specifyId,
           },
           header: {
             'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值

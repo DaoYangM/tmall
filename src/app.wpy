@@ -18,8 +18,8 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/cart',
       'pages/order',
-
       'pages/orderDetail',
       'pages/index',
       'pages/pay',
@@ -29,7 +29,6 @@ export default class extends wepy.app {
       'pages/me',
       'pages/search',
       'pages/searchDetail',
-      'pages/cart',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -95,6 +94,7 @@ export default class extends wepy.app {
     productSearch: this.service + '/products/search',
     order: this.service + '/order',
     preOrder: this.service + '/order/pre/create',
+    payOrder:  this.service + '/order/pay/',
     shipping: this.service + '/shipping',
   }
 

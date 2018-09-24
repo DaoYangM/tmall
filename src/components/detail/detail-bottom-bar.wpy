@@ -20,7 +20,7 @@ import wepy from 'wepy'
 export default class DetailBottomBar extends wepy.component{
 
   props = {
-    allChecked: Boolean,
+    allChecked: {},
     isFavorite: Boolean,
     productInfo: {},
   }
@@ -85,6 +85,7 @@ export default class DetailBottomBar extends wepy.component{
     },
 
     goCart () {
+      if (this.allChecked.all) {
         if (this.isLogin) {
           wepy.request({
             url: this.$root.$parent.serviceRoute.cart,
@@ -94,25 +95,29 @@ export default class DetailBottomBar extends wepy.component{
             },
             data: {
               "productId": this.productInfo.productId,
-              "count": this.quantity
+              "count": this.quantity,
+              'specifyIds': this.allChecked.specifyIds,
             }
         }).then(res => {
           if (res.data.status == 200) {
             wx.showToast({
               title: "添加购物车成功"
             })
-          } else {
+          } else if (res.data.status == 705) {
             wx.showToast({
-              title: '添加购物车失败',
+              title: '库存不足',
               icon: 'none'
             })
           }
         })
       } else {
-        wx.showToast({
-          title: '请先登录',
-          icon: 'none'
-        })
+          wx.showToast({
+            title: '请先登录',
+            icon: 'none'
+          })
+        }
+      } else {
+        this.$invoke('../detail-service', 'showModal', '2')
       }
     },
 

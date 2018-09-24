@@ -3,7 +3,7 @@
     <view class="head-img-wrap">
       <view class="img">
         <view class="status-desc">
-          等待买家付款
+          {{statusDesc}}
         </view>
         <view class="status-img-wrap">
           <view class="status-img">
@@ -21,7 +21,50 @@
 <script>
 import wepy from 'wepy'
 export default class OrderDetailHead extends wepy.component {
-  
+  props = {
+    status: String,
+  }
+
+  computed = {
+    statusDesc () {
+
+      switch (this.status.toString()) {
+        case '0':
+          return '等待买家付款'
+          break
+        
+        case '10':
+          return '等待收货'
+          break
+        
+        case '20':
+          return '交易完成'
+          break
+
+        case '30':
+          return '订单关闭'
+          break
+        case '40':
+          return '订单取消'
+          break
+
+        case '50':
+          return '代发货'
+          break
+        case '60':
+          return '等待收货'
+          break
+
+        case '70':
+          return '待评价'
+          break
+
+        default:
+          return '未知错误'
+          break;
+      }
+    }
+  }
 }
 </script>
 

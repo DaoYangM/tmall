@@ -13,23 +13,38 @@
           {{productInfo.productName}}
         </view>
         <view class="info-specify" style="">
-          <view>颜色分类 <text>{{specifyDesItems}}</text></view>
+          <block wx:if="{{!isFromCart}}">
+            <view>颜色分类 <text>{{specifyDesItems}}</text></view>
+          </block>
+
+          <block wx:else>
+            <view>颜色分类 <text>{{productInfo.specifyDescItems}}</text></view>
+          </blocK>
+
           <text style="color: #F5A623">发货时间: 卖家承诺72小时</text>
         </view>
       </view>
       <view class="info-price">
         <text>￥</text><text>{{productInfo.price}}</text>
-        <view>x{{productInfo.count}}</view>
-      </view>  
-    </view>
-    <view class="btn-group-container">
-      <view class="btn-desc">购买数量</view>
-      <view class="btn-gorup">
-        <button @tap="clickMinus" disabled="{{btnMinus}}" size="mini" plain="true">-</button>
-        <input value="{{productInfo.count}}" />
-        <button @tap="clickPlus" disabled="{{btnPlus}}" size="mini" plain="true">+</button>
+        <block wx:if="{{!isFromCart}}">
+          <view>x{{productInfo.count}}</view>
+        </blocK>
+        <block wx:else>
+          <view>x{{productInfo.quantity}}</view>
+        </blocK>
       </view>
+      
     </view>
+    <block wx:if="{{!isFromCart}}">
+      <view class="btn-group-container">
+        <view class="btn-desc">购买数量</view>
+        <view class="btn-gorup">
+          <button @tap="clickMinus" disabled="{{btnMinus}}" size="mini" plain="true">-</button>
+          <input value="{{productInfo.count}}" />
+          <button @tap="clickPlus" disabled="{{btnPlus}}" size="mini" plain="true">+</button>
+        </view>
+      </view>
+    </block>
     <view class="btn-group-container">
       <view class="btn-desc">快递方式</view>
       <view class="btn-gorup">
@@ -54,7 +69,8 @@ import wepy from 'wepy'
 export default class OrderItem extends wepy.component{
   props = {
     productInfo: {},
-    specifyDesItems: []
+    specifyDesItems: [],
+    isFromCart: Boolean,
   }
 
   data = {
