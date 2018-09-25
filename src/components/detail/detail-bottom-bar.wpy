@@ -8,8 +8,12 @@
       <i class="iconfont  {{isFavorite ? 'icon-favorfill': 'icon-favor'}}" style="color: red"></i>
       <text>收藏</text>
     </view>
+    <view @tap="goCart" class="bottom fav">
+      <i class="iconfont icon-cart" style="color: red"></i>
+      <text>购物车</text>
+    </view>
     <view class="btn-group">
-      <view @tap="goCart" class="btn-cart">加入购物车</view>
+      <view @tap="addCart" class="btn-cart">加入购物车</view>
       <view @tap="goBuy" class="btn-buy">立即购买</view>
     </view>
   </view>
@@ -85,7 +89,7 @@ export default class DetailBottomBar extends wepy.component{
       }
     },
 
-    goCart () {
+    addCart () {
       if (this.allChecked.all) {
         if (this.isLogin) {
           wepy.request({
@@ -133,6 +137,12 @@ export default class DetailBottomBar extends wepy.component{
     goShop () {
       wx.navigateTo({
         url: 'searchDetail?id=""'
+      })
+    },
+
+    goCart () {
+      wx.switchTab({
+        url: 'cart'
       })
     }
   }
@@ -186,19 +196,18 @@ export default class DetailBottomBar extends wepy.component{
       justify-content center
       align-items center
       font-size 28rpx
-      // cursor pointer
       text-align center
       color #ffffff
       
       .btn-cart
-        flex 1 0
+        flex 1 1
         border-radius 40rpx 0 0 40rpx
         background-image linear-gradient(to right, #FFC500, #FF9402)
         height 80rpx
         line-height 80rpx
       
       .btn-buy
-        flex 1 0
+        flex 1 1
         border-radius 0 40rpx 40rpx 0
         background-image linear-gradient(to right, #FF7A00, #FE560A)
         height 80rpx

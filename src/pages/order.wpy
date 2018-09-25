@@ -78,15 +78,6 @@ export default class Order extends wepy.page {
     let type = parseInt(option.type)
     this.changeTap(type)
     this.$broadcast('changeTopActivated', type)
-    // wepy.request({
-    //   url: this.$root.$parent.serviceRoute.order,
-    //   header: {
-    //     'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
-    //   }
-    // }).then((res) => {
-    //   this.dataSet = res.data.data.list
-    //   this.$apply()
-    // })
   }
 }
 </script>

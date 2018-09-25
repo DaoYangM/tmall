@@ -15,10 +15,12 @@
             <view style="background:#ffffff; margin-top:20rpx;border-radius:30rpx;margin:20rpx 20rpx">
               <view class="cart-item-head">
                 <view style="display:flex; align-items:center">
-                  <radio @tap="clickSelect({{item.productId}}, {{item.productChecked}})" style="display: block; margin-left: 20rpx;" checked="{{ item.productChecked == 1}}" />
-                  <i class="iconfont icon-shop"></i>
-                  <text class="iconfont" style="font-size: 24rpx">XXX</text>
-                  <i class="iconfont icon-right"></i>
+                  <radio @tap="clickSelect({{item.productId}}, {{item.productChecked}}, {{item.specifyId}})" style="display: block; margin-left: 20rpx;" checked="{{ item.productChecked == 1}}" />
+                  <view @tap="goshop" style="display:flex;align-items:center">
+                    <i class="iconfont icon-shop"></i>
+                    <text class="iconfont" style="font-size: 24rpx">TMMALL</text>
+                    <i class="iconfont icon-right"></i>
+                  </view>
                 </view>
                 <block wx:if="{{item.productChecked == 1}}">
                   <view @tap="clickDel({{item.productId}}, {{item.specifyId}})" class="del">
@@ -27,11 +29,11 @@
                 </block>  
               </view>
               <view class="cart-item">
-                <view class="cart-img-wrap">
+                <view @tap="goDetail({{item.productId}})" class="cart-img-wrap">
                   <image class="item-img" src="{{item.productImage}}" />
                 </view>
                 <view class="item-info">
-                  <view class="item-title">
+                  <view @tap="goDetail({{item.productId}})" class="item-title">
                     {{item.productName}}
                   </view>
                   <view style="width:auto;display:flex;align-items:center;">
@@ -95,13 +97,20 @@ export default class CartItem extends wepy.component{
       });
     },
 
-    clickSelect (index, check) {
+    clickSelect (productId, check, specifyId) {
+      if (specifyId.active) {
+        specifyId = null
+      }
 
       let rOj = {
-        url: this.route.cartItemSelect + index,
+        url: this.route.cartItemSelect,
         method: "PUT",
         header: {
           'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        },
+        data: {
+          'productId': productId,
+          'specifyId': specifyId
         },
         success: (s) => {
           if (s.statusCode == 200) {
@@ -114,9 +123,8 @@ export default class CartItem extends wepy.component{
         }
       }
 
-      console.log('check', check)
       if (check == 1)
-        rOj.url = this.route.cartItemUnselected + index
+        rOj.url = this.route.cartItemUnselected
 
       wx.request(rOj)
     },
@@ -264,6 +272,18 @@ export default class CartItem extends wepy.component{
       }
       wx.request(rOj) 
     },
+
+    goDetail (productId) {
+      wx.navigateTo({
+        url: 'detail?id=' + productId
+      })
+    },
+
+    goshop () {
+      wx.navigateTo({
+        url: 'searchDetail?id=""'
+      })
+    }
   }
 
   events = {

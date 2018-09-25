@@ -84,8 +84,8 @@ export default class extends wepy.app {
     indexProducts: this.service + '/products',
     productDetail: this.service + '/products/', // /products/id
     cart: this.service + '/cart',
-    cartItemSelect: this.service + '/cart/select/',
-    cartItemUnselected: this.service + '/cart/unselected/',
+    cartItemSelect: this.service + '/cart/select',
+    cartItemUnselected: this.service + '/cart/unselected',
     cartSelectAll: this.service + '/cart/selects',
     cartUnselectAll: this.service + '/cart/unselects',
     favorite: this.service + '/favorite/',

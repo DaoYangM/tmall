@@ -80,8 +80,10 @@ export default class ShippingItem extends wepy.component {
         title: '删除地址',
         content: '是否要删除选中地址',
         success: (confirm, cancel) => {
-          if (confirm) {
+          if (confirm.confirm) {
             this.$emit('goDeleteAddress', id)
+          } else {
+            console.log('cancel')
           }
         }
       })

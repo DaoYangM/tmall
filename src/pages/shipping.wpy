@@ -3,7 +3,9 @@
     <block wx:if="{{dataSet.length > 0}}">
       <view>
         <repeat for="{{dataSet}}" item="item">
-          <shipping-item :address.sync="item"></shipping-item>
+          <block wx:if="{{item.deleted == 0}}">
+            <shipping-item :address.sync="item"></shipping-item>
+          </block>
         </repeat>
       </view>      
     </block>
@@ -210,19 +212,21 @@ export default class Shipping extends wepy.page {
           this.getInitList()
           this.$apply()
           if (this.isEmpty) {
-          this.$root.$parent.globalData.currentaddress = null
+            this.$root.$parent.globalData.currentaddress = null
           } else {
             if (cAddress != null) {
               if (cAddress.id == id) {
-                this.dataSet.forEach(element => {
-                  if (element.checked == 1) {
-                    cAddress = element
-                    element.isCurrentCheck = true
-                  }
-                })
+                this.$root.$parent.globalData.currentaddress = null
+                this.getInitList()
+                // this.dataSet.forEach(element => {
+                //   if (element.checked == 1) {
+                //     cAddress = element
+                //     element.isCurrentCheck = true
+                //   }
+                // })
               }
 
-              this.$root.$parent.globalData.currentaddress = cAddress
+              // this.$root.$parent.globalData.currentaddress = cAddress
             }            
           }
           this.$apply()
@@ -235,11 +239,12 @@ export default class Shipping extends wepy.page {
       let repeatFlag = false 
 
       this.dataSet.forEach(element => {
-        if ((element.receiverAddress.trim() == res.detailInfo.trim()) 
-        && (element.receiverName.trim() == res.userName)
-        && (element.receiverPhone.trim() == res.telNumber)) {
-          
-          repeatFlag = true
+        if (element.deleted == 0) {
+          if ((element.receiverAddress.trim() == res.detailInfo.trim()) 
+          && (element.receiverName.trim() == res.userName)
+          && (element.receiverPhone.trim() == res.telNumber)) {
+            repeatFlag = true
+          }
         }
       })
 

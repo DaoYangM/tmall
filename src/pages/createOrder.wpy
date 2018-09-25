@@ -45,6 +45,21 @@ export default class CreateOrder extends wepy.page{
   }
 
   onLoad (option) {
+    wepy.request({
+      url: this.$root.$parent.serviceRoute.shipping + '/checked',
+      header: {
+        'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+      }
+    }).then((res) => {
+      if (res.data.data) {
+        this.checkAddress = res.data.data
+        this.$root.$parent.globalData.currentaddress = this.checkAddress
+      } else {
+        this.checkAddress = null
+      }
+      this.$apply()
+    })
+
     if (option.isFromCart == 'false') {
       let productId = option.productId
       let pasId =  option.pasId
@@ -53,21 +68,6 @@ export default class CreateOrder extends wepy.page{
       let stock = option.stock
 
       this.isFromCart = false
-
-      wepy.request({
-        url: this.$root.$parent.serviceRoute.shipping + '/checked',
-        header: {
-          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
-        }
-      }).then((res) => {
-        if (res.data.data) {
-          this.checkAddress = res.data.data
-          this.$root.$parent.globalData.currentaddress = this.checkAddress
-        } else {
-          this.checkAddress = null
-        }
-        this.$apply()
-      })
 
       wepy.request(this.$root.$parent.serviceRoute.productDetail + productId).then((d) => {
         let product = d.data.data
