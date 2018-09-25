@@ -4,7 +4,12 @@
       共<text style="color:#ff5000">{{buyCount}}</text>件, 总金额
       <view style="display: inline-block; color:#ff5000; font-size: 32rpx" >￥<text>{{totalPrice}}</text></view>
     </view>
-    <button @tap="goPay" class="btn-submit">提交订单</button>  
+    <blocK wx:if="isFromCart">
+      <button @tap="goPay" class="btn-submit">提交订单</button>  
+    </blocK>
+    <blocK wx:else>
+      <button @tap="goPay" class="btn-submit">提交订单</button>  
+    </blocK>
   </view>
 </template>
 
@@ -16,6 +21,7 @@ export default class OrderBottom extends wepy.component{
     productInfo: {},
     totalPrice: 0,
     buyCount: 0,
+    isFromCart: Boolean,
   }
   methods = {
     changeTotalPrice (totalPrice, count) {
@@ -26,32 +32,43 @@ export default class OrderBottom extends wepy.component{
     },
 
     goPay () {
-      if (this.$root.$parent.globalData.currentaddress.id != null) {
-        wx.showLoading({
-          title: '正在生成二维码',
-          mask: true
-        })
-        wepy.request({
-          url: this.$root.$parent.serviceRoute.preOrder,
-          method: 'POST',
-          header: {
-            'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
-          },
-          data: {
-            productId: this.productInfo.productId,
-            count: parseInt(this.productInfo.count),
-            specifyId: parseInt(this.productInfo.pasId),
-            shippingId: parseInt(this.$root.$parent.globalData.currentaddress.id),
-          }
-        }).then((res) => {
-          if (res.data.status == 200) {
-            console.log(res.data.data)
-            wx.navigateTo({
-              url: 'pay?qrurl=' + res.data.data
-            })
-            wx.hideLoading()
-          }
-        })        
+      if (this.$root.$parent.globalData.currentaddress != null &&this.$root.$parent.globalData.currentaddress.id != null) {
+        let data = {}
+        let url
+        if (this.isFromCart) {
+          console.log("isfromcart is true")
+          url = this.$root.$parent.serviceRoute.order + '/' + parseInt(this.$root.$parent.globalData.currentaddress.id)
+          data = {}
+        } else {
+            url = this.$root.$parent.serviceRoute.preOrder
+            data = {
+              productId: this.productInfo.productId,
+              count: parseInt(this.productInfo.count),
+              specifyId: parseInt(this.productInfo.pasId),
+              shippingId: parseInt(this.$root.$parent.globalData.currentaddress.id),
+            }
+        }
+
+          wx.showLoading({
+            title: '正在生成二维码',
+            mask: true
+          })
+          wepy.request({
+            'url': url,
+            method: 'POST',
+            header: {
+              'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+            },
+            'data': data
+          }).then((res) => {
+            if (res.data.status == 200) {
+              console.log(res.data.data)
+              wx.navigateTo({
+                url: 'pay?qrurl=' + res.data.data
+              })
+              wx.hideLoading()
+            }
+          })        
       } else {
         wx.showToast({
           title: '请选择一个收货地址',

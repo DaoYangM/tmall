@@ -27,8 +27,13 @@ export default class Order extends wepy.page {
 
   events = {
     fChangeTop (index) {
+      this.changeTap(index)
+    }
+  }
+
+  changeTap (index) {
       console.log("fa", index)
-      this.fType = index
+      this.fType = parseInt(index)
       this.$apply()
       let url = this.$root.$parent.serviceRoute.order
 
@@ -67,19 +72,21 @@ export default class Order extends wepy.page {
         this.dataSet = res.data.data.list
         this.$apply()
       })
-    }
   }
 
-  onLoad () {
-    wepy.request({
-      url: this.$root.$parent.serviceRoute.order,
-      header: {
-        'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
-      }
-    }).then((res) => {
-      this.dataSet = res.data.data.list
-      this.$apply()
-    })
+  onLoad (option) {
+    let type = parseInt(option.type)
+    this.changeTap(type)
+    this.$broadcast('changeTopActivated', type)
+    // wepy.request({
+    //   url: this.$root.$parent.serviceRoute.order,
+    //   header: {
+    //     'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+    //   }
+    // }).then((res) => {
+    //   this.dataSet = res.data.data.list
+    //   this.$apply()
+    // })
   }
 }
 </script>

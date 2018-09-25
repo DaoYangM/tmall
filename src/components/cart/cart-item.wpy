@@ -28,7 +28,7 @@
               </view>
               <view class="cart-item">
                 <view class="cart-img-wrap">
-                  <view class="item-img" src="{{item.productImage}}" />
+                  <image class="item-img" src="{{item.productImage}}" />
                 </view>
                 <view class="item-info">
                   <view class="item-title">
@@ -304,7 +304,6 @@ export default class CartItem extends wepy.component{
       })
       
       this.$apply()
-      console.log(this.totalPrice)
     }
   }
 
@@ -423,6 +422,7 @@ export default class CartItem extends wepy.component{
         font-size 24rpx
         color #666
         height 200rpx
+        flex 1 1
 
         .item-title
           margin-right 10rpx

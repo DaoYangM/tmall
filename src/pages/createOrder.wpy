@@ -5,15 +5,16 @@
       <order-item :productInfo.sync="productInfo" :specifyDesItems.sync="specifyDesItems"></order-item>
     </block>
     <block wx:else>
+      <scroll-view style="height: 88vh;" scroll-y class="cart-item-container">
       <repeat for="{{cartDataSet.cartItemResponse}}" item="productInfo">
         <block wx:if="{{productInfo.productChecked == 1}}">
           <order-item :productInfo.sync="productInfo" :specifyDesItems.sync="specifyDesItems" :isFromCart.sync="true"></order-item>
         </block>
       </repeat>
+      </scroll-view>
     </block>
-    <order-bottom :productInfo.sync="productInfo" :totalPrice.sync="totalPrice" :buyCount.sync="buyCount"></order-bottom>
+    <order-bottom :productInfo.sync="productInfo" :totalPrice.sync="totalPrice" :buyCount.sync="buyCount" :isFromCart.sync="isFromCart"></order-bottom>
   </view>
-
 </template>
 
 <script>
@@ -102,8 +103,14 @@ export default class CreateOrder extends wepy.page{
           'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
         },      
         success: (s) => {
+          let totalCount = 0
           if (s.statusCode == 200) {
             this.cartDataSet = s.data.data
+            this.cartDataSet.cartItemResponse.forEach(element => {
+              totalCount += element.quantity
+            })
+            this.totalPrice = this.cartDataSet.cartTotalPrice
+            this.buyCount = totalCount
           }
           this.$apply()
         },
@@ -133,6 +140,10 @@ export default class CreateOrder extends wepy.page{
 </script>
 
 <style lang="stylus">
+  ::-webkit-scrollbar
+    width 0
+    height 0
+    color transparent
   page 
     height 100%
     background #eee

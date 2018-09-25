@@ -59,6 +59,10 @@ export default class Cart extends wepy.page {
 </script>
 
 <style lang="stylus">
+  ::-webkit-scrollbar
+    width 0
+    height 0
+    color transparent
   page
     background rgb(238, 238, 238)
 </style>

@@ -19,20 +19,27 @@ export default class OrderHead extends wepy.component {
   }
   methods = {
     clickTop (index) {
-      for (let i = 0; i < this.activeColor.length; i++) {
-        if (i === index) {
-          this.activeColor[i].activated = 'activated'
-          
-          this.$emit('fChangeTop', index);
+      this.changeTop(index)
+    }
+  }
 
-        } else {
-          this.activeColor[i].activated = ''
-        }
+  changeTop (index) {
+    for (let i = 0; i < this.activeColor.length; i++) {
+      if (i === index) {
+        this.activeColor[i].activated = 'activated'
+        
+        this.$emit('fChangeTop', index);
+
+      } else {
+        this.activeColor[i].activated = ''
       }
     }
   }
-  onLoad () {
-    
+
+  events = {
+    changeTopActivated (index) {
+      this.changeTop(index)
+    }
   }
 }
 </script>

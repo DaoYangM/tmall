@@ -23,19 +23,19 @@
           </view>
         </view>
         <view class="behavior-container">
-          <view class="behavior">
+          <view @tap="waitPayOrder" class="behavior">
             <i class="iconfont icon-pay"></i>
             <text class="behavior-text">待付款</text>
           </view>
-          <view class="behavior">
+          <view @tap="waitDelivery" class="behavior">
             <i class="iconfont icon-time"></i>
             <text class="behavior-text">代发货</text>
           </view>
-          <view class="behavior">
+          <view @tap="waitReceipt" class="behavior">
             <i class="iconfont icon-deliver"></i>
             <text class="behavior-text">待收货</text>
           </view>
-          <view class="behavior">
+          <view @tap="waitComment" class="behavior">
             <i class="iconfont icon-evaluate"></i>
             <text class="behavior-text">待评价</text>
           </view>
@@ -69,10 +69,7 @@ export default class MeInfo extends wepy.component {
                 wx.setStorageSync('userMd5', s.data)
       
                 that.$root.$parent.globalData.userInfo = e.detail.userInfo
-                console.log(e.detail.userInfo);
-
                 that.userInfo = e.detail.userInfo,
-                console.log("this", that.$root.$parent.globalData.userInfo)
                 that.$apply()
               },
               fail: function(e) {
@@ -88,7 +85,28 @@ export default class MeInfo extends wepy.component {
 
     allOrder () {
       wx.navigateTo({
-        url: 'order'
+        url: 'order?type=0'
+      })
+    },
+
+    waitPayOrder () {
+      wx.navigateTo({
+        url: 'order?type=1'
+      })
+    },
+    waitDelivery () {
+      wx.navigateTo({
+        url: 'order?type=2'
+      })
+    },
+    waitReceipt () {
+      wx.navigateTo({
+        url: 'order?type=3'
+      })
+    },
+    waitComment () {
+      wx.navigateTo({
+        url: 'order?type=4'
       })
     }
   }
