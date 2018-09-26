@@ -17,20 +17,33 @@
             <view @tap="chooseImage" class="ci-wrap">
               <view class="ci">
                 <i class="iconfont icon-camera"></i>
-                <block wx:if="{{showImg}}">
+                <block wx:if="{{count != 0}}">
                   <text>{{count}} / 5</text>
                 </block>
-                <block wx:else>
+                <block wx:elif="{{count == 0}}">
                   <text>添加图片</text>
                 </block>
               </view>
             </view>
           </block>
-        </view> 
-        <view>
-           <!-- @tap="goUploadImg" -->
+        </view>
+
+        <view class="rating-wrap">
+          <view>
+            <i class="iconfont icon-shop"></i>
+            <text style="display:inline-box; font-size: 30rpx; margin-left: 20rpx">店铺评分</text>
+          </view>
+          <view class="star-rating">
+            <view class="star-rating-top">
+              <block wx:for="{{starList}}">
+                <i @tap="changeRating({{index}})" :class="{'iconfont': active, 'icon-favorfill': item, 'icon-favor': !item}"></i>
+              </block>
+            </view>
+          </view>
+        </view>
+        <view class="btn-wrap">
           <button form-type="submit">提交</button>
-        </view>  
+        </view>
       </form>
     </view>
   </view>
@@ -43,6 +56,8 @@ export default class WriteContent extends wepy.component {
   data = {
     imgs: [],
     showImg: false,
+    starList: [false, false, false, false, false],
+    evaluate: 1,
   }
 
   methods = {
@@ -64,9 +79,15 @@ export default class WriteContent extends wepy.component {
       this.$apply()
     },
 
-    goUploadImg () {
-      
-
+    changeRating (index) {
+      for (let i = 0; i < this.starList.length; i++) {
+        if (index >= i) {
+          this.starList[i] = true
+        } else {
+          this.starList[i] = false
+        }
+        this.$apply()
+      }
     },
 
     bindFormSubmit (e) {
@@ -88,69 +109,115 @@ export default class WriteContent extends wepy.component {
           this.$root.$parent.upLoadFile(this.imgs, comment.id,0)
         }
       })
-    }
+    },
+    changeEvaluate (i) {
+      this.evaluate = i
+      this.$apply()
+      console.log("changeEvaluate", i)
+    }  
   }
 
   computed = {
     count () {
       return this.imgs.length
+    },
+
+    active() {
+      return true
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
- .content-wrap
-  display flex
-  margin 0 20rpx
-  font-size 28rpx
-  border-bottom 1rpx solid #eee
+  .icon-favorfill
+    color #f50
+  .content-wrap
+    display flex
+    margin 0 20rpx
+    font-size 28rpx
 
-  .section
-    flex 1
+    .section
+      flex 1
 
-    .img-all-wrap
-      display flex
-      flex-wrap wrap
 
-      .ops-img
-        position relative
+      .img-all-wrap
+        display flex
+        flex-wrap wrap
 
-        .del
-          width 50rpx
-          height 50rpx
-          background #000000
-          color #ffffff
-          border-radius 50%
+        .ops-img
+          position relative
+
+          .del
+            width 50rpx
+            height 50rpx
+            background #000000
+            color #ffffff
+            border-radius 50%
+            display flex
+            justify-content center
+            align-items center
+            position absolute
+            top 0
+            right 0
+            font-size 28rpx
+
+        .ci-wrap
+          width 25%
+          height 200rpx
           display flex
           justify-content center
           align-items center
-          position absolute
-          top 0
-          right 0
-          font-size 28rpx
+          border 1rpx dashed #eee
+          box-sizing border-box
+          margin-bottom 20rpx
 
-      .ci-wrap
-        width 25%
-        height 200rpx
+          .ci
+            width 150rpx
+            height 150rpx
+            display flex
+            flex-direction column
+            text-align center
+            justify-content center
+
+            .iconfont
+              font-size 50rpx
+
+            text
+              font-size 28rpx  
+
+      .rating-wrap
         display flex
-        justify-content center
+        border-top 20rpx solid #f5f5f5
+        padding-top 50rpx
         align-items center
-        border 1rpx dashed #eee
-        box-sizing border-box
-        margin-bottom 20rpx
 
-        .ci
-          width 150rpx
-          height 150rpx
-          display flex
-          flex-direction column
-          text-align center
-          justify-content center
+        .star-rating 
+          unicode-bidi: bidi-override;
+          margin: 0 auto;
+          position: relative;
+          display: table;
 
-          .iconfont
-            font-size 50rpx
+          .star-rating-top 
+            color: #000000;
+            white-space: nowrap;
+            display: block;
+            padding: 0;
+            display flex
 
-          text
-            font-size 28rpx  
+            .iconfont
+              font-size: 28px
+              margin-right 30rpx
+      
+      .btn-wrap
+        position fixed
+        bottom 20rpx
+        width 700rpx
+        left 50%
+        margin-left -350rpx
+
+        button
+          color #ffffff
+          border-radius 40rpx 40rpx 40rpx 40rpx
+          background-image linear-gradient(to right, #FF7A00, #FE560A)
 </style>

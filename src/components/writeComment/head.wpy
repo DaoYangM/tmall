@@ -4,9 +4,9 @@
       <image class="img" src="http://img.alicdn.com/imgextra/i1/32696179/TB2AVeixoOWBKNjSZKzXXXfWFXa_!!0-saturn_solar.jpg_210x210.jpg"/>
     </view>
     <view class="appraise">
-      <view><i class="iconfont icon-evaluate"></i><text>好评</text></view>
-      <view><i class="iconfont icon-bad"></i><text>中评</text></view>
-      <view><i class="iconfont icon-evaluate"></i><text>差评</text></view>
+      <view @tap="changeEvaluate(1)"><i :class="{'iconfont': activate, 'icon-evaluate_fill': evaluate==1, 'icon-evaluate': evaluate!=1}"></i><text>好评</text></view>
+      <view @tap="changeEvaluate(2)"><i :class="{'iconfont': activate, 'icon-badfill': evaluate==2, 'icon-bad': evaluate!=2}"></i><text>中评</text></view>
+      <view @tap="changeEvaluate(3)"><i :class="{'iconfont': activate, 'icon-badfill': evaluate==3, 'icon-bad': evaluate!=3}"></i><text>差评</text></view>
     </view>  
   </view>
 </template>
@@ -15,10 +15,29 @@
 import wepy from 'wepy'
 
 export default class WriteCommentHead extends wepy.component {
+  data = {
+    evaluate: 1,
+    activate: true,
+  }
+
+  methods = {
+    changeEvaluate (i) {
+      this.evaluate = i
+
+      this.$invoke('../write-comment-content', 'changeEvaluate', i)
+      this.$apply()
+    }
+  }
 }
 </script>
 
 <style lang="stylus" scoped>
+  .icon-evaluate_fill
+    color #f50
+
+  .icon-badfill
+    color #f50
+    
  .head-wrap
   display flex
   align-items center
