@@ -57,7 +57,7 @@
             <button @tap="delAllSelect">删除选中</button>
           </view>
         </block>
-        <cart-bottom-bar :totalPrice.sync="totalPrice"></cart-bottom-bar>
+        <cart-bottom-bar :totalPrice.sync="totalPrice" :checkCount.sync="checkCount"></cart-bottom-bar>
       </view>
     </block>
     <block wx:else>

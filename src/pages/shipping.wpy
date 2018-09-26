@@ -1,6 +1,6 @@
 <template>
   <view>
-    <block wx:if="{{dataSet.length > 0}}">
+    <block wx:if="{{!isEmpty}}">
       <view>
         <repeat for="{{dataSet}}" item="item">
           <block wx:if="{{item.deleted == 0}}">
@@ -294,7 +294,11 @@ export default class Shipping extends wepy.page {
       if (res.data.status == 200) {
         this.dataSet = res.data.data.list
 
-        if (this.dataSet.length == 0) {
+        let deletedLength = 0
+        this.dataSet.forEach(element => {
+          deletedLength += parseInt(element.deleted)
+        });
+        if (this.dataSet.length == deletedLength) {
           this.$root.$parent.globalData.currentaddress = null
           this.isEmpty = true
           this.$apply()

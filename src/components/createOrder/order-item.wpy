@@ -2,7 +2,7 @@
   <view class="item-container">
     <view class="provide-container">
       <image class="provide-avatar" src="https://img.alicdn.com/tps/i2/TB1wopUHVXXXXXyXpXXAAT2HVXX-63-63.png"/>
-      <text class="provide-name">xxxxx店</text>
+      <text class="provide-name">TMMALL店</text>
     </view>
     <view class="item-info">
       <view class="info-img-container">

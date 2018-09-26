@@ -23,7 +23,8 @@ export default class CartBottomBar extends wepy.component{
   }
 
   props = {
-    totalPrice: Number
+    totalPrice: Number,
+    checkCount: Number,
   }
 
   onLoad () {
@@ -39,9 +40,16 @@ export default class CartBottomBar extends wepy.component{
     },
 
     goCreateOrder () {
-      wx.navigateTo({
-        url: 'createOrder?isFromCart=' + true
-      })
+      if (this.checkCount == 0) {
+        wx.showToast({
+          title: '您还没有选择任何宝贝哦',
+          icon: 'none',
+        })
+      } else {
+        wx.navigateTo({
+          url: 'createOrder?isFromCart=' + true
+        })        
+      }
     }
   }
 }

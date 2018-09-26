@@ -1,5 +1,5 @@
 <template>
-  <view class="item-wrap">
+  <view @tap="goDetail({{order.productId}})" class="item-wrap">
     <view class="product-img-wrap">
       <image src="{{order.productImage}}" />
     </view>
@@ -23,6 +23,14 @@ import wepy from 'wepy'
 export default class OrderDetailItem extends wepy.component {
   props = {
     order: {}
+  }
+
+  methods = {
+    goDetail (productId) {
+      wx.navigateTo({
+        url: 'detail?id=' + productId
+      })
+    },
   }
 }
 </script>

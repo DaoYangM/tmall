@@ -1,0 +1,27 @@
+<template>
+  <view>
+    <write-comment-head></write-comment-head>
+    <write-comment-content></write-comment-content>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import WriteCommentHead from '../components/writeComment/head'
+import WriteContent from '../components/writeComment/content'
+
+export default class WriteComment extends wepy.page {
+  config = {
+    navigationBarTitleText: "填写评论"
+  }
+
+  components = {
+    'write-comment-head': WriteCommentHead,
+    'write-comment-content': WriteContent,
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+
+</style>

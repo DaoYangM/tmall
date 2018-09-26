@@ -1,0 +1,52 @@
+<template>
+  <view class="head-wrap">
+    <view class="img-wrap">
+      <image class="img" src="http://img.alicdn.com/imgextra/i1/32696179/TB2AVeixoOWBKNjSZKzXXXfWFXa_!!0-saturn_solar.jpg_210x210.jpg"/>
+    </view>
+    <view class="appraise">
+      <view><i class="iconfont icon-evaluate"></i><text>好评</text></view>
+      <view><i class="iconfont icon-bad"></i><text>中评</text></view>
+      <view><i class="iconfont icon-evaluate"></i><text>差评</text></view>
+    </view>  
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class WriteCommentHead extends wepy.component {
+}
+</script>
+
+<style lang="stylus" scoped>
+ .head-wrap
+  display flex
+  align-items center
+  height 140rpx
+  border-bottom 1rpx solid #eee
+
+  .img-wrap
+    height 100rpx
+    width 100rpx
+    margin-left 20rpx
+
+    .img
+      height 100%
+      width 100%
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover
+
+  .appraise
+    flex 1
+    display flex
+    justify-content space-around
+    align-items center
+    font-size 28rpx
+    color #666
+
+    .iconfont
+      margin-right 30rpx
+      font-size 50rpx
+      display inline-block
+</style>

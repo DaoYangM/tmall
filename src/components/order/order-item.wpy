@@ -1,11 +1,11 @@
 <template>
   <view class="order-item">
-    <view class="provide-container">
+    <view @tap="goShop" class="provide-container">
       <i class="iconfont icon-shop provide-avatar"/>
-      <text class="provide-name">充值中心</text> <i class="iconfont icon-right"/>
+      <text class="provide-name">TMMALL</text> <i class="iconfont icon-right"/>
     </view>
     <block wx:for="{{dataSet.orderItems}}" wx:key="{{index}}">
-    <view class="item-info">
+    <view @tap="goOrderDetail" class="item-info">
       <view class="info-img-container">
         <image class="provide-avatar" src="{{item.productImage}}"/>
       </view>
@@ -43,6 +43,12 @@ export default class OrderItem extends wepy.component {
     goOrderDetail (orderId) {
       wx.navigateTo({
         url: 'orderDetail?orderId=' + this.dataSet.orderNo
+      })
+    },
+
+    goShop () {
+      wx.navigateTo({
+        url: 'searchDetail?id=""'
       })
     }
   }

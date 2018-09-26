@@ -1,0 +1,141 @@
+<template>
+  <view class="content-wrap">
+    <view class="section">
+      <form bindsubmit="bindFormSubmit">
+        <textarea style="width: 100%;padding-top: 20rpx" placeholder="宝贝满足你的期待吗？说说你的使用心得，分享给想买的他们吧" name="textarea"/>
+        
+        <view class="img-all-wrap">
+
+          <block wx:for="{{imgs}}" wx:key="{{index}}">
+            <view class="ops-img" style="height: {{showImg? '200rpx': '0' }}; width:{{showImg? '25%': '0' }}">
+              <image src="{{item}}" style="height: 100%; width: 100%"/>
+              <view @tap="delImg({{index}})" class="del">X</view>
+            </view>
+          </block>
+
+          <block wx:if="{{count < 5}}">
+            <view @tap="chooseImage" class="ci-wrap">
+              <view class="ci">
+                <i class="iconfont icon-camera"></i>
+                <block wx:if="{{showImg}}">
+                  <text>{{count}} / 5</text>
+                </block>
+                <block wx:else>
+                  <text>添加图片</text>
+                </block>
+              </view>
+            </view>
+          </block>
+        </view> 
+      </form>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class WriteContent extends wepy.component {
+  data = {
+    imgs: [],
+    showImg: false,
+  }
+
+  methods = {
+    chooseImage () {
+      wx.chooseImage({
+        success: (res) => {
+            const tempFilePaths = res.tempFilePaths
+            // wx.uploadFile({
+            //   url: 'http://localhost:8080/comment', //仅为示例，非真实的接口地址
+            //   filePath: tempFilePaths[0],
+            //   name: 'file',
+            //   header: {
+            //     'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+            //   },
+            //   formData: {
+            //     'user': 'test'
+            //   },
+            //   success (res){
+            //     const data = res.data
+            //     //do something
+            //   }
+            // })
+            console.log(tempFilePaths);
+            let img = tempFilePaths[0]
+            this.imgs.push(img)
+            this.showImg = true
+            this.$apply()
+        }
+      })
+    },
+
+    delImg (index) {
+      this.imgs.splice(index, 1)
+      this.$apply()
+    }
+  }
+
+  computed = {
+    count () {
+      return this.imgs.length
+    }
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+ .content-wrap
+  display flex
+  margin 0 20rpx
+  font-size 28rpx
+  border-bottom 1rpx solid #eee
+
+  .section
+    flex 1
+
+    .img-all-wrap
+      display flex
+      flex-wrap wrap
+
+      .ops-img
+        position relative
+
+        .del
+          width 50rpx
+          height 50rpx
+          background #000000
+          color #ffffff
+          border-radius 50%
+          display flex
+          justify-content center
+          align-items center
+          position absolute
+          top 0
+          right 0
+          font-size 28rpx
+
+      .ci-wrap
+        width 25%
+        height 200rpx
+        display flex
+        justify-content center
+        align-items center
+        border 1rpx dashed #eee
+        box-sizing border-box
+        margin-bottom 20rpx
+
+        .ci
+          width 150rpx
+          height 150rpx
+          display flex
+          flex-direction column
+          text-align center
+          justify-content center
+
+          .iconfont
+            font-size 50rpx
+
+          text
+            font-size 28rpx  
+</style>

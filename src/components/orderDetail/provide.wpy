@@ -1,5 +1,5 @@
 <template>
-  <view class="item-wrap">
+  <view @tap="goShop" class="item-wrap">
     <view class="provide-wrap">
       <view class="icon-wrap">
         <view></view>
@@ -15,7 +15,13 @@
 <script>
 import wepy from 'wepy'
 export default class OrderDetailProvide extends wepy.component {
-  
+  methods = {
+    goshop () {
+      wx.navigateTo({
+        url: 'searchDetail?id=""'
+      })
+    }
+  }
 }
 </script>
 
