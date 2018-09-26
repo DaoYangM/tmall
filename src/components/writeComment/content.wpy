@@ -27,6 +27,10 @@
             </view>
           </block>
         </view> 
+        <view>
+           <!-- @tap="goUploadImg" -->
+          <button form-type="submit">提交</button>
+        </view>  
       </form>
     </view>
   </view>
@@ -46,21 +50,6 @@ export default class WriteContent extends wepy.component {
       wx.chooseImage({
         success: (res) => {
             const tempFilePaths = res.tempFilePaths
-            // wx.uploadFile({
-            //   url: 'http://localhost:8080/comment', //仅为示例，非真实的接口地址
-            //   filePath: tempFilePaths[0],
-            //   name: 'file',
-            //   header: {
-            //     'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
-            //   },
-            //   formData: {
-            //     'user': 'test'
-            //   },
-            //   success (res){
-            //     const data = res.data
-            //     //do something
-            //   }
-            // })
             console.log(tempFilePaths);
             let img = tempFilePaths[0]
             this.imgs.push(img)
@@ -73,6 +62,32 @@ export default class WriteContent extends wepy.component {
     delImg (index) {
       this.imgs.splice(index, 1)
       this.$apply()
+    },
+
+    goUploadImg () {
+      
+
+    },
+
+    bindFormSubmit (e) {
+      const comment = e.detail.value.textarea
+
+      wx.request({
+        url: 'http://localhost:8080/comment', //仅为示例，非真实的接口地址
+        method: 'POST',
+        header: {
+          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+        },
+        data: {
+          'comment': comment,
+          'productId': 28
+        },
+        success: (res) => {
+          const comment = res.data.data
+          console.log(res.data.data)
+          this.$root.$parent.upLoadFile(this.imgs, comment.id,0)
+        }
+      })
     }
   }
 
