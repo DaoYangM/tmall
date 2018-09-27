@@ -1,13 +1,13 @@
 <template>
   <view>
-    <write-comment-head></write-comment-head>
-    <write-comment-content></write-comment-content>
+    <scroll-view scroll-y style="height:90vh;">
+      <write-comment-content :orderItems.sync="orderItems"></write-comment-content>
+    </scroll-view>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
-import WriteCommentHead from '../components/writeComment/head'
 import WriteContent from '../components/writeComment/content'
 
 export default class WriteComment extends wepy.page {
@@ -15,13 +15,50 @@ export default class WriteComment extends wepy.page {
     navigationBarTitleText: "填写评论"
   }
 
+  data = {
+    order: {},
+    orderItems: [], 
+  }
+
   components = {
-    'write-comment-head': WriteCommentHead,
-    'write-comment-content': WriteContent,
+    'write-comment-content': WriteContent
+  }
+
+  events = {
+  }
+
+  onLoad (option) {
+    // const orderId = option.orderId
+    const orderId = 1492090946105
+    console.log('orderId', orderId)
+
+    wepy.request({
+      url: this.$root.$parent.serviceRoute.order + '/' + orderId,
+      header: {
+        'Authorization': 'Bearer ' + wx.getStorageSync('userMd5')
+      }}).then((d) => {
+      
+        this.order = d.data.data
+        this.orderItems = this.order.orderItems
+
+        this.orderItems.forEach(element => {
+          element.evaluate = 1
+          element.comment = ''
+          element.star = [false, false, false, false, false]
+          element.imgs = []
+        });
+
+        this.$apply()
+        console.log(this.orderItems)
+    })
   }
 }
 </script>
 
-<style lang="stylus" scoped>
-
+<style lang="stylus">
+  page
+    ::-webkit-scrollbar
+      width 0
+      height 0
+      color transparent
 </style>

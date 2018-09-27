@@ -66,11 +66,15 @@ export default class MeInfo extends wepy.component {
                 code: res.code
               },
               success: (s) => {
-                wx.setStorageSync('userMd5', s.data)
-      
-                that.$root.$parent.globalData.userInfo = e.detail.userInfo
-                that.userInfo = e.detail.userInfo,
-                that.$apply()
+                if (s.data.status == 401) {
+                  this.userInfo = null
+                } else {
+                  wx.setStorageSync('userMd5', s.data)
+
+                  that.$root.$parent.globalData.userInfo = e.detail.userInfo
+                  that.userInfo = e.detail.userInfo
+                }
+                that.$apply()    
               },
               fail: function(e) {
                 console.log('fail', e)
@@ -113,30 +117,9 @@ export default class MeInfo extends wepy.component {
 
   onLoad () {
     let userInfo = this.$root.$parent.globalData.userInfo
-    console.log(this.$root.$parent.globalData.userInfo)
-    
-    // if (userInfo) {
-    //   this.userInfo = userInfo
-    //   this.$apply()
-    // }
-    if (wx.getStorageSync('userMd5') != null) {
-      wx.getSetting({
-        success: (res) => {
-          if (res.authSetting['scope.userInfo']) {
-            // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-            wx.getUserInfo({
-              success: (res) => {
-                this.userInfo = res.userInfo
-                this.$apply()
-              }
-            })
-          }
-        },
-        fail: function(res) {
-          console.log(res)
-        }
-      })
-    }
+    this.userInfo = userInfo
+
+    this.$apply()
   }
 }
 </script>

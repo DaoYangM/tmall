@@ -1,73 +1,93 @@
 <template>
-  <view class="content-wrap">
-    <view class="section">
-      <form bindsubmit="bindFormSubmit">
-        <textarea style="width: 100%;padding-top: 20rpx" placeholder="宝贝满足你的期待吗？说说你的使用心得，分享给想买的他们吧" name="textarea"/>
-        
-        <view class="img-all-wrap">
+  <view>
+    <block wx:for="{{orderItems}}" wx:key="{{index}}">
+      <view class="head-wrap">
+        <view class="img-wrap">
+          <image class="img" src="{{item.productImage}}" />
+        </view>
+        <view class="appraise">
+          <view @tap="changeEvaluate(1, {{index}})"><i :class="{'iconfont': activate, 'icon-evaluate_fill': item.evaluate==1, 'icon-evaluate': item.evaluate!=1}"></i><text>好评</text></view>
+          <view @tap="changeEvaluate(2, {{index}})"><i :class="{'iconfont': activate, 'icon-badfill': item.evaluate==2, 'icon-bad': item.evaluate!=2}"></i><text>中评</text></view>
+          <view @tap="changeEvaluate(3, {{index}})"><i :class="{'iconfont': activate, 'icon-badfill': item.evaluate==3, 'icon-bad': item.evaluate!=3}"></i><text>差评</text></view>
+        </view>  
+      </view>      
+      <view class="content-wrap">
+          <view class="section">
+            <form bindsubmit="bindFormSubmit">
+              <textarea bindinput="areaInput({{index}})" style="width: 100%;padding-top: 20rpx" placeholder="宝贝满足你的期待吗？说说你的使用心得，分享给想买的他们吧" name="textarea"/>
+              
+              <view class="img-all-wrap">
 
-          <block wx:for="{{imgs}}" wx:key="{{index}}">
-            <view class="ops-img" style="height: {{showImg? '200rpx': '0' }}; width:{{showImg? '25%': '0' }}">
-              <image src="{{item}}" style="height: 100%; width: 100%"/>
-              <view @tap="delImg({{index}})" class="del">X</view>
-            </view>
-          </block>
-
-          <block wx:if="{{count < 5}}">
-            <view @tap="chooseImage" class="ci-wrap">
-              <view class="ci">
-                <i class="iconfont icon-camera"></i>
-                <block wx:if="{{count != 0}}">
-                  <text>{{count}} / 5</text>
+                <block wx:for="{{item.imgs}}" wx:for-item="item3" wx:for-index="index3" wx:key="{{index3}}">
+                  <view class="ops-img" style="height: {{showImg? '200rpx': '0' }}; width:{{showImg? '25%': '0' }}">
+                    <image src="{{item3}}" style="height: 100%; width: 100%"/>
+                    <view @tap="delImg({{index}})" class="del">X</view>
+                  </view>
                 </block>
-                <block wx:elif="{{count == 0}}">
-                  <text>添加图片</text>
+
+                <block wx:if="{{count < 5}}">
+                  <view @tap="chooseImage({{index}})" class="ci-wrap">
+                    <view class="ci">
+                      <i class="iconfont icon-camera"></i>
+                      <block wx:if="{{count != 0}}">
+                        <text>{{count}} / 5</text>
+                      </block>
+                      <block wx:elif="{{count == 0}}">
+                        <text>添加图片</text>
+                      </block>
+                    </view>
+                  </view>
                 </block>
               </view>
-            </view>
-          </block>
-        </view>
 
-        <view class="rating-wrap">
-          <view>
-            <i class="iconfont icon-shop"></i>
-            <text style="display:inline-box; font-size: 30rpx; margin-left: 20rpx">店铺评分</text>
+              <view class="rating-wrap">
+                <view>
+                  <i class="iconfont icon-shop"></i>
+                  <text style="display:inline-box; font-size: 30rpx; margin-left: 20rpx">店铺评分</text>
+                </view>
+                <view class="star-rating">
+                  <view class="star-rating-top">
+                    <block wx:for="{{item.star}}" wx:for-index="index2" wx:key="{{index2}}" wx:for-item="item2">
+                      <i @tap="changeRating({{index}}, {{index2}})" :class="{'iconfont': active, 'icon-favorfill': item2, 'icon-favor': !item2}"></i>
+                    </block>
+                  </view>
+                </view>
+              </view>
+              <view class="btn-wrap">
+                <button form-type="submit">提交</button>
+              </view>
+            </form>
           </view>
-          <view class="star-rating">
-            <view class="star-rating-top">
-              <block wx:for="{{starList}}">
-                <i @tap="changeRating({{index}})" :class="{'iconfont': active, 'icon-favorfill': item, 'icon-favor': !item}"></i>
-              </block>
-            </view>
-          </view>
-        </view>
-        <view class="btn-wrap">
-          <button form-type="submit">提交</button>
-        </view>
-      </form>
-    </view>
+      </view>
+   </block>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
+import WriteCommentHead from './head'
 
 export default class WriteContent extends wepy.component {
+
+  props = {
+    orderItems: [],
+  }
+  
   data = {
     imgs: [],
     showImg: false,
-    starList: [false, false, false, false, false],
-    evaluate: 1,
+    activate: true,
+    current: 0,
   }
 
   methods = {
-    chooseImage () {
+    chooseImage (index) {
       wx.chooseImage({
         success: (res) => {
             const tempFilePaths = res.tempFilePaths
             console.log(tempFilePaths);
             let img = tempFilePaths[0]
-            this.imgs.push(img)
+            this.orderItems[index].imgs.push(img)
             this.showImg = true
             this.$apply()
         }
@@ -79,12 +99,14 @@ export default class WriteContent extends wepy.component {
       this.$apply()
     },
 
-    changeRating (index) {
-      for (let i = 0; i < this.starList.length; i++) {
-        if (index >= i) {
-          this.starList[i] = true
+    changeRating (index, index2) {
+      console.log(index, index2)
+
+      for (let i = 0; i < 5; i++) {
+        if (index2 >= i) {
+          this.orderItems[index].star[i] = true
         } else {
-          this.starList[i] = false
+          this.orderItems[index].star[i] = false
         }
         this.$apply()
       }
@@ -92,29 +114,63 @@ export default class WriteContent extends wepy.component {
 
     bindFormSubmit (e) {
       const comment = e.detail.value.textarea
-
-      wx.request({
-        url: 'http://localhost:8080/comment', //仅为示例，非真实的接口地址
-        method: 'POST',
-        header: {
-          'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
-        },
-        data: {
-          'comment': comment,
-          'productId': 28
-        },
-        success: (res) => {
-          const comment = res.data.data
-          console.log(res.data.data)
-          this.$root.$parent.upLoadFile(this.imgs, comment.id,0)
-        }
-      })
+      let star = 0
+      console.log(comment)
+      // this.starList.forEach(element => {
+      //   if (element) {
+      //     star += 1
+      //   }
+      // })
+      // if (star == 0) {
+      //   wx.showToast({
+      //     title: '请对店铺进行评分',
+      //     icon: 'none',
+      //   })
+      // } else {
+      //   wx.showLoading({
+      //     title: '加载中',
+      //   })
+      //   wx.request({
+      //     url: this.$root.$parent.serviceRoute.comment, //仅为示例，非真实的接口地址
+      //     method: 'POST',
+      //     header: {
+      //       'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+      //     },
+      //     data: {
+      //       'comment': comment,
+      //       'productId': 28,
+      //       'star': star,
+      //       'evaluate': this.evaluate
+      //     },
+      //     success: (res) => {
+      //       const comment = res.data.data
+      //       console.log(res.data.data)
+      //       if (this.imgs.length > 0) {
+      //         this.$root.$parent.upLoadFile(this.imgs, comment.id,0)
+      //       }
+      //       wx.hideLoading()
+      //       wx.showToast({
+      //         title: '评论成功',
+      //         icon: 'success',
+      //         complete () {
+      //           wx.redirectTo({
+      //             url: 'order?type=0'
+      //           })
+      //         }
+      //       })
+      //     }
+      //   })        
+      // }
     },
-    changeEvaluate (i) {
-      this.evaluate = i
+    areaInput (index, e) {
+      this.orderItems[index].comment = e.detail.value
       this.$apply()
-      console.log("changeEvaluate", i)
-    }  
+    },
+
+    changeEvaluate (i, index) {
+      this.orderItems[index].evaluate = i
+      this.$apply()
+    }
   }
 
   computed = {
@@ -126,16 +182,87 @@ export default class WriteContent extends wepy.component {
       return true
     }
   }
+
+  components = {
+    'write-comment-head': WriteCommentHead,
+  }
+
+  watch = {
+    // orderItem (newValue, oldValue) {
+    //   console.log("ordertime")
+    //   this.orderItem.star =  [false, false, false, false, false]
+    //   this.$apply()
+    // }
+  }
+
+  onLoad () {
+    // setTimeout(() => {
+
+    //   let stars = [false, false, false, false, false]
+
+    //   for (let index = 0; index < stars.length; index++) {
+        
+    //   }
+
+    //   this.orderItem.star =  [false, false, false, false, false]
+    //   this.$apply()
+    //   console.log('onload')
+    // }, 1000);
+  }
+
+  rStars () {
+    return {
+      star: [false, false, false, false, false]
+    }
+  }
 }
 </script>
 
 <style lang="stylus" scoped>
-  .icon-favorfill
-    color #f50
-  .content-wrap
+ .icon-favorfill
+  color #f50
+ .icon-evaluate_fill
+  color #f50
+
+ .icon-badfill
+  color #f50
+    
+ .head-wrap
+  display flex
+  align-items center
+  height 140rpx
+  border-bottom 1rpx solid #eee
+
+  .img-wrap
+    height 100rpx
+    width 100rpx
+    margin-left 20rpx
+
+    .img
+      height 100%
+      width 100%
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover
+
+  .appraise
+    flex 1
     display flex
-    margin 0 20rpx
+    justify-content space-around
+    align-items center
     font-size 28rpx
+    color #666
+
+    .iconfont
+      margin-right 30rpx
+      font-size 50rpx
+      display inline-block
+
+.content-wrap
+    display flex
+    margin 0 20rpx 20rpx
+    font-size 28rpx
+    border-bottom 20rpx solid #f5f5f5
 
     .section
       flex 1
@@ -188,7 +315,6 @@ export default class WriteContent extends wepy.component {
 
       .rating-wrap
         display flex
-        border-top 20rpx solid #f5f5f5
         padding-top 50rpx
         align-items center
 

@@ -17,7 +17,7 @@
     </block>
 
     <block wx:elif="{{status == 70}}">
-      <view class="ops-wrap" style="color:rgb(255, 85, 0); border-color:rgb(255, 85, 0);">去评价</view>
+      <view @tap="goComment" class="ops-wrap" style="color:rgb(255, 85, 0); border-color:rgb(255, 85, 0);">去评价</view>
     </block>
 
     <block wx:else>
@@ -61,6 +61,11 @@ export default class OrderDetailBottom extends wepy.component {
           })
         }
       }) 
+    },
+    goComment () {
+      wx.redirectTo({
+        url: 'writeComment?orderId=' + this.order.orderNo
+      })
     }
   }
 }
