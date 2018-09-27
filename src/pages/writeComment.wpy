@@ -1,8 +1,8 @@
 <template>
   <view>
-    <scroll-view scroll-y style="height:90vh;">
+    <view>
       <write-comment-content :orderItems.sync="orderItems"></write-comment-content>
-    </scroll-view>
+    </view>
   </view>
 </template>
 
@@ -57,8 +57,8 @@ export default class WriteComment extends wepy.page {
 
 <style lang="stylus">
   page
-    ::-webkit-scrollbar
-      width 0
-      height 0
-      color transparent
+    // ::-webkit-scrollbar
+    //   width 0
+    //   height 0
+    //   color transparent
 </style>
