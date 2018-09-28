@@ -28,13 +28,13 @@
         <i class="iconfont icon-comment"></i>
         <text>评论</text>
       </view>  
-      <view class="comment-ops">
+      <view @tap="goUp" class="comment-ops">
         <i class="iconfont icon-appreciate"></i>
         <block wx:if="{{comment.up != null}}">
           <text>{{comment.up}}</text>
         </block>
         <block wx:else>
-          <text>点赞</text>
+          <text >点赞</text>
         </block>
       </view>
     </view>  
@@ -48,6 +48,7 @@ import time from '../../filter/time.wxs'
 export default class ShowCommentItem extends wepy.component {
   props = {
     comment: {},
+    index: Number,
   }
   data = {
 
@@ -55,6 +56,31 @@ export default class ShowCommentItem extends wepy.component {
   wxs = {
       timeFilter: time
   }
+
+  methods = {
+    goUp () {
+      wepy.request({
+        url: this.$root.$parent.serviceRoute.comment + '/up/' + this.comment.id,
+        method: 'PUT',
+        header: {
+          'Authorization': 'Bearer ' + wx.getStorageSync('userMd5')
+        }
+        }).then((d) => {
+          if (d.data.status == 200) {
+            this.comment = d.data.data
+            this.$apply()
+            this.$emit('changeUp', this.comment, this.index)
+            console.log(this.comment);
+          } else {
+            wx.showToast({
+              title: '需要登录才能操作',
+              icon: 'none',
+            })
+          }
+      })
+    }
+  }
+
   onLoad (option) {
   }
 }

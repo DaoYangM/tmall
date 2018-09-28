@@ -1,11 +1,10 @@
 <template>
   <view>
-    <scroll-view scroll-y style="height: 100vh;">
+    <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="toLower" lower-threshold="150">
       <repeat for="{{commentList}}" item="comment">
-        <show-comment-item :comment.sync="comment"></show-comment-item>
+        <show-comment-item :comment.sync="comment" :index.sync="index"></show-comment-item>
       </repeat>  
     </scroll-view>
-
   </view>
 </template>
 
@@ -20,24 +19,61 @@ export default class ShowComment extends wepy.page {
 
   data = {
     commentList: [],
+    page: 1,
+    size: 10,
+    isEnd: false,
+  }
+
+  methods = {
+    toLower () {
+      this.getCommentList(28, this.page, this.size)
+    }
   }
 
   components = {
     'show-comment-item': ShowCommentItem
   }
 
+  events = {
+    changeUp (comment, index) {
+      this.commentList[index] = comment
+      this.$apply()
+    }
+  }
+  
   onLoad (option) {
     // const orderId = option.orderId
-    const productId = 28
+    this.getCommentList(28, 1, 10)
 
-    wepy.request({
-      url: this.$root.$parent.serviceRoute.comment + '/' + productId,
-      }).then((d) => {
-        this.commentList = d.data.data.list
+  }
 
-        this.$apply()
-        console.log(this.commentList)
-    })
+  getCommentList(productId, page, size) {
+  if (!this.isEnd) {
+      wepy.request({
+        url: this.$root.$parent.serviceRoute.comment + '/' + productId + '?page=' + this.page + '&size=' + this.size,
+        }).then((d) => {
+          
+          if (d.data.status == 200) {
+            let newData = d.data.data.list
+            if (newData.length == 0) {
+              this.isEnd = true
+              wx.showToast({
+                title: '已经到底了',
+                icon: 'none',
+              })
+            }
+              this.commentList = this.commentList.concat(newData)
+              this.page += 1
+              this.$apply()
+              console.log(this.commentList)                
+          } else {
+            wx.showToast({
+              title: '获取评论失败',
+              icon: 'none',
+            })
+          }
+      })
+    }
   }
 }
 </script>
