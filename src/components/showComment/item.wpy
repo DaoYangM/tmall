@@ -1,0 +1,139 @@
+<template>
+  <view class="item-wrap">
+    <view class="head-wrap">
+      <view class="avatar-wrap">
+        <image src="{{comment.avatar}}"/>
+      </view>
+      <view class="nick-name">
+        <text>{{comment.nickName}}</text>
+      </view>
+    </view>
+    <view class="create-time">
+      <text>{{timeFilter.filter(comment.createTime)}}</text>
+    </view>
+    <view class="comment-wrap">
+      <view class="comment">
+        {{comment.comment}}
+      </view>  
+    </view>
+    <block wx:if="{{comment.commentImages.length > 0}}">
+      <view class="comment-img">
+        <view wx:for="{{comment.commentImages}}" wx:key="{{index}}" class="img-wrap">
+          <image src="{{item}}" />
+        </view>  
+      </view>
+    </block>  
+    <view class="comment-ops-wrap">
+      <view class="comment-ops">
+        <i class="iconfont icon-comment"></i>
+        <text>评论</text>
+      </view>  
+      <view class="comment-ops">
+        <i class="iconfont icon-appreciate"></i>
+        <block wx:if="{{comment.up != null}}">
+          <text>{{comment.up}}</text>
+        </block>
+        <block wx:else>
+          <text>点赞</text>
+        </block>
+      </view>
+    </view>  
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import time from '../../filter/time.wxs'
+
+export default class ShowCommentItem extends wepy.component {
+  props = {
+    comment: {},
+  }
+  data = {
+
+  }
+  wxs = {
+      timeFilter: time
+  }
+  onLoad (option) {
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+  .item-wrap
+    display flex
+    flex-direction column
+    width 100%
+    justify-content center
+    margin-bottom 50rpx
+
+    .head-wrap
+      flex 1
+      display flex
+      align-items center
+      margin-left 20rpx
+
+      .avatar-wrap
+        height 80rpx
+        width 80rpx
+        border-radius 50%
+        margin-right 20rpx
+
+        image
+          width 100%
+          height 100%
+          border-radius 50%
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-size: cover
+
+      .nick-name
+        font-size 28rpx
+
+    .create-time    
+      font-size 24rpx
+      color #666
+      margin 20rpx 20rpx
+
+    .comment-wrap
+      margin 0 20rpx
+      font-size 28rpx
+      height auto 
+
+    .comment-img
+      margin 30rpx 20rpx
+      display flex
+      // justify-content 
+      flex-wrap wrap
+
+      .img-wrap
+        width 30%
+        height 200rpx
+        margin-left 10rpx
+
+        image
+          width 100%
+          height 100%
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-size: cover
+
+    .comment-ops-wrap
+      display flex
+      justify-content flex-end
+      align-items center
+      .comment-ops
+        border-radius 20rpx
+        border 1rpx solid #999
+        margin-right 20rpx
+        font-size 24rpx
+        color #666
+        text-align center
+        padding 6rpx 20rpx
+
+        
+        .iconfont
+          margin-right 10rpx
+
+</style>

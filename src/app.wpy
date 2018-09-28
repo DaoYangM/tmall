@@ -18,8 +18,9 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/writeComment',
+      'pages/showComment',
       'pages/index',
+      'pages/writeComment',
       'pages/cart',
       'pages/order',
       'pages/orderDetail',
@@ -137,7 +138,7 @@ export default class extends wepy.app {
 
   onLaunch() {
     this.testAsync()
-    // wx.setStorageSync('userMd5', '123123')
+    // wx.setStorageSync('userMd5', null)
     let that = this
     let jwt = wx.getStorageSync('userMd5')
 
@@ -176,7 +177,8 @@ export default class extends wepy.app {
               },
               fail: function(){
                 console.log('session_key expired')
-                that.login()
+                wx.setStorageSync('userMd5', null)
+                that.globalData.userInfo = null
               }
             })
           }

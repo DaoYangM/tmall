@@ -1,0 +1,51 @@
+<template>
+  <view>
+    <scroll-view scroll-y style="height: 100vh;">
+      <repeat for="{{commentList}}" item="comment">
+        <show-comment-item :comment.sync="comment"></show-comment-item>
+      </repeat>  
+    </scroll-view>
+
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import ShowCommentItem from '../components/showComment/item'
+
+export default class ShowComment extends wepy.page {
+  config = {
+    navigationBarTitleText: "查看评论"
+  }
+
+  data = {
+    commentList: [],
+  }
+
+  components = {
+    'show-comment-item': ShowCommentItem
+  }
+
+  onLoad (option) {
+    // const orderId = option.orderId
+    const productId = 28
+
+    wepy.request({
+      url: this.$root.$parent.serviceRoute.comment + '/' + productId,
+      }).then((d) => {
+        this.commentList = d.data.data.list
+
+        this.$apply()
+        console.log(this.commentList)
+    })
+  }
+}
+</script>
+
+<style lang="stylus">
+  page
+    ::-webkit-scrollbar
+      width 0
+      height 0
+      color transparent
+</style>

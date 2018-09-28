@@ -73,11 +73,32 @@ export default class MeInfo extends wepy.component {
 
                   that.$root.$parent.globalData.userInfo = e.detail.userInfo
                   that.userInfo = e.detail.userInfo
+                  wx.request({
+                    url: that.$root.$parent.service +'/wx/setInfo',
+                    method: 'POST',
+                    data: {
+                      nickName: that.userInfo.nickName,
+                      avatar: that.userInfo.avatarUrl,
+                      gender: that.userInfo.gender,
+                    },
+                    header: {
+                      'Authorization': that.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+                    },
+                    success: (s) => {
+                      console.log('Setting userinfo success')
+                    },
+                    fail: function(e) {
+                      console.log('Setting userinfo fail')
+                    }
+                  })
                 }
                 that.$apply()    
               },
               fail: function(e) {
-                console.log('fail', e)
+                wx.showToast({
+                  title: '请求超时',
+                  icon: 'none',
+                })
               }
             })
           } else {
