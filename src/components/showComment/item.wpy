@@ -18,26 +18,28 @@
     </view>
     <block wx:if="{{comment.commentImages.length > 0}}">
       <view class="comment-img">
-        <view wx:for="{{comment.commentImages}}" wx:key="{{index}}" class="img-wrap">
+        <view wx:for="{{comment.commentImages}}" wx:key="{{index}}" :class="{'img-wrap': !isDetail, 'detail-img-wrap': isDetail}">
           <image src="{{item}}" />
         </view>  
       </view>
-    </block>  
-    <view class="comment-ops-wrap">
-      <view class="comment-ops">
-        <i class="iconfont icon-comment"></i>
-        <text>评论</text>
-      </view>  
-      <view @tap="goUp" class="comment-ops">
-        <i class="iconfont icon-appreciate"></i>
-        <block wx:if="{{comment.up != null}}">
-          <text>{{comment.up}}</text>
-        </block>
-        <block wx:else>
-          <text >点赞</text>
-        </block>
+    </block>
+    <block wx:if="{{!isDetail}}">
+      <view class="comment-ops-wrap">
+        <view class="comment-ops">
+          <i class="iconfont icon-comment"></i>
+          <text>评论</text>
+        </view>  
+        <view @tap="goUp" class="comment-ops">
+          <i class="iconfont icon-appreciate"></i>
+          <block wx:if="{{comment.up != null}}">
+            <text>{{comment.up}}</text>
+          </block>
+          <block wx:else>
+            <text >点赞</text>
+          </block>
+        </view>
       </view>
-    </view>  
+    </blocK>
   </view>
 </template>
 
@@ -49,6 +51,7 @@ export default class ShowCommentItem extends wepy.component {
   props = {
     comment: {},
     index: Number,
+    isDetail: Boolean,
   }
   data = {
 
@@ -87,6 +90,18 @@ export default class ShowCommentItem extends wepy.component {
 </script>
 
 <style lang="stylus" scoped>
+  .detail-img-wrap
+    height 480rpx
+    width 100%
+    margin-bottom 20rpx
+
+    image
+      width 100%
+      height 100%
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover
+
   .item-wrap
     display flex
     flex-direction column
