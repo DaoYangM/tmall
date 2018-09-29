@@ -1,13 +1,21 @@
 <template>
   <view class="bottom-wrap">
-    <view class="bottom-ops" style="border-right: 2rpx solid #eee">
-      <i class="iconfont icon-comment"></i>
-      <text>评价</text>
-    </view>
-    <view class="bottom-ops">
-      <i class="iconfont icon-appreciate"></i>
-      <text>点赞</text>
-    </view>    
+    <block wx:if="{{!isGoCometSubComet}}">
+      <view @tap="showSend" class="bottom-ops" style="border-right: 2rpx solid #eee">
+        <i class="iconfont icon-comment"></i>
+        <text>评价</text>
+      </view>
+      <view class="bottom-ops">
+        <i class="iconfont icon-appreciate"></i>
+        <text>点赞</text>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="comment-input">
+        <input bindinput="inputInput" bindblur="goHideSendComet" focus="true" placeholder="回复 {{nickName}}: "/>
+        <view @tap="goSend" class="go-send">发送</view>
+      </view>  
+    </block>
   </view>
 </template>
 
@@ -16,15 +24,64 @@ import wepy from 'wepy'
 
 export default class CommentDetailBottom extends wepy.component {
   props = {
-
+    isGoCometSubComet: Boolean,
+    commentId: Number,
   }
   data = {
-
+    nickName: '',
+    scId: null,
+    content: '',
   }
 
   methods = {
+    goHideSendComet () {
+      this.$emit('goHideSendComet')
+      this.$apply()
+    },
+
+    inputInput (e) {
+      this.content = e.detail.value
+      this.$apply()
+    },
+
+    goSend () {
+      wepy.request({
+        url: this.$root.$parent.serviceRoute.comment + '/sub',
+        method: 'POST',
+        data: {
+          "commentId": this.commentId,
+          "subCommentId": this.scId,
+          "content": this.content,
+        },
+        header: {
+        'Authorization': 'Bearer ' + wx.getStorageSync('userMd5')
+        }
+      }).then((res)=> {
+        if (res.data.status == 200) {
+          this.$emit('getNewData', res.data.data)
+          this.$apply()        
+        } else {
+          wx.showToast({
+            title: '评论失败',
+            icon: 'none',
+          })
+        }
+      })
+    },
+
+    showSend () {
+      this.$emit('showSend')
+    }
   }
 
+  events = {
+    goSubsC (nickName, scId) {
+      console.log(nickName, scId)
+      this.nickName = nickName
+      this.scId = scId
+      this.$apply()
+    }
+  }
   onLoad (option) {
   }
 }
@@ -38,7 +95,7 @@ export default class CommentDetailBottom extends wepy.component {
     align-items center
     border-top 2rpx solid #eeeeee
     box-sizing border-box
-    
+
     .bottom-ops
       // width 50%
       flex 1
@@ -51,4 +108,27 @@ export default class CommentDetailBottom extends wepy.component {
       .iconfont
         margin-right 20rpx
 
+    .comment-input
+      display flex
+      align-items center
+      width 100%
+
+      input 
+       flex 1
+       margin 20rpx 20rpx
+       font-size 26rpx
+
+      .go-send
+        text-align center
+        width 100rpx
+        height 40rpx
+        border-radius 20rpx
+        background  #f50
+        color #ffffff
+        font-size 26rpx
+        margin-right 20rpx
+        padding 20rpx 20rpx
+        display flex
+        justify-content center
+        align-items center
 </style>

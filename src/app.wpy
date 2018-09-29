@@ -19,8 +19,8 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/commentDetail',
-      'pages/showComment',
       'pages/index',
+      'pages/showComment',
       'pages/writeComment',
       'pages/cart',
       'pages/order',

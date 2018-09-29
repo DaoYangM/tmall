@@ -4,7 +4,7 @@
       <i class="iconfont icon-comment"></i>
       <text>全部评论</text>
     </view>
-    <view wx:for="{{subCommentList}}" class="sub-comment-content-wrap">
+    <view wx:for="{{subCommentList}}" @tap="goCometSubComet({{item.fromNickName}}, {{item.id}})" wx:key="{{index}}" class="sub-comment-content-wrap">
       <view class="head-wrap">
         <view class="avatar-wrap">
           <image src="{{item.fromAvatar}}"/>
@@ -39,6 +39,9 @@ export default class CommentDetailBottom extends wepy.component {
   }
 
   methods = {
+    goCometSubComet (nickName, scId) {
+      this.$emit('goCometSubComet', nickName, scId)
+    }
   }
 
   wxs = {

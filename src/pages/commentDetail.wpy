@@ -5,7 +5,7 @@
       <sub-comment :subCommentList.sync="subCommentList"></sub-comment>
     </scroll-view>
     <view style="height: 7vh;">
-      <comment-detail-bottom></comment-detail-bottom>
+      <comment-detail-bottom :isGoCometSubComet.sync="isGoCometSubComet" :commentId.sync="commentId"></comment-detail-bottom>
     </view>
   </view>
 </template>
@@ -28,12 +28,14 @@ export default class CommentDetail extends wepy.page {
     isEnd: false,
     isDetail: true,
     subCommentList: [],
+    isGoCometSubComet: false,
+    commentId: 1,
   }
 
   methods = {
     toLower () {
       this.getCommentList(28, this.page, this.size)
-    }
+    },
   }
 
   components = {
@@ -45,6 +47,28 @@ export default class CommentDetail extends wepy.page {
   events = {
     changeUp (comment, index) {
       this.commentList[index] = comment
+      this.$apply()
+    },
+
+    goCometSubComet (nickName, scId) {
+      this.isGoCometSubComet = true
+      this.$broadcast('goSubsC', nickName, scId)
+      this.$apply()
+    },
+
+    goHideSendComet () {
+      this.isGoCometSubComet = false
+      this.$apply()
+    },
+
+    getNewData (data) {
+      this.subCommentList = data
+      this.$apply()
+    },
+
+    showSend () {
+      this.isGoCometSubComet = true
+      this.$broadcast('goSubsC', '', null)
       this.$apply()
     }
   }
