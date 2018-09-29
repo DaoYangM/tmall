@@ -38,6 +38,7 @@ export default class CommentDetailBottom extends wepy.component {
     align-items center
     border-top 2rpx solid #eeeeee
     box-sizing border-box
+    
     .bottom-ops
       // width 50%
       flex 1

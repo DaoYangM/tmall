@@ -2,6 +2,7 @@
   <view>
     <scroll-view scroll-y style="height: 93vh;">
       <show-comment-item :comment.sync="comment" :isDetail.sync="isDetail"></show-comment-item>
+      <sub-comment :subCommentList.sync="subCommentList"></sub-comment>
     </scroll-view>
     <view style="height: 7vh;">
       <comment-detail-bottom></comment-detail-bottom>
@@ -13,6 +14,7 @@
 import wepy from 'wepy'
 import ShowCommentItem from '../components/showComment/item'
 import CommentDetailBottom from '../components/commentDetail/bottom'
+import SubComment from '../components/commentDetail/sub-comment'
 
 export default class CommentDetail extends wepy.page {
   config = {
@@ -25,6 +27,7 @@ export default class CommentDetail extends wepy.page {
     size: 10,
     isEnd: false,
     isDetail: true,
+    subCommentList: [],
   }
 
   methods = {
@@ -36,6 +39,7 @@ export default class CommentDetail extends wepy.page {
   components = {
     'show-comment-item': ShowCommentItem,
     'comment-detail-bottom': CommentDetailBottom,
+    'sub-comment': SubComment,
   }
 
   events = {
@@ -48,16 +52,38 @@ export default class CommentDetail extends wepy.page {
   onLoad (option) {
     // const orderId = option.orderId
     wepy.request({
-      url: this.$root.$parent.serviceRoute.comment + '/detail/' + '1/p/28',
+      url: this.$root.$parent.serviceRoute.comment + '/detail/1',
     }).then((res)=> {
-      this.comment = res.data.data.data
-      this.$apply()
+      if (res.data.status == 200) {
+        this.comment = res.data.data
+        this.$apply()        
+      } else {
+        wx.showToast({
+          title: '获取子评论失败',
+          icon: 'none',
+        })
+      }
+    })
+    wepy.request({
+      url: this.$root.$parent.serviceRoute.comment + '/sub/1',
+    }).then((res)=> {
+      if (res.data.status == 200) {
+        this.subCommentList = res.data.data
+        this.$apply()
+      } else {
+        wx.showToast({
+          title: '获取子评论失败',
+          icon: 'none',
+        })
+      }
     })
   }
 }
 </script>
 
 <style lang="stylus">
+  .item-wrap
+    margin-bottom 0
   page
     ::-webkit-scrollbar
       width 0
