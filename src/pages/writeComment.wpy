@@ -28,8 +28,8 @@ export default class WriteComment extends wepy.page {
   }
 
   onLoad (option) {
-    // const orderId = option.orderId
-    const orderId = 1492090946105
+    const orderId = option.orderId
+    // const orderId = 1492090946105
     console.log('orderId', orderId)
 
     wepy.request({

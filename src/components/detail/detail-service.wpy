@@ -147,6 +147,7 @@ export default class DetailService extends wepy.component {
     isFromCart: false,
 
     isSpecifyLengthZero: false,
+
   }
   methods = {
     showService () {
@@ -455,7 +456,6 @@ export default class DetailService extends wepy.component {
       })
 
       this.$apply()
-
     },
 
     quantity (newValue, oldVaue) {

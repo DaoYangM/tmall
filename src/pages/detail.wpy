@@ -3,7 +3,7 @@
     <detail-swiper :swpierImages.sync="swiperImages"></detail-swiper>
     <detail-info :productInfo.sync="productInfo"></detail-info>
     <detail-service :productInfo.sync="productInfo"></detail-service>
-    <detail-comment></detail-comment>
+    <detail-comment :commentProductIndex.sync="commentProductIndex"></detail-comment>
     <detail-desc></detail-desc>
     <detail-bottom-bar :allChecked.sync="allChecked" :isFavorite.sync="isFavorite" :productInfo.sync="productInfo"></detail-bottom-bar>
     <html2wxml :parserName="name" :parserContent.sync="productDesc"></html2wxml>
@@ -36,6 +36,7 @@ export default class Detail extends wepy.page {
     productDesc: '',
     allChecked: {},
     isFavorite: false,
+    commentProductIndex: {},
   }
 
   onLoad (option) { 
@@ -69,15 +70,24 @@ export default class Detail extends wepy.page {
       this.$invoke('html2wxml', 'htmlParserNotice')
     })
 
+    wepy.request(this.$root.$parent.serviceRoute.commentProductIndex + option.id).then((d) => {
+      this.commentProductIndex = d.data.data
+      this.$apply()
+    })
+
     wepy.request({
       url: this.$root.$parent.serviceRoute.favorite + option.id,
       header: {
       'Authorization': 'Bearer ' + wx.getStorageSync('userMd5')
-      }}).then((d) => {
-      this.isFavorite = d.data.data
-      this.$apply()
+      }
+      }).then((d) => {
+        if (d.data.status == 200) {
+          this.isFavorite = d.data.data
+          this.$apply()
+        } else {
+          console.log('favor errr')
+        }
     })
-
   }
   components = {
     'detail-swiper': DetailSwiper,

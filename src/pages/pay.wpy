@@ -14,7 +14,7 @@ import wepy from 'wepy'
 export default class Pay extends wepy.page {
 
   data  = {
-    qrUrl: 'http://img.daoyang.top//alipayQRCode/240c01d6-3dba-4912-a991-7c8f5e89baea.jpg'
+    qrUrl: ''
   }
 
   methods = {

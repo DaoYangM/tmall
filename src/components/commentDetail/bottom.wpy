@@ -70,7 +70,14 @@ export default class CommentDetailBottom extends wepy.component {
     },
 
     showSend () {
-      this.$emit('showSend')
+      if (this.$root.$parent.globalData.userInfo == null) {
+        wx.showToast({
+          title: '请先登录',
+          icon: 'none',
+        })  
+      } else {
+        this.$emit('showSend')
+      }
     }
   }
 

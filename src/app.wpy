@@ -18,8 +18,9 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/commentDetail',
       'pages/index',
+      'pages/detail',
+      'pages/commentDetail',
       'pages/showComment',
       'pages/writeComment',
       'pages/cart',
@@ -28,7 +29,6 @@ export default class extends wepy.app {
       'pages/pay',
       'pages/shipping',
       'pages/createOrder',
-      'pages/detail',
       'pages/me',
       'pages/search',
       'pages/searchDetail',
@@ -127,8 +127,10 @@ export default class extends wepy.app {
     order: this.service + '/order',
     preOrder: this.service + '/order/pre/create',
     payOrder:  this.service + '/order/pay/',
+    receiptOrder: this.service + '/order/confirm/receipt/',
     shipping: this.service + '/shipping',
     comment: this.service + '/comment',
+    commentProductIndex: this.service + '/comment/product/index/'
   }
 
   constructor () {
@@ -139,7 +141,7 @@ export default class extends wepy.app {
 
   onLaunch() {
     this.testAsync()
-    // wx.setStorageSync('userMd5', null)
+    wx.setStorageSync('userMd5', null)
     let that = this
     let jwt = wx.getStorageSync('userMd5')
 

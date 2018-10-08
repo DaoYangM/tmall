@@ -1,5 +1,5 @@
 <template>
-  <view class="item-wrap">
+  <view @tap="goCommentDetail" class="item-wrap">
     <view class="head-wrap">
       <view class="avatar-wrap">
         <image src="{{comment.avatar}}"/>
@@ -80,6 +80,11 @@ export default class ShowCommentItem extends wepy.component {
               icon: 'none',
             })
           }
+      })
+    },
+    goCommentDetail () {
+      wx.navigateTo({
+        url: 'commentDetail?commentId=' + this.comment.id
       })
     }
   }

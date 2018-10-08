@@ -7,7 +7,6 @@
     </scroll-view>
   </view>
 </template>
-
 <script>
 import wepy from 'wepy'
 import ShowCommentItem from '../components/showComment/item'
@@ -44,7 +43,7 @@ export default class ShowComment extends wepy.page {
   
   onLoad (option) {
     // const orderId = option.orderId
-    this.getCommentList(28, 1, 10)
+    this.getCommentList(option.productId, 1, 10)
 
   }
 

@@ -1,28 +1,45 @@
 <template>
   <view class="comment-container">
     <view class="comment-head">
-      <text class="commnet-count">宝贝评价(296)</text>
-      <view class="comment-all">
-        <text>查看全部</text>
-        <i class="iconfont icon-right" style="height: 20rpx width: 20rpx;"></i>
-      </view>
+      <text class="commnet-count">宝贝评价({{commentProductIndex.commentCount}})</text>
+      <block wx:if="{{commentProductIndex.comment != null}}">     
+        <view @tap="goAllComment" class="comment-all">
+          <text>查看全部</text>
+          <i class="iconfont icon-right" style="height: 20rpx width: 20rpx;"></i>
+        </view>
+      </block>
     </view>
-    <view class="comment-hot-container">
-      <view style="display:flex; align-items:center">
-        <image class="comment-avatar" src="https://gtms03.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_80x80.jpg"/>
-        <text class="comment-anonymous">v**8</text>
+    <block wx:if="{{commentProductIndex.comment != null}}">
+      <view class="comment-hot-container">
+        <view style="display:flex; align-items:center">
+          <image class="comment-avatar" src="{{commentProductIndex.comment.avatar}}"/>
+          <text class="comment-anonymous">{{commentProductIndex.comment.nickName}}</text>
+        </view>
+        <view class="comment">
+          {{commentProductIndex.comment.comment}}
+        </view>
       </view>
-      <view class="comment">
-          家里正好有个小盖子，12cm的，盖上正好，这锅不要错，煮500ml的豆浆，看着不会溢出，深锅就是好
-      </view>
-    </view>
+    </blocK>
+    <block wx:else>
+      <text style="font-size: 24rpx; text-align: center; color: #666">暂时没有文字评价</text>
+    </block>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
 export default class DetailComment extends wepy.component{
-  
+  props = {
+    commentProductIndex: {},
+  }
+
+  methods = {
+    goAllComment () {
+      wx.navigateTo({
+        url: 'showComment?productId=' + this.commentProductIndex.comment.productId
+      })
+    }
+  }
 }
 </script>
 
@@ -65,9 +82,10 @@ export default class DetailComment extends wepy.component{
       margin-top 40rpx
 
       .comment-avatar
-        height 40rpx
-        width 40rpx
+        height 60rpx
+        width 60rpx
         margin-right 20rpx
+        border-radius 50%
 
       .comment-anonymous
         display inline-block
