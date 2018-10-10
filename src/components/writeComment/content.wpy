@@ -65,6 +65,7 @@ export default class WriteContent extends wepy.component {
 
   props = {
     orderItems: [],
+    order: {},
   }
   
   data = {
@@ -78,12 +79,13 @@ export default class WriteContent extends wepy.component {
     chooseImage (index) {
       wx.chooseImage({
         success: (res) => {
-            const tempFilePaths = res.tempFilePaths
-            console.log(tempFilePaths);
-            let img = tempFilePaths[0]
-            this.orderItems[index].imgs.push(img)
-            this.showImg = true
-            this.$apply()
+          const tempFilePaths = res.tempFilePaths
+          console.log(tempFilePaths);
+          tempFilePaths.forEach(element => {
+            this.orderItems[index].imgs.push(element)
+          });
+          this.showImg = true
+          this.$apply()
         }
       })
     },
@@ -171,15 +173,33 @@ export default class WriteContent extends wepy.component {
                   console.log(res.data.data)
                 }
               }) 
+            },
+            fail: (res) => {
+              wx.hideLoading()
+              wx.showToast({
+                title: '评论失败',
+                icon: 'success',
+              })
             }
           })           
         })
 
-        wx.hideLoading()
-        wx.showToast({
-          title: '评论成功',
-          icon: 'success',
-        })
+        wx.request({
+          url: this.$root.$parent.serviceRoute.order + '/finished/' + this.order.orderNo, //仅为示例，非真实的接口地址
+          method: 'PUT',
+          header: {
+            'Authorization': this.$root.$parent.serviceRoute.jwtToken + wx.getStorageSync('userMd5') // 默认值
+          },
+          success: (res) => {
+            if (res.data.data) {
+              wx.hideLoading()
+              wx.showToast({
+                title: '评论成功',
+                icon: 'success',
+              })              
+            }
+          }
+        }) 
         setTimeout(() => {
           wx.redirectTo({
             url: 'order?type=0'

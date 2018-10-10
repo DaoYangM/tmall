@@ -1,23 +1,25 @@
 <template>
-  <view @tap="goCommentDetail" class="item-wrap">
-    <view class="head-wrap">
-      <view class="avatar-wrap">
-        <image src="{{comment.avatar}}"/>
+  <view>
+    <view @tap="goCommentDetail" class="item-wrap">
+      <view class="head-wrap">
+        <view class="avatar-wrap">
+          <image src="{{comment.avatar}}"/>
+        </view>
+        <view class="nick-name">
+          <text>{{comment.nickName}}</text>
+        </view>
       </view>
-      <view class="nick-name">
-        <text>{{comment.nickName}}</text>
+      <view class="create-time">
+        <text>{{timeFilter.filter(comment.createTime)}}</text>
       </view>
-    </view>
-    <view class="create-time">
-      <text>{{timeFilter.filter(comment.createTime)}}</text>
-    </view>
-    <view class="comment-wrap">
-      <view class="comment">
-        {{comment.comment}}
-      </view>  
+      <view class="comment-wrap">
+        <view class="comment">
+          {{comment.comment}}
+        </view>  
+      </view>
     </view>
     <block wx:if="{{comment.commentImages.length > 0}}">
-      <view class="comment-img">
+      <view @tap="goCommentDetail" class="comment-img">
         <view wx:for="{{comment.commentImages}}" wx:key="{{index}}" :class="{'img-wrap': !isDetail, 'detail-img-wrap': isDetail}">
           <image src="{{item}}" />
         </view>  
@@ -25,9 +27,14 @@
     </block>
     <block wx:if="{{!isDetail}}">
       <view class="comment-ops-wrap">
-        <view class="comment-ops">
+        <view @tap="goCommentDetail" class="comment-ops">
           <i class="iconfont icon-comment"></i>
-          <text>评论</text>
+          <block wx:if="{{comment.commentCount != 0}}">
+            <text>评论 ({{comment.commentCount}})</text>
+          </block>
+          <block wx:else>
+            <text>评论</text>
+          </block>  
         </view>  
         <view @tap="goUp" class="comment-ops">
           <i class="iconfont icon-appreciate"></i>
@@ -35,7 +42,7 @@
             <text>{{comment.up}}</text>
           </block>
           <block wx:else>
-            <text >点赞</text>
+            <text>点赞</text>
           </block>
         </view>
       </view>
@@ -75,6 +82,7 @@ export default class ShowCommentItem extends wepy.component {
             this.$emit('changeUp', this.comment, this.index)
             console.log(this.comment);
           } else {
+            console.log('nologin')
             wx.showToast({
               title: '需要登录才能操作',
               icon: 'none',
@@ -83,9 +91,11 @@ export default class ShowCommentItem extends wepy.component {
       })
     },
     goCommentDetail () {
-      wx.navigateTo({
-        url: 'commentDetail?commentId=' + this.comment.id
-      })
+      if (!this.isDetail) {
+        wx.navigateTo({
+          url: 'commentDetail?commentId=' + this.comment.id
+        })        
+      }
     }
   }
 
@@ -147,39 +157,39 @@ export default class ShowCommentItem extends wepy.component {
       font-size 28rpx
       height auto 
 
-    .comment-img
-      margin 30rpx 20rpx
-      display flex
-      // justify-content 
-      flex-wrap wrap
+  .comment-img
+    margin 30rpx 20rpx
+    display flex
+    // justify-content 
+    flex-wrap wrap
 
-      .img-wrap
-        width 30%
-        height 200rpx
-        margin-left 10rpx
+    .img-wrap
+      width 30%
+      height 200rpx
+      margin-left 10rpx
 
-        image
-          width 100%
-          height 100%
-          background-repeat: no-repeat;
-          background-position: center center;
-          background-size: cover
+      image
+        width 100%
+        height 100%
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover
 
-    .comment-ops-wrap
-      display flex
-      justify-content flex-end
-      align-items center
-      .comment-ops
-        border-radius 20rpx
-        border 1rpx solid #999
-        margin-right 20rpx
-        font-size 24rpx
-        color #666
-        text-align center
-        padding 6rpx 20rpx
+  .comment-ops-wrap
+    display flex
+    justify-content flex-end
+    align-items center
+    .comment-ops
+      border-radius 20rpx
+      border 1rpx solid #999
+      margin-right 20rpx
+      font-size 24rpx
+      color #666
+      text-align center
+      padding 6rpx 20rpx
 
-        
-        .iconfont
-          margin-right 10rpx
+      
+      .iconfont
+        margin-right 10rpx
 
 </style>

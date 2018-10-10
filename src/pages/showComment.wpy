@@ -1,8 +1,10 @@
 <template>
   <view>
     <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="toLower" lower-threshold="150">
-      <repeat for="{{commentList}}" item="comment">
-        <show-comment-item :comment.sync="comment" :index.sync="index" :isDetail.sync="isDetail"></show-comment-item>
+      <repeat for="{{commentList}}" index="index" item="comment">
+        <view> 
+          <show-comment-item :comment.sync="comment" :index.sync="index" :isDetail.sync="isDetail"></show-comment-item>
+        </view>
       </repeat>  
     </scroll-view>
   </view>
@@ -27,7 +29,7 @@ export default class ShowComment extends wepy.page {
   methods = {
     toLower () {
       this.getCommentList(28, this.page, this.size)
-    }
+    },
   }
 
   components = {
