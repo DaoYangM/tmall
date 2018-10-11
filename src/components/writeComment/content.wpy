@@ -202,7 +202,7 @@ export default class WriteContent extends wepy.component {
         }) 
         setTimeout(() => {
           wx.redirectTo({
-            url: 'order?type=0'
+            url: 'order?type=4'
           })          
         }, 1500);
       } else {

@@ -73,6 +73,13 @@ export default class Order extends wepy.page {
       })
   }
 
+  onUnload () {
+    console.log('unLoad')
+    wx.switchTab({
+      url: "me"
+    })
+  }
+
   onLoad (option) {
     let type = parseInt(option.type)
     this.changeTap(type)

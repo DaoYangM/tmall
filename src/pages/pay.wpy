@@ -1,11 +1,15 @@
 <template>
   <view class="container">
-    <view style="width: 500rpx; font-size: 35rpx; text-align: center;">请使用支付宝进行支付</view>
+    <view style="width: 500rpx; font-size: 35rpx; text-align: center;color: #666">支付宝二维码</view>
     <image class="qr-image" src="{{qrUrl}}" />
     <view class="text-wrap">
-      <text style="color: #f50;">已完成支付</text>
-      <text>支付失败</text>
-    </view>  
+      <view>
+        <text @tap="goFinishedPay" style="color: #fff;background: #f50">已完成支付</text>
+      </view>
+      <view>
+        <text @tap="goWaitPay" style="background: #eee; color: red">支付失败 ？</text>
+      </view>
+    </view> 
   </view>  
 </template>
 
@@ -18,6 +22,18 @@ export default class Pay extends wepy.page {
   }
 
   methods = {
+
+    goFinishedPay () {
+      wx.redirectTo({
+        url: 'order?type=0'
+      })
+    },
+
+    goWaitPay () {
+      wx.redirectTo({
+        url: 'order?type=1'
+      })
+    },
 
     goPay () {
       wepy.request('http://localhost:8080/order/pay/1534689708357').then((res) => {
@@ -50,16 +66,16 @@ export default class Pay extends wepy.page {
       margin-top 100rpx
       width 500rpx
       display flex
-      justify-content space-between
+      flex-direction column
+      align-items center
 
       text
+        margin-top 40rpx
         display inline-block
-        border-radius 10rpx
+        border-radius 200rpx
         border 2rpx solid #eee
-        height 60rpx
-        width 200rpx
+        height 100rpx
+        width 400rpx
         text-align center
-        line-height 60rpx
-        color #ffffff
-        background #666
+        line-height 100rpx
 </style>
