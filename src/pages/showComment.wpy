@@ -45,7 +45,8 @@ export default class ShowComment extends wepy.page {
   
   onLoad (option) {
     // const orderId = option.orderId
-    this.getCommentList(option.productId, 1, 10)
+    // this.getCommentList(option.productId, 1, 10)
+    this.getCommentList(28, 1, 10)
 
   }
 

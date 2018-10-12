@@ -74,13 +74,18 @@ export default class CommentDetail extends wepy.page {
   }
   
   onLoad (option) {
-    const commentId = option.commentId
+    wx.showLoading({
+      title: '加载评论中...',
+      mask: true
+    })
+    const commentId= option.commentId
     wepy.request({
       url: this.$root.$parent.serviceRoute.comment + '/detail/' + commentId,
     }).then((res)=> {
       if (res.data.status == 200) {
         this.comment = res.data.data
-        this.$apply()        
+        this.$apply()
+        wx.hideLoading()         
       } else {
         wx.showToast({
           title: '获取子评论失败',
@@ -94,6 +99,7 @@ export default class CommentDetail extends wepy.page {
       if (res.data.status == 200) {
         this.subCommentList = res.data.data
         this.$apply()
+
       } else {
         wx.showToast({
           title: '获取子评论失败',
@@ -101,6 +107,8 @@ export default class CommentDetail extends wepy.page {
         })
       }
     })
+
+
   }
 }
 </script>

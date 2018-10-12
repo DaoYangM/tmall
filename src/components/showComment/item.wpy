@@ -8,6 +8,35 @@
         <view class="nick-name">
           <text>{{comment.nickName}}</text>
         </view>
+        <view class="comment-evaluation">
+          <view wx:if="{{comment.evaluate == 1}}">
+            <text>好评</text>
+          </view>
+          <view wx:elif="{{comment.evaluate == 2}}">
+            <text>中评</text>
+          </view>
+          <view wx:else>
+            <text>差评</text>
+          </view>
+        </view>
+        <view style="position:absolute;right: 20rpx" class="comment-star">
+          <view class="star-rating">
+              <view class="star-rating-top" style="width: {{comment.star / 5 * 100}}%">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+              </view>
+              <view class="star-rating-bottom">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+              </view>
+          </view>
+        </view>  
       </view>
       <view class="create-time">
         <text>{{timeFilter.filter(comment.createTime)}}</text>
@@ -105,6 +134,32 @@ export default class ShowCommentItem extends wepy.component {
 </script>
 
 <style lang="stylus" scoped>
+  .star-rating 
+    unicode-bidi: bidi-override;
+    color: #ddd;
+    margin: 0 auto;
+    position: relative;
+    display: table;
+
+  .star-rating span:after 
+    content: "★";
+    font-size: 40rpx
+
+
+  .star-rating-top 
+    color: #f50;
+    position: absolute;
+    z-index: 1;
+    // width: 60%;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block
+    padding 0
+  .star-rating-bottom 
+    z-index 0
+    display block
+    padding 0
+
   .detail-img-wrap
     height 480rpx
     width 100%
@@ -123,6 +178,7 @@ export default class ShowCommentItem extends wepy.component {
     width 100%
     justify-content center
     margin-bottom 50rpx
+    position relative
 
     .head-wrap
       flex 1
@@ -146,6 +202,12 @@ export default class ShowCommentItem extends wepy.component {
 
       .nick-name
         font-size 28rpx
+
+      .comment-evaluation
+        position absolute
+        font-size 28rpx
+        right 200rpx
+        color #f50  
 
     .create-time    
       font-size 24rpx

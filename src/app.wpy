@@ -18,11 +18,11 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/showComment',
       'pages/index',
       'pages/pay',
       'pages/detail',
       'pages/commentDetail',
-      'pages/showComment',
       'pages/writeComment',
       'pages/cart',
       'pages/order',

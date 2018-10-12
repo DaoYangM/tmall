@@ -31,7 +31,11 @@ export default class Pay extends wepy.page {
   methods = {}
 
   onLoad(option) {
-    // let orderId = '1537604339089'
+    wx.showLoading({
+      title: '加载中',
+      mask: true,
+    })
+
     let orderId = option.orderId
     console.log('orderId', orderId)
 
@@ -48,9 +52,8 @@ export default class Pay extends wepy.page {
 
         this.$apply()
 
-        console.log(this.orderItems)
+        wx.hideLoading()
     })
-
   }
 
   components = {
